@@ -1,0 +1,6 @@
+{
+    "deck": "ai-not-enjoying.pptm",
+    "script": "ai-not-enjoying_script.md",
+    "port": 8765,
+    "auto_start": false
+}

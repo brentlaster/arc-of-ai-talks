@@ -1,0 +1,6 @@
+{
+    "deck": "cicd-cai.pptm",
+    "script": "cicd-cai-script.md",
+    "port": 8765,
+    "auto_start": false
+}
