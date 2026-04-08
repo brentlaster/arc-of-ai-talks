@@ -126,7 +126,7 @@ One thing I want to be upfront about: every security control has a cost. Let me 
 
 ---
 
-## SLIDE 9b: Every Control Has a Cost
+## SLIDE 10: Every Control Has a Cost
 
 *[GESTURE at the five tradeoffs]*
 
@@ -142,7 +142,7 @@ Quick framing: think of three tiers of AI systems. A *chatbot* is a conversation
 
 ---
 
-## SLIDE 10: Six-Layer Architecture
+## SLIDE 11: Six-Layer Architecture
 
 Here's the full blueprint.
 
@@ -172,7 +172,7 @@ Let's start at the foundation. But first, a few more visuals to anchor everythin
 
 ---
 
-## SLIDE 11: The Transformation: Unguarded vs. Blueprint-Aligned
+## SLIDE 12: The Transformation: Unguarded vs. Blueprint-Aligned
 
 *[GESTURE at side-by-side]*
 
@@ -186,7 +186,7 @@ Same AI capabilities. Same outcomes for the business. But one of these is an inc
 
 ---
 
-## SLIDE 12: End-to-End: An AI Request Through All 6 Layers
+## SLIDE 13: End-to-End: An AI Request Through All 6 Layers
 
 *[GESTURE at diagram]*
 
@@ -202,7 +202,7 @@ But there's a deeper principle that ties these layers together — and it's one 
 
 ---
 
-## SLIDE 13: Policy-Driven AI: How the Engine Decides
+## SLIDE 14: Policy-Driven AI: How the Engine Decides
 
 *[GESTURE at diagram]*
 
@@ -234,7 +234,7 @@ Now let's drill into each layer.
 
 ---
 
-## SLIDE 14: Layer 1: Identity & Access Control
+## SLIDE 15: Layer 1: Identity & Access Control
 
 Layer one is the foundation, and it's the one most organizations skip entirely. AI-specific identity and access management.
 
@@ -254,7 +254,7 @@ And secrets management — AI agents should never hold long-lived credentials. U
 
 ---
 
-## SLIDE 15: Scenario: Marketing AI Agent
+## SLIDE 16: Scenario: Marketing AI Agent
 
 Let me make this concrete. Your marketing team deploys an AI agent that generates campaign content. It needs customer data. How do you scope that?
 
@@ -264,7 +264,7 @@ OAuth 2.0 client credentials, role-based access, secure tool binding, and audit 
 
 ---
 
-## SLIDE 16: IAM Configuration Example
+## SLIDE 17: IAM Configuration Example
 
 And here's what the infrastructure-as-code looks like. Terraform creating an AI service account with a custom role scoped to exactly what the marketing agent needs.
 
@@ -274,7 +274,7 @@ This is a deployable pattern — the structure works in any cloud IAM stack toda
 
 ---
 
-## SLIDE 17: Layer 2: Context Isolation & Data Boundaries
+## SLIDE 18: Layer 2: Context Isolation & Data Boundaries
 
 *[TRANSITION]*
 
@@ -292,7 +292,7 @@ Third, DLP for AI — filtering and redacting sensitive patterns before they rea
 
 ---
 
-## SLIDE 18: Layer 2: Three Data Boundary Rules
+## SLIDE 19: Layer 2: Three Data Boundary Rules
 
 Three rules govern data boundaries. First: minimum necessary context only — each AI session or agent gets only the data it needs for the specific task. Nothing more. Second: PII enters prompts only when explicitly justified, approved, minimized, and auditable. That's not "never" — some use cases legitimately need PII — but it should be a conscious, controlled decision. Third: tenant boundaries are absolute. Customer A's data never leaks into Customer B's context, even when the underlying infrastructure is shared. Shared compute, isolated data planes.
 
@@ -300,7 +300,7 @@ Three rules govern data boundaries. First: minimum necessary context only — ea
 
 ---
 
-## SLIDE 19: Data Redaction Pipeline
+## SLIDE 20: Data Redaction Pipeline
 
 Here's the pattern in practice. Raw data on the left; AI-safe version on the right.
 
@@ -308,7 +308,7 @@ Three techniques: masking for display, tokenization for AI contexts — stronges
 
 ---
 
-## SLIDE 20: Multi-Tenant Isolation
+## SLIDE 21: Multi-Tenant Isolation
 
 Multi-tenant isolation — this is the one that bites people hardest in production.
 
@@ -322,7 +322,7 @@ This matters most with RAG systems. Think of retrieval security as a five-step c
 
 ---
 
-## SLIDE 21: Layer 3: Prompt Injection Defenses
+## SLIDE 22: Layer 3: Prompt Injection Defenses
 
 *[TRANSITION]*
 
@@ -338,7 +338,7 @@ Indirect injection is especially dangerous because the attack surface is enormou
 
 ---
 
-## SLIDE 22: Injection Attack Flow
+## SLIDE 23: Injection Attack Flow
 
 *[GESTURE at diagram]*
 
@@ -348,7 +348,7 @@ And the bottom path shows the indirect injection vector: retrieved content from 
 
 ---
 
-## SLIDE 23: Four Defense Techniques
+## SLIDE 24: Four Defense Techniques
 
 Four concrete defense techniques you can implement.
 
@@ -358,7 +358,7 @@ Defense in depth. No single technique is sufficient. All four together make inje
 
 ---
 
-## SLIDE 24: Live Walkthrough: Indirect Injection in RAG
+## SLIDE 25: Live Walkthrough: Indirect Injection in RAG
 
 *[SLOW DOWN — this is the most memorable segment]*
 
@@ -388,7 +388,7 @@ Quick checkpoint before we continue. We're halfway through the blueprint. If you
 
 ---
 
-## SLIDE 25: Layer 4: Model Governance Pipeline
+## SLIDE 26: Layer 4: Model Governance Pipeline
 
 *[SHIFT TONE — common failure]*
 
@@ -406,7 +406,7 @@ And if you already have shadow AI — which statistically you do — here's the 
 
 ---
 
-## SLIDE 26: Layer 4: Governance Pipeline Stages
+## SLIDE 27: Layer 4: Governance Pipeline Stages
 
 The governance lifecycle has six stages, and at each one there should be a gate — a checkpoint where risk assessment, bias testing, and security review happen before the model advances.
 
@@ -416,7 +416,7 @@ Selection, evaluation, approval, deployment, monitoring, retirement. The most co
 
 ---
 
-## SLIDE 27: Governance Gates
+## SLIDE 28: Governance Gates
 
 Every model in production should be in a model registry: approved models with version tracking, compliance status, and usage policies. When a new model or model version is proposed, it goes through evaluation — performance, safety, bias, security — before an approval committee signs off.
 
@@ -428,7 +428,7 @@ Separately, ISO 42001 and NIST AI RMF are governance frameworks — they don't c
 
 ---
 
-## SLIDE 28: Model Registry Configuration
+## SLIDE 29: Model Registry Configuration
 
 Here's what a model registry entry looks like in practice. JSON configuration specifying the model name, version, provider, risk classification, compliance status, approved use cases, and data access restrictions.
 
@@ -438,7 +438,7 @@ Every model has explicit boundaries: what data it can access, what use cases it'
 
 ---
 
-## SLIDE 29: Supply Chain & Vendor Risk
+## SLIDE 30: Supply Chain & Vendor Risk
 
 *[NEW SECTION]*
 
@@ -448,7 +448,7 @@ The controls: AI-specific vendor questionnaires, data processing agreements with
 
 ---
 
-## SLIDE 30: Layer 5: Audit Trails & Observability
+## SLIDE 31: Layer 5: Audit Trails & Observability
 
 *[TRANSITION]*
 
@@ -472,7 +472,7 @@ In most organizations, the answer is Layer 5 — you wouldn't even know the pois
 
 ---
 
-## SLIDE 31: Layer 5: What Evidence-Quality Logs Require
+## SLIDE 32: Layer 5: What Evidence-Quality Logs Require
 
 Remember: 33% of organizations have no audit trails at all, and only 6% have comprehensive coverage. Regulators are going to ask — the EU AI Act requires audit trails for high-risk AI systems, and ISO 42001 requires demonstrable governance.
 
@@ -484,7 +484,7 @@ The key distinction: debugging logs and evidence-quality logs are not the same t
 
 ---
 
-## SLIDE 32: Structured Audit Logging
+## SLIDE 33: Structured Audit Logging
 
 Here's what a structured, privacy-safe audit log entry looks like — five essential fields.
 
@@ -494,7 +494,7 @@ Important nuance: log structured metadata, not raw prompts and responses. Store 
 
 ---
 
-## SLIDE 33: Audit Maturity Ladder
+## SLIDE 34: Audit Maturity Ladder
 
 *[GESTURE at diagram]*
 
@@ -504,7 +504,7 @@ Move up this ladder incrementally. Start with structured logging for your highes
 
 ---
 
-## SLIDE 34: Layer 6: Operational Controls
+## SLIDE 35: Layer 6: Operational Controls
 
 *[ARCHITECTURE PRINCIPLE]*
 
@@ -520,7 +520,7 @@ Canary deployments — don't roll out AI changes to everyone at once. Start with
 
 ---
 
-## SLIDE 35: Kill Switches & Rate Limiting
+## SLIDE 36: Kill Switches & Rate Limiting
 
 On the left, the kill switch — a simple API endpoint that stops requests, cancels in-flight calls, logs the event, and alerts the incident channel. Recovery requires manual review before restart.
 
@@ -528,7 +528,7 @@ On the right, rate limiting — per-tenant, per-model limits with burst handling
 
 ---
 
-## SLIDE 36: Canary Deployments & Incident Response
+## SLIDE 37: Canary Deployments & Incident Response
 
 Canary deployments are especially important for generative AI because "quality" isn't binary. You need AI-specific metrics: escalation rate, unsafe output rate, and cost per resolved interaction. Start at 5% of traffic, then 10%, 25%, full rollout. Any anomaly triggers automatic rollback.
 
@@ -538,7 +538,7 @@ You also need AI-specific incident response playbooks — detection, containment
 
 ---
 
-## SLIDE 37: Tool Isolation & Sandboxing
+## SLIDE 38: Tool Isolation & Sandboxing
 
 *[NEW SECTION]*
 
@@ -554,7 +554,7 @@ Without tool isolation, an agent tricked into misusing its tools bypasses everyt
 
 ---
 
-## SLIDE 38: Human Oversight Patterns
+## SLIDE 39: Human Oversight Patterns
 
 *[NEW SECTION]*
 
@@ -570,7 +570,7 @@ The design principles: confidence-based routing — below a threshold, escalate 
 
 ---
 
-## SLIDE 39: Security Testing & Red Teaming
+## SLIDE 40: Security Testing & Red Teaming
 
 *[NEW SECTION]*
 
@@ -582,7 +582,7 @@ Automate what you can — injection tests and regression gates belong in CI/CD. 
 
 ---
 
-## SLIDE 40: Governance Operating Model (RACI)
+## SLIDE 41: Governance Operating Model (RACI)
 
 *[NEW SECTION]*
 
@@ -596,7 +596,7 @@ If your organization has an internal developer platform or a platform engineerin
 
 ---
 
-## SLIDE 41: What Breaks Without Each Control?
+## SLIDE 42: What Breaks Without Each Control?
 
 *[VISUAL RESET — let the audience scan the table]*
 
@@ -608,7 +608,7 @@ The key insight: the six layers protect the data and the interactions. The cross
 
 ---
 
-## SLIDE 42: When the Blueprint Is Missing: A Failure Chain
+## SLIDE 43: When the Blueprint Is Missing: A Failure Chain
 
 *[PAUSE — let audience read the cascade]*
 
@@ -630,7 +630,7 @@ Each missing layer compounds the next. A single missing control rarely causes th
 
 ---
 
-## SLIDE 43: Section Divider: Scenario Walkthroughs
+## SLIDE 44: Section Divider: Scenario Walkthroughs
 *[PAUSE]*
 
 Alright, that's the six layers, the cross-cutting concerns, and the failure chain.
@@ -647,7 +647,7 @@ Now let me show you how the blueprint works when it's in place — by walking th
 
 ---
 
-## SLIDE 44: Scenario 1: Customer-Facing AI Chatbot
+## SLIDE 45: Scenario 1: Customer-Facing AI Chatbot
 
 Scenario one: a customer-facing AI chatbot. This is probably the most common enterprise AI deployment, and it touches every single layer of the blueprint. So it's a great end-to-end test of the architecture.
 
@@ -679,7 +679,7 @@ Most of you probably said DENY or ESCALATE — and you're right. The chatbot's s
 
 ---
 
-## SLIDE 45: Scenario 1: Chatbot — All Six Layers Applied
+## SLIDE 46: Scenario 1: Chatbot — All Six Layers Applied
 
 Let me recap how all six layers work together for this chatbot deployment. Layer 1 Identity: customer authenticates, chatbot gets a session-scoped token with customer-data-read only. Layer 2 Context: sees only that customer's account data — tenant boundaries are absolute. Layer 3 Injection: input scanning on every query before it reaches the model. Layer 4 Governance: approved model with documented behavioral constraints and expiration. Layer 5 Audit: every interaction logged with full context for compliance. Layer 6 Ops: rate limits, kill switch to redirect to human agents, canary deployments.
 
@@ -689,7 +689,7 @@ Without any single layer, the attack surface opens. That's the end-to-end test.
 
 ---
 
-## SLIDE 46: Scenario 1: Risk Mitigation Summary
+## SLIDE 47: Scenario 1: Risk Mitigation Summary
 
 Risk mitigation summary — every risk maps to a specific blueprint control. Data leakage: context isolation and tokenization. Injection: layered defense stack. Hallucination: behavioral constraints and output validation. Privacy: audit trails and consent management. Service disruption: operational controls and kill switches.
 
@@ -697,7 +697,7 @@ That's the power of a layered approach. It's an architecture, not a checklist.
 
 ---
 
-## SLIDE 47: Scenario 2: Internal AI Coding Assistant
+## SLIDE 48: Scenario 2: Internal AI Coding Assistant
 
 Scenario two: an internal AI coding assistant. And let me tell this one as an incident story — because that's how you'll remember it.
 
@@ -721,7 +721,7 @@ Remember the principle: *prompts guide behavior; platforms enforce behavior.* Th
 
 ---
 
-## SLIDE 48: Scenario 2: The Near-Miss That Changed Policy
+## SLIDE 49: Scenario 2: The Near-Miss That Changed Policy
 
 Here's the critical moment distilled. The assistant assembled 340 lines of context to send to the external model: the custom tokenization logic, rate-limiting strategy, vendor-specific API patterns, and on line 287 — an internal pricing algorithm.
 
@@ -733,7 +733,7 @@ The developer's experience didn't change. The organization's exposure did.
 
 ---
 
-## SLIDE 49: Scenario 2: Critical Safeguards
+## SLIDE 50: Scenario 2: Critical Safeguards
 
 Here's the policy architecture that made that incident a non-event. The policy target is simple: proprietary code stays internal by default.
 
@@ -745,7 +745,7 @@ The effort varies by maturity. Start with the highest-risk repositories and expa
 
 ---
 
-## SLIDE 50: Implementation Roadmap
+## SLIDE 51: Implementation Roadmap
 
 *[GESTURE at diagram]*
 
@@ -765,7 +765,7 @@ Each phase builds on the previous one. Ship Phase 0 this week.
 
 ---
 
-## SLIDE 51: Your Monday Morning Checklist (1 of 2)
+## SLIDE 52: Your Monday Morning Checklist (1 of 2)
 
 *[GESTURE at the checklist]*
 
@@ -777,7 +777,7 @@ These four are the foundation. Now let's look at the operational layer.
 
 ---
 
-## SLIDE 51b: Your Monday Morning Checklist (2 of 2)
+## SLIDE 53: Your Monday Morning Checklist (2 of 2)
 
 *[GESTURE at items 5-8]*
 
@@ -789,7 +789,7 @@ Start this week. Iterate this quarter. Mature this year.
 
 ---
 
-## SLIDE 52: The Road Ahead
+## SLIDE 54: The Road Ahead
 
 The regulatory and technical landscape is moving fast.
 
@@ -801,7 +801,7 @@ Agentic AI security is the next frontier. Agents that act autonomously — calli
 
 ---
 
-## SLIDE 53: 5 Questions Every AI Team Should Answer
+## SLIDE 55: 5 Questions Every AI Team Should Answer
 
 *[SLOW DOWN — closing framework]*
 
@@ -821,7 +821,7 @@ If you can't answer yes to all five, you know where to start.
 
 ---
 
-## SLIDE 54: What Most Teams Get Wrong
+## SLIDE 56: What Most Teams Get Wrong
 
 *[PAUSE — let the slide land]*
 
@@ -831,7 +831,7 @@ Quick self-assessment — count how many of these exist in your organization. If
 
 ---
 
-## SLIDE 55: Opening Incidents → Missing Blueprint Layers
+## SLIDE 57: Opening Incidents → Missing Blueprint Layers
 
 *[GESTURE across the four mapping rows]*
 
@@ -845,7 +845,7 @@ Notice something: Layer 2 — context isolation — shows up in both enterprise 
 
 These are not technology problems. They're architecture problems. And they're all addressable with the controls we walked through today.
 
-## SLIDE 56: Closing: Security Enables Innovation
+## SLIDE 58: Closing: Security Enables Innovation
 *[SLOW DOWN — closing moment]*
 
 97% of organizations that experienced an AI breach had no proper access controls. Remember the opening? The Chevy chatbot — no behavioral boundaries, no output validation, no kill switch. That's Layers 3 and 6 missing. DPD's swearing chatbot — no input filtering, no escalation path. Layers 3 and cross-cutting human oversight. Microsoft's EchoLeak — no content filtering on retrieved data. Layer 2. GitHub Copilot leaking API keys — no data boundary between training data and output. Layer 2 again. Each of these incidents maps to one or more missing layers in the blueprint. These aren't technology problems. They're architecture problems — and they're addressable with the controls we walked through today.
@@ -862,7 +862,7 @@ Thank you.
 
 ---
 
-## SLIDE 57: Questions
+## SLIDE 59: Questions
 *[PAUSE]*
 
 I'd love to take questions. We've got some time — who wants to go first?
@@ -872,86 +872,8 @@ I'd love to take questions. We've got some time — who wants to go first?
 ---
 
 
-## SLIDE 58: CLOSING SLIDE
+## SLIDE 60: CLOSING SLIDE
 
 Thank you so much, everyone. My contact info is up here — training@getskillsnow.com, or find me at techskillstransformations.com. If you want to go deeper on any of these layers, I'd love to connect.
 
 Thanks for spending this time with me. Stay secure out there!
-
----
-
-## Timing Checkpoints
-| Slide | Elapsed Time | Section |
-|-------|-------------|---------|
-| 1 | ~2 min | Title + setup |
-| 2 | ~7 min | Opening incidents + audience poll |
-| 3 | ~10 min | 97% stat |
-| 5 | ~13 min | End of current state stats (compressed) |
-| 8 | ~19 min | Blueprint overview + Before/After + E2E + Policy Engine |
-| 13 | ~23 min | End of Layer 1 (Identity) — compressed |
-| 16 | ~30 min | End of Layer 2 (Context Isolation + RAG chain) |
-| 20 | ~39 min | End of Layer 3 (Prompt Injection + walkthrough + decision) + mid-talk recap — MIDPOINT |
-| 25 | ~47 min | End of Layer 4 (Model Governance + vendor risk) |
-| 28 | ~52 min | End of Layer 5 (Audit + threat-model exercise) — compressed |
-| 36 | ~61 min | End of Layer 6 + cross-cutting (RACI compressed) + failure chain |
-| 41 | ~65 min | End of Scenarios |
-| 44 | ~67 min | MVP Checklist + Quick Wins (compressed) |
-| 47 | ~70 min | 5 Questions + Anti-Patterns (compressed) + Closing + challenge question |
-| 49 | ~71 min | Q&A + End |
-
-## Word Count Estimate
-~10,500 spoken words | At 140 wpm = ~75 min (tight fit for 75-min slot; compress back third if running long)
-
----
-
-# Appendix: Humor, Irony & Anecdote Opportunities
-
-These are preserved from the original script with placement updated for the new slide order. Use as drop-in additions or improvisational springboards.
-
----
-
-### SLIDE 3 — 97% Had No Controls
-**After the 97% stat:**
-> "97% had no proper AI access controls. Which means if you're in a room of 100 companies that got breached, 97 of them basically left the front door open with a sign that said 'AI systems — come on in.' And somehow we're still surprised when things go wrong."
-
----
-
-### SLIDE 4 — Agent Containment Stats
-**After "60% cannot terminate a misbehaving agent":**
-> "60% have no kill switch. Let me rephrase that: they deployed an autonomous system that can access their data, call their APIs, and interact with their customers — and there's no off button. That's not cutting-edge technology. That's the opening scene of a movie where things go very wrong very fast."
-
----
-
-### SLIDE 11 — Layer 1: Identity & Access Control
-**After explaining AI agents need their own identity:**
-> "Most organizations give their AI agents the same credentials as the developer who deployed them. That's like giving the intern the CEO's badge because it was easier than getting them their own. It works — right up until it really, really doesn't."
-
----
-
-### SLIDE 15 — Layer 3: Prompt Injection
-**After explaining direct vs. indirect injection:**
-> "Prompt injection is the new SQL injection — except this time, the attack vector is natural language, and the defense is... also natural language. We're defending computers with English. If that doesn't keep you up at night, you haven't thought about it enough."
-
----
-
-### SLIDE 19 — Layer 4: Model Governance / Shadow AI
-**After mentioning shadow AI:**
-> "A developer finds a model on Hugging Face that works great in a notebook, deploys it behind an API on a Friday afternoon, and nobody knows it exists until a customer complaint surfaces three weeks later. We spent twenty years fighting shadow IT. Now we have shadow AI. Same problem, higher stakes, worse vibes."
-
----
-
-### SLIDE 23 — Layer 5: Audit Trails — 33% Have None
-**After "33% have no audit trails whatsoever":**
-> "33% have no audit trails. Zero record of what the AI did. That's like running a bank where nobody writes down the transactions. 'How much money is in the vault?' 'We... don't actually know. But the AI seems confident about it.'"
-
----
-
-### SLIDE 28 — Canary Deployments
-**After explaining canary phases:**
-> "5% of traffic, then 10%, then 25%, then full. That's how you deploy AI safely. What most organizations do instead is 0% on Tuesday, 100% on Wednesday, and 'oh no' on Thursday."
-
----
-
-### SLIDE 48 — Closing
-**Before the final call to action:**
-> "The fastest way to kill AI adoption is a breach. One data leak, one hallucination in a customer interaction, one compliance violation — and the whole program gets shut down. Security doesn't slow innovation. It's what keeps innovation alive."
