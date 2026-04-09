@@ -452,28 +452,34 @@ That's context engineering in practice. Let's look at the research evidence that
 
 Alright, so I've laid out the theory. I've shown you six pillars, practical techniques, before-and-after examples. The natural question is: does this actually work? Is there rigorous evidence that better context engineering leads to measurably better outcomes?
 
-The answer is: emphatically yes. But before I show you the research data, let me walk you through one real-world case that brings all six pillars together. This is the kind of thing I think makes the framework click.
-
-Consider a common scenario: a customer support agent — an AI chatbot handling product questions for a SaaS platform. The original setup is straightforward: a generic system prompt that says "You are a helpful customer support agent," a RAG pipeline that pulls from the entire documentation library, no memory management, no output structure, and no constraints. Basically, built in an afternoon.
-
-The failure mode? The agent hallucinated product features. A customer would ask "Can your platform do X?" and the agent would confidently say yes — even when the answer was no. It was also giving inconsistent answers to the same question depending on what retrieval noise landed in the context that day. The hallucination rate hit 23% and customer satisfaction scores were tanking.
-
-The first instinct was to upgrade to a bigger model. Sound familiar?
+The answer is: emphatically yes. But before I show you the research data, let me walk you through a representative scenario that brings all six pillars together. This is a composite — the kind of situation that's well-documented in industry reports and that many of you have probably encountered in some form.
 
 ---
 
-## SLIDE 34: Support Bot: The Six-Pillar Fix
+## SLIDE 34: The Naive Support Bot
+
+*[GESTURE at the "before" state on screen]*
+
+Picture a typical setup: an AI customer support chatbot for a SaaS product. Generic system prompt — "You are a helpful customer support agent." RAG pipeline that pulls from the entire documentation library with no filtering. No memory management, no output structure, no constraints. The kind of thing a team builds in an afternoon to check the "we have AI" box.
+
+The predictable failure mode? The agent hallucinates product features. A customer asks "Can your platform do X?" and the agent confidently says yes — even when the answer is no. It gives inconsistent answers to the same question depending on what retrieval noise happens to land in the context window that day. In scenarios like this, published case studies report hallucination rates in the 15 to 30 percent range, and customer satisfaction scores drop accordingly.
+
+The first instinct is almost always to upgrade to a bigger model. Sound familiar?
+
+---
+
+## SLIDE 35: Support Bot: The Six-Pillar Fix
 *[GESTURE across the six cards]*
 
-Here's how the fix broke down. They rewrote the system prompt with strict constraints, switched to focused retrieval (verified docs only with recency weighting), added session persistence, used XML formatting, and decomposed into a three-step pipeline: classify, retrieve, generate.
+Here's how the fix breaks down. Rewrite the system prompt with strict constraints, switch to focused retrieval — verified docs only with recency weighting — add session persistence, use XML formatting, and decompose into a three-step pipeline: classify, retrieve, generate.
 
 *[GESTURE at the result bar]*
 
-The result? Hallucination rate dropped from 23% to under 4%. Same model. Two weeks of work.
+The result in documented cases like this? Hallucination rates drop dramatically — from that 15-to-30 percent range down to low single digits. Same model. A couple of weeks of work.
 
 ---
 
-## SLIDE 35: ACE Framework Results
+## SLIDE 36: ACE Framework Results
 
 The ACE framework — Agentic Context Engineering — was developed at Stanford, SambaNova, and UC Berkeley, published October 2025.
 
@@ -483,10 +489,10 @@ Results: +10.6% improvement on agentic tasks. 86.9% latency reduction. Faster *a
 
 ---
 
-## SLIDE 36: Context Beats Model Upgrades
+## SLIDE 37: Context Beats Model Upgrades
 *[GESTURE at the two-column layout]*
 
-The ACE findings match practical experience. The support bot hallucination dropped from 23% to under 4% from restructured retrieval and constraints — not from model upgrade. Whether academic or production, well-engineered context delivers more improvement than model upgrades.
+The ACE findings match what practitioners report. In scenarios like our support bot example, hallucination rates drop from double digits to low single digits through restructured retrieval and constraints — not from model upgrades. Whether academic or production, well-engineered context delivers more improvement than model upgrades.
 
 *[PAUSE]*
 
@@ -494,7 +500,7 @@ That pattern — fix the context first, measure what changes — is the single m
 
 ---
 
-## SLIDE 37: When the Model Actually IS the Problem
+## SLIDE 38: When the Model Actually IS the Problem
 
 But I'd be doing you a disservice if I stopped there. Context engineering has real limits.
 
@@ -508,7 +514,7 @@ Here's the rule of thumb: fix context first, measure what changes, then decide. 
 
 ---
 
-## SLIDE 38: When to Use Each Approach
+## SLIDE 39: When to Use Each Approach
 
 So when should you use each approach? Context engineering, fine-tuning, or scaling up to a bigger model?
 
@@ -524,7 +530,7 @@ Let me walk you through the decision tree — it's on the next slide.
 
 ---
 
-## SLIDE 39: The Decision Tree
+## SLIDE 40: The Decision Tree
 
 *[GESTURE at the decision flow]*
 
@@ -538,7 +544,7 @@ One thing to note: hybrid strategies are common in practice. Many production sys
 
 ---
 
-## SLIDE 40: It Takes a Village
+## SLIDE 41: It Takes a Village
 
 One more thing before we move to the playbook. Context engineering isn't a solo sport. It's cross-disciplinary by nature.
 
@@ -546,14 +552,14 @@ You need data engineers for retrieval pipelines and chunking. You need domain ex
 
 ---
 
-## SLIDE 41: Section Divider: Monday Morning Playbook
+## SLIDE 42: Section Divider: Monday Morning Playbook
 *[PAUSE]*
 
 Okay, I've given you the theory, the pillars, and the evidence. Now let's get practical. What can you actually do with this? I've distilled everything down into seven items for your Monday morning playbook. Things you can start doing this week.
 
 ---
 
-## SLIDE 42: Playbook Items 1-4
+## SLIDE 43: Playbook Items 1-4
 
 **Item 1: Audit your system prompt.** Is it specific to your domain and task, or generic? Read it aloud — if it could apply to any company, it's too generic.
 
@@ -561,7 +567,7 @@ Okay, I've given you the theory, the pillars, and the evidence. Now let's get pr
 
 ---
 
-## SLIDE 43: Playbook: Structure & Memory
+## SLIDE 44: Playbook: Structure & Memory
 *[GESTURE at the two cards]*
 
 **Item 3: Map your information architecture.** Where does critical information live — working context, session, long-term memory? Draw it out. You'll find it's either duplicated or missing.
@@ -570,7 +576,7 @@ Okay, I've given you the theory, the pillars, and the evidence. Now let's get pr
 
 ---
 
-## SLIDE 44: Playbook Items 5-7
+## SLIDE 45: Playbook Items 5-7
 
 **Item 5: Compress thoughtfully.** Measure quality — prune aggressively but verify signal remains.
 
@@ -580,7 +586,7 @@ Okay, I've given you the theory, the pillars, and the evidence. Now let's get pr
 
 ---
 
-## SLIDE 45: How Do You Know It's Working?
+## SLIDE 46: How Do You Know It's Working?
 
 Now, how do you actually measure whether your context engineering efforts are paying off? Here are eight key metrics, organized in two categories.
 
@@ -608,7 +614,7 @@ Before context fixes: irrelevant docs, generic answer, 8 seconds. After: relevan
 
 ---
 
-## SLIDE 46: Your Five-Step Eval Recipe
+## SLIDE 47: Your Five-Step Eval Recipe
 *[GESTURE at the five steps]*
 
 Here's a practical evaluation recipe you can start tomorrow.
@@ -621,7 +627,7 @@ This gives you a clear, attributable picture of what's working and what's not. N
 
 ---
 
-## SLIDE 47: The Road Ahead
+## SLIDE 48: The Road Ahead
 
 Let me leave you with where this is heading.
 
@@ -633,7 +639,7 @@ And here's my personal prediction — this is opinion, not a sourced forecast: b
 
 ---
 
-## SLIDE 48: Reveal Part 1 - The Viral Post Unpacked
+## SLIDE 49: Reveal Part 1 - The Viral Post Unpacked
 *[GESTURE back to the opening]*
 
 So let me bring it full circle, and answer the question I posed at the very beginning.
@@ -656,7 +662,7 @@ The model didn't magically know what to build. The context was so well-engineere
 
 ---
 
-## SLIDE 49: Reveal Part 2 - The Real Insight
+## SLIDE 50: Reveal Part 2 - The Real Insight
 *[GESTURE at the big reveal]*
 
 And this is the real insight I want you to carry with you.
@@ -677,7 +683,7 @@ It was about context engineering.
 
 ---
 
-## SLIDE 50: Now the AI Knows What You Mean
+## SLIDE 51: Now the AI Knows What You Mean
 *[SLOW DOWN — this is the closing moment]*
 
 So let me bring it all together.
@@ -700,7 +706,7 @@ Thank you.
 
 ---
 
-## SLIDE 51: Questions
+## SLIDE 52: Questions
 *[OPEN FOR Q&A]*
 
 I'm ready for questions. What do you want to dig into?
@@ -748,7 +754,7 @@ I'm ready for questions. What do you want to dig into?
 
 <details>
 <summary>How much time does context engineering actually take?</summary>
-<div class="qa-answer">The system prompt rewrite example in the talk took 20 minutes and caught a race condition the old prompt missed. Structuring prompts with XML tags takes 30 seconds per prompt. The support bot case study was two weeks of work for a hallucination drop from 23% to under 4%. The ROI is typically very fast because you're not training models or building new infrastructure — you're reorganizing information you already have.</div>
+<div class="qa-answer">The system prompt rewrite example in the talk took 20 minutes and caught a race condition the old prompt missed. Structuring prompts with XML tags takes 30 seconds per prompt. In documented cases similar to our support bot scenario, teams report a couple of weeks of work to bring hallucination rates from double digits down to low single digits. The ROI is typically very fast because you're not training models or building new infrastructure — you're reorganizing information you already have.</div>
 </details>
 
 <details>
@@ -838,7 +844,7 @@ I'm ready for questions. What do you want to dig into?
 
 ---
 
-## SLIDE 52: CLOSING SLIDE
+## SLIDE 53: CLOSING SLIDE
 *[Hold this briefly]*
 
 Thank you all for your time and attention today. My contact info is on screen — training@getskillsnow.com is the best way to reach me. And you can find more of my work at techskillstransformations.com and getskillsnow.com. If you're working on context engineering challenges at your organization, I'd genuinely love to hear about it.
