@@ -823,19 +823,8 @@ I'd love to take questions. We've got some time — who wants to go first?
 
 *[Take questions]*
 
----
 
-
-## SLIDE 58: CLOSING SLIDE
-
-Thank you so much, everyone. My contact info is up here — training@getskillsnow.com, or find me at techskillstransformations.com. If you want to go deeper on any of these layers, I'd love to connect.
-
-Thanks for spending this time with me. Stay secure out there!
-
-
-## SLIDE 59: Q&A REFERENCE
-
-*Expand any question below to see the suggested response.*
+*Expand any question below for a suggested response.*
 
 <div class="qa-index">
 
@@ -974,3 +963,12 @@ Thanks for spending this time with me. Stay secure out there!
 <hr>
 
 </div>
+
+---
+
+
+## SLIDE 58: CLOSING SLIDE
+
+Thank you so much, everyone. My contact info is up here — training@getskillsnow.com, or find me at techskillstransformations.com. If you want to go deeper on any of these layers, I'd love to connect.
+
+Thanks for spending this time with me. Stay secure out there!

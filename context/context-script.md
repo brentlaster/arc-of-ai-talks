@@ -705,44 +705,8 @@ Thank you.
 
 I'm ready for questions. What do you want to dig into?
 
----
 
-## SLIDE 52: CLOSING SLIDE
-*[Hold this briefly]*
-
-Thank you all for your time and attention today. My contact info is on screen — training@getskillsnow.com is the best way to reach me. And you can find more of my work at techskillstransformations.com and getskillsnow.com. If you're working on context engineering challenges at your organization, I'd genuinely love to hear about it.
-
-Remember: better context often beats bigger models. Audit, prune, structure, measure. Start this week.
-
----
-
-# Timing & Pacing Guide
-
-| 26-28 | ~5 min | Pillar 5: Constraints, context smells, diagnosis |
-| 29-31 | ~5 min | Pillar 6: Decomposition, strategies, multi-agent |
-| 32-33 | ~5 min | Does it work? Support bot case study |
-| 34 | ~2 min | Evidence: ACE framework |
-| 35-39 | ~4.5 min | Context beats model upgrades, boundary conditions, decision framework, collaboration |
-| 40-43 | ~5 min | Monday morning playbook (7 items) |
-| 44-45 | ~4 min | Metrics, measurement, eval recipe |
-| 46 | ~3 min | Road ahead |
-| 47-48 | ~2 min | Reveal Part 1 & 2 — viral post callback |
-| 49-51 | ~3 min | Closing, questions, thank you |
-| **Total** | **~65 min** | **Core spoken ~50 min + ~10 min pauses, polls, transitions; ~5 min buffer** |
-
----
-
-# Key Changes Made in v11
-
-
-
----
-
-
-
-## SLIDE 53: Q&A REFERENCE
-
-*Expand any question below to see the suggested response.*
+*Expand any question below for a suggested response.*
 
 <div class="qa-index">
 
@@ -871,3 +835,36 @@ Remember: better context often beats bigger models. Audit, prune, structure, mea
 <hr>
 
 </div>
+
+---
+
+## SLIDE 52: CLOSING SLIDE
+*[Hold this briefly]*
+
+Thank you all for your time and attention today. My contact info is on screen — training@getskillsnow.com is the best way to reach me. And you can find more of my work at techskillstransformations.com and getskillsnow.com. If you're working on context engineering challenges at your organization, I'd genuinely love to hear about it.
+
+Remember: better context often beats bigger models. Audit, prune, structure, measure. Start this week.
+
+---
+
+# Timing & Pacing Guide
+
+| 26-28 | ~5 min | Pillar 5: Constraints, context smells, diagnosis |
+| 29-31 | ~5 min | Pillar 6: Decomposition, strategies, multi-agent |
+| 32-33 | ~5 min | Does it work? Support bot case study |
+| 34 | ~2 min | Evidence: ACE framework |
+| 35-39 | ~4.5 min | Context beats model upgrades, boundary conditions, decision framework, collaboration |
+| 40-43 | ~5 min | Monday morning playbook (7 items) |
+| 44-45 | ~4 min | Metrics, measurement, eval recipe |
+| 46 | ~3 min | Road ahead |
+| 47-48 | ~2 min | Reveal Part 1 & 2 — viral post callback |
+| 49-51 | ~3 min | Closing, questions, thank you |
+| **Total** | **~65 min** | **Core spoken ~50 min + ~10 min pauses, polls, transitions; ~5 min buffer** |
+
+---
+
+# Key Changes Made in v11
+
+
+
+---

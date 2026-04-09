@@ -579,57 +579,8 @@ I'd love to hear what's on your mind. What resonated? What didn't? What's the bi
 
 [Q&A: ~10 minutes]
 
----
 
-
-## SLIDE 48: CLOSING SLIDE
-
-Thank you so much. If you want to stay in touch, my contact info is on the slide. I'd love to hear how the playbook works for your team.
-
-The goal isn't more AI. The goal is less friction. Take that with you.
-
-Thank you. Enjoy the rest of the conference.
-
-[TIMING: 50:00 + Q&A = ~60:00]
-
----
-
-## TIMING CHECKPOINTS
-
-| Section | Slides | Cumulative Time |
-|---------|--------|----------------|
-| AI bloopers + opening | 1-4 | 3:30 |
-| About me & framing | 5-7 | 7:15 |
-| Illustrative scenario | 8-9 | 7:45 |
-| Barriers intro | 10-11 | 8:30 |
-| Barrier 1: Tool sprawl | 12-14 | 12:45 |
-| Barrier 2: Workflow fit | 15-16 | 16:30 |
-| Barrier 3: Promise vs reality | 17-19 | 19:45 |
-| Barrier 4: Brain fry | 20-23 | 23:30 |
-| Midpoint interaction | 24 | 24:30 |
-| Barrier 5: Pressure | 25 | 25:00 |
-| Shifts intro | 26-28 | 26:30 |
-| Shift 1: Right jobs | 29-31 | 30:15 |
-| Shift 2: Mental models | 32-33 | 33:00 |
-| Shift 3: Context-first | 34-36 | 37:45 |
-| Shift 4: Workflow pairing | 37-38 | 41:00 |
-| Shift 5: Guardrails + training | 39-40 | 43:45 |
-| When AI shines + vibe coding | 41-42 | 47:30 |
-| Leadership + playbook | 43-44 | 49:30 |
-| Close + challenge | 45 | 50:45 |
-| Q&A | 46 | ~59:00 |
-| Ending | 47 | ~60:00 |
-
----
-
-## WORD COUNT: ~7,600 spoken words | ~51 min content + ~9 min Q&A = 60 min
-
-NOTE ON TIMING: At a natural speaking pace with audience pauses, show-of-hands moments, and laughter, expect content delivery closer to 54-56 minutes before Q&A. Budget 4-6 minutes for Q&A rather than 10 if the talk runs long in rehearsal. The vibe coding section is self-contained — if you're running hot in rehearsal, it's the easiest section to tighten or cut.
-
-
-## SLIDE 49: Q&A REFERENCE
-
-*Expand any question below to see the suggested response.*
+*Expand any question below for a suggested response.*
 
 <div class="qa-index">
 
@@ -763,3 +714,50 @@ NOTE ON TIMING: At a natural speaking pace with audience pauses, show-of-hands m
 <hr>
 
 </div>
+
+---
+
+
+## SLIDE 48: CLOSING SLIDE
+
+Thank you so much. If you want to stay in touch, my contact info is on the slide. I'd love to hear how the playbook works for your team.
+
+The goal isn't more AI. The goal is less friction. Take that with you.
+
+Thank you. Enjoy the rest of the conference.
+
+[TIMING: 50:00 + Q&A = ~60:00]
+
+---
+
+## TIMING CHECKPOINTS
+
+| Section | Slides | Cumulative Time |
+|---------|--------|----------------|
+| AI bloopers + opening | 1-4 | 3:30 |
+| About me & framing | 5-7 | 7:15 |
+| Illustrative scenario | 8-9 | 7:45 |
+| Barriers intro | 10-11 | 8:30 |
+| Barrier 1: Tool sprawl | 12-14 | 12:45 |
+| Barrier 2: Workflow fit | 15-16 | 16:30 |
+| Barrier 3: Promise vs reality | 17-19 | 19:45 |
+| Barrier 4: Brain fry | 20-23 | 23:30 |
+| Midpoint interaction | 24 | 24:30 |
+| Barrier 5: Pressure | 25 | 25:00 |
+| Shifts intro | 26-28 | 26:30 |
+| Shift 1: Right jobs | 29-31 | 30:15 |
+| Shift 2: Mental models | 32-33 | 33:00 |
+| Shift 3: Context-first | 34-36 | 37:45 |
+| Shift 4: Workflow pairing | 37-38 | 41:00 |
+| Shift 5: Guardrails + training | 39-40 | 43:45 |
+| When AI shines + vibe coding | 41-42 | 47:30 |
+| Leadership + playbook | 43-44 | 49:30 |
+| Close + challenge | 45 | 50:45 |
+| Q&A | 46 | ~59:00 |
+| Ending | 47 | ~60:00 |
+
+---
+
+## WORD COUNT: ~7,600 spoken words | ~51 min content + ~9 min Q&A = 60 min
+
+NOTE ON TIMING: At a natural speaking pace with audience pauses, show-of-hands moments, and laughter, expect content delivery closer to 54-56 minutes before Q&A. Budget 4-6 minutes for Q&A rather than 10 if the talk runs long in rehearsal. The vibe coding section is self-contained — if you're running hot in rehearsal, it's the easiest section to tighten or cut.
