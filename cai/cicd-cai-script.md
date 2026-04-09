@@ -59,7 +59,7 @@ Let me share what teams on the leading edge are seeing. And I want to be upfront
 
 Reported test-cycle reductions up to 80% in specific contexts — from the MDPI systematic mapping study. Actual gains vary widely by suite architecture and change-selection quality. Even a 30% reduction on a 45-minute test suite gives your team back 15 minutes per PR.
 
-21% more tasks completed with AI coding assistants — DORA 2025. But 98% more PRs were merged, yet organizational throughput didn't spike proportionally. The bottleneck moved from code production to code delivery. That's exactly the gap CAI addresses.
+21% more tasks completed with AI coding assistants — DORA 2025. But 98% more PRs were merged, yet organizational throughput didn't spike proportionally. More code is flowing in, but the pipeline isn't keeping up — which is why the delivery layer needs its own intelligence.
 
 25 to 40% faster mean time to recovery — case study range from enterprise AIOps deployments. Even the low end translates to significant savings.
 
