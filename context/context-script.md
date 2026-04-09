@@ -2,7 +2,7 @@
 
 **Duration:** ~65 minutes (raw spoken ~50 min + ~10 min pauses, polls, transitions + ~5 min buffer)
 **Target pace:** ~140 words/min | **Spoken word count:** ~7,000 words
-**v11 Changes:** Added NEW Slide 4 ("This isn't funny" hook with viral post setup), NEW Slide 23 (Context Rot), and NEW Slides 47-48 (Reveal Part 1 & 2 callback). Renumbered slides 4-46 (old) → 5-51 (new). Updated timing guide, Key Changes section, and Optional Expansion Points with corrected slide numbers. Strengthened engineering framing at Slide 9 and ACE caveat at Slide 32.
+**v12 Changes:** Removed Slide 24 (Context Rot) entirely. Condensed Slides 35-36, 43-45, and 46. Applied light trims to Slides 17, 20, 28, 31, 37. Renumbered slides 25+ to fill gap. Cut ~1,000 words total to meet 50-minute spoken content target.
 
 ---
 
@@ -205,7 +205,7 @@ Here's a common failure pattern. A documentation agent gives confidently wrong a
 
 Three principles that fix most retrieval problems.
 
-First — quality in equals quality out. The bottleneck in most RAG systems is not the embedding model or the vector database. It's the quality of what goes in. If you're retrieving irrelevant documents, the model is wasting tokens parsing noise.
+First — quality in equals quality out. If you're retrieving irrelevant documents, the model wastes tokens parsing noise.
 
 Second — recency matters. Remember the deprecated docs example from a moment ago? That pattern is everywhere. Stale documents in the index are one of the most common retrieval failures. A recency filter and "last-verified" metadata tag are straightforward fixes that can eliminate an entire class of errors.
 
@@ -225,7 +225,27 @@ Put simply: a context engine is not just retrieval — it's the system that sele
 
 ---
 
-## SLIDE 19: The Retrieval Evolution (Practitioner Mental Model)
+## SLIDE 19: Inside a Context Engine (NEW)
+
+*[GESTURE at the 5-stage pipeline diagram]*
+
+So what does a context engine actually look like under the hood? Let me walk you through it — five stages, left to right.
+
+Stage one: **Query Analysis**. Before you retrieve anything, you analyze and expand the query. "Fix the login bug" becomes a classified intent — authentication issue, production severity — with expanded search terms. This is Pillar 6, Decomposition, in action.
+
+Stage two: **Multi-Source Retrieval**. Now you're pulling from multiple sources in parallel — embedding similarity against your knowledge base, but also knowledge graphs, live APIs, memory stores. Not just "find similar documents." This is Pillar 2.
+
+Stage three: **Rerank and Verify**. This is where most naive RAG falls down. You score the retrieved results for actual relevance to the expanded query, check whether they're current, and filter out noise. A document about connection pooling might be semantically similar to an auth token error, but it's irrelevant. This stage catches that. Pillar 5 — Constraints.
+
+Stage four: **Compress**. You've got verified, relevant context now, but maybe too much of it. Summarize, deduplicate, trim to your token budget. Pillar 3 — Memory management.
+
+And stage five: it all flows into **Structured Context** that gets sent to the LLM — your system prompt, XML-tagged context, constraints, formatted output spec. Pillars 1 and 4.
+
+Look at that bottom bar — every stage maps back to one or more of the six pillars we just introduced. The context engine is what happens when you orchestrate all six pillars into a single automated pipeline. That's the key insight: it's not one clever trick. It's systematic engineering.
+
+---
+
+## SLIDE 20: The Retrieval Evolution (Practitioner Mental Model)
 
 *[GESTURE at the timeline]*
 
@@ -239,9 +259,9 @@ If your retrieval system is still doing basic similarity search while the state 
 
 ---
 
-## SLIDE 20: Pillar 3: Memory
+## SLIDE 21: Pillar 3: Memory
 
-Pillar three — memory. And this is where things get really fascinating, because there's a fundamental, well-documented problem with how language models handle long contexts.
+Pillar three — memory. And here's a fundamental problem with how language models handle long contexts.
 
 *[GESTURE at the diagram]*
 
@@ -253,7 +273,7 @@ Why does this happen? It's an architectural consequence. Transformer models have
 
 ---
 
-## SLIDE 21: Position Your Context Wisely
+## SLIDE 22: Position Your Context Wisely
 *[GESTURE at the position diagram]*
 
 So what do you do with the lost-in-the-middle finding? Three practical actions.
@@ -266,7 +286,7 @@ Some teams report meaningful token savings while preserving the information that
 
 ---
 
-## SLIDE 22: Context Layers Architecture
+## SLIDE 23: Context Layers Architecture
 
 Here's how to think about memory architecturally. I find this four-layer model really useful.
 
@@ -279,28 +299,6 @@ Then: memory. Long-lived, searchable knowledge that outlives any single session.
 And finally: artifacts. Large binary or textual data — documents, images, code repositories. These are referenced but not necessarily sitting in the context window. They're available when needed.
 
 Let me make this concrete with our support bot. Working context: the current customer question plus the system prompt and retrieved docs. Session: the full conversation history so this customer doesn't have to repeat themselves. Memory: knowledge from thousands of prior support conversations — "customers who ask about X usually mean Y." Artifacts: the full product documentation library, queried on demand. Each layer has a different lifetime and a different retrieval strategy. The art is in knowing what goes where.
-
----
-
-## SLIDE 23: Context Rot
-
-*[GESTURE at the degradation diagram]*
-
-There's one more memory-related concept I want you to internalize before we move to formatting: context rot. This is the progressive degradation of context quality as conversations grow longer.
-
-*[PAUSE]*
-
-Picture this. You start a conversation with an AI — early turns, clean. The model has the system prompt, your initial question, maybe some retrieved docs. High accuracy, focused answers. That's Turns 1-5.
-
-Then the conversation grows. By Turns 10-20, you've got accumulated history. Earlier exchanges are still in context. Some of them are relevant to where you are now. Some aren't. Noise is building. Model drift starts — answers become less precise because the model has more contradictory information to parse. Accuracy declines.
-
-By Turns 30 and beyond? Full context rot. Conversations deteriorate. Hallucinations appear. The model's generating answers based on information overload, contradictions, and stale references. You're seeing the same phenomenon: a longer context isn't always better. Sometimes it's actively worse.
-
-Why does this happen? Information overload — contradictions pile up. Stale references — early context becomes outdated by later messages. Lost focus — the model's attention drifts across too many conversational threads.
-
-How do you mitigate it? Context pruning — remove irrelevant old messages. Summarization — condense conversation history into a digest. Session resets — start fresh when context gets too long. Sliding windows — keep only the last N relevant turns. These are practical moves that happen in production systems constantly.
-
-If you've ever noticed an AI conversation getting worse the longer it goes, you've experienced context rot firsthand. It's not a model problem — it's a memory architecture problem. And it's fixable.
 
 ---
 
@@ -350,7 +348,7 @@ Most teams spend 90% of their prompt engineering energy on instructions — what
 
 ## SLIDE 27: Context Smells: Red Flags to Watch For
 
-Before we move to the last pillar, I want to show you six bad patterns — what I call "context smells." These are warning signs that your context engineering is off the rails. And if you see them, something needs fixing.
+Before the last pillar, here are six bad patterns — "context smells" that signal your context engineering needs fixing.
 
 Quick show of hands — which of these is your biggest problem right now: prompt sprawl, retrieval noise, or memory overload? *[pause]* Yeah, I see a lot of hands for that one. You're not alone.
 
@@ -401,11 +399,7 @@ The key idea here is on this slide: instead of cramming everything into one mass
 
 ## SLIDE 30: Four Context Strategies
 
-Here are four high-level strategies for managing context, and they directly support that decomposition principle.
-
-Write — persist important information outside the context window for later retrieval. Don't rely on in-context memory for everything. Select — retrieve only what's relevant. Resist the urge to dump everything in. Compress — summarize and trim. Prune aggressively, but measure quality loss as you compress. And Isolate — use multi-agent systems to separate concerns. Give each agent a focused context for its specific task.
-
-These strategies aren't mutually exclusive — the best systems combine all four. The question is always: which strategy addresses your biggest bottleneck right now?
+Four strategies for managing context: Write — persist data outside the context window. Select — retrieve only what's relevant. Compress — summarize and prune (but measure quality loss). Isolate — use multi-agent systems to separate concerns. The best systems combine all four. Ask: which strategy addresses your biggest bottleneck?
 
 Let me make decomposition concrete. Imagine a code review agent. Monolithic approach: you dump the entire pull request, the style guide, the test results, the ticket description, and the deployment config into one prompt and say "review this." The model produces a vague, unfocused review because the signal-to-noise ratio is terrible.
 
@@ -425,7 +419,35 @@ Same principle, applied to AI agents. One caveat: this is useful when specializa
 
 ---
 
-## SLIDE 32: Section Divider: Does It Actually Work?
+## SLIDE 32: [LIVE DEMO] Context Engine in Action (NEW)
+
+*[SWITCH to terminal — run demo-context-engine.py]*
+
+Alright — I've shown you six pillars, retrieval principles, the context engine architecture. Now let's see it work. Live, with a real model running locally.
+
+I have a script that asks the exact same question three times — "Fix the login bug" — but with three different levels of context. Same model each time. Let's watch what happens.
+
+*[Run Round 1 — Naive prompt]*
+
+Round 1: vague prompt, no context. Watch the response — generic, could apply to any codebase. The model is guessing because we gave it nothing to work with.
+
+*[Hit Enter for Round 2 — Structured context]*
+
+Round 2: same question, but now we send a system prompt, error logs, the actual code, and user state — all in structured XML. Notice the bordered box showing exactly what we're sending. Watch the difference in the response.
+
+*[Hit Enter for Round 3 — Full context engine]*
+
+Round 3: full context engine. Embeddings, semantic retrieval, ranking, all six pillars assembled. Look at that pillar summary table — every one of the six pillars we just discussed is active. And look at the response quality.
+
+*[Hit Enter for comparison table]*
+
+Same model. Same question. Three rounds. The quality difference isn't subtle — it's dramatic. And the only variable was context.
+
+That's context engineering in practice. Let's look at the research evidence that backs this up.
+
+---
+
+## SLIDE 33: Section Divider: Does It Actually Work?
 *[PAUSE — let the audience reset]*
 
 Alright, so I've laid out the theory. I've shown you six pillars, practical techniques, before-and-after examples. The natural question is: does this actually work? Is there rigorous evidence that better context engineering leads to measurably better outcomes?
@@ -440,41 +462,31 @@ The first instinct was to upgrade to a bigger model. Sound familiar?
 
 ---
 
-## SLIDE 33: Support Bot: The Six-Pillar Fix
+## SLIDE 34: Support Bot: The Six-Pillar Fix
 *[GESTURE across the six cards]*
 
-Here's how the fix broke down, pillar by pillar. Instructions — they rewrote the system prompt with a specific role and an explicit constraint: "If the answer is not in the retrieved docs, say you don't know and escalate."
-
-Retrieval — they switched to a focused pipeline pulling only from verified, current product docs, with recency weighting. Memory — session persistence so customers don't repeat themselves. Formatting — XML tags separating capabilities, limitations, and pricing. Constraints — never speculate, never promise features not in docs, escalate billing to humans. And decomposition — a three-step pipeline: classify the question, retrieve docs for that type, then generate.
+Here's how the fix broke down. They rewrote the system prompt with strict constraints, switched to focused retrieval (verified docs only with recency weighting), added session persistence, used XML formatting, and decomposed into a three-step pipeline: classify, retrieve, generate.
 
 *[GESTURE at the result bar]*
 
-The result? Hallucination rate dropped from 23% to under 4%. Same model. Two weeks of work. That's what systematic context engineering looks like.
+The result? Hallucination rate dropped from 23% to under 4%. Same model. Two weeks of work.
 
 ---
 
-## SLIDE 34: ACE Framework Results
+## SLIDE 35: ACE Framework Results
 
-This is the research that made me sit up straight in my chair when I first read it. The ACE framework — Agentic Context Engineering — developed by a team at Stanford, SambaNova, and UC Berkeley. Published in October 2025.
+The ACE framework — Agentic Context Engineering — was developed at Stanford, SambaNova, and UC Berkeley, published October 2025.
 
 *[GESTURE at the big number]*
 
-Plus 10.6 percent improvement on benchmarked agentic tasks. Not from a bigger model. Not from expensive fine-tuning. From engineering the context. That's the entire intervention — better context management.
-
-And look at this secondary stat: 86.9% average latency reduction. Faster AND better. In AI, those two things almost never go together. Usually, better quality means more compute. Here, better context meant *less* compute because you're not wasting tokens on irrelevant information.
-
-What ACE showed is that, in that specific benchmarked setup, context-engineered systems matched GPT-4.1-based agents without any model fine-tuning. It treats contexts as evolving playbooks that accumulate, refine, and organize strategies through a cycle of generation, reflection, and curation.
-
-To be clear — this is strong evidence for the direction of the field, not a guarantee that context engineering replaces model choice in every scenario. It's one study, not the final word — but it strongly reinforces the pattern practitioners are already seeing.
+Results: +10.6% improvement on agentic tasks. 86.9% latency reduction. Faster *and* better — usually those don't go together. The entire intervention was better context management. No model fine-tuning needed. This is strong evidence that context engineering can match GPT-4.1-based agents. To be clear — it's one study, not the final word — but it strongly reinforces what practitioners are seeing.
 
 ---
 
-## SLIDE 35: Context Beats Model Upgrades
+## SLIDE 36: Context Beats Model Upgrades
 *[GESTURE at the two-column layout]*
 
-And here's how the ACE findings map to practical experience. Remember the support bot case from a few slides back? The hallucination rate dropped from 23% to under 4% — not from a model upgrade, but from restructured retrieval and one added constraint. That's the same pattern ACE demonstrated at the benchmark level.
-
-The consistency is the point. Whether it's academic benchmarks or production deployments, the pattern holds: well-engineered context often delivers more improvement than model upgrades.
+The ACE findings match practical experience. The support bot hallucination dropped from 23% to under 4% from restructured retrieval and constraints — not from model upgrade. Whether academic or production, well-engineered context delivers more improvement than model upgrades.
 
 *[PAUSE]*
 
@@ -482,7 +494,7 @@ That pattern — fix the context first, measure what changes — is the single m
 
 ---
 
-## SLIDE 36: When the Model Actually IS the Problem
+## SLIDE 37: When the Model Actually IS the Problem
 
 But I'd be doing you a disservice if I stopped there. Context engineering has real limits.
 
@@ -496,7 +508,7 @@ Here's the rule of thumb: fix context first, measure what changes, then decide. 
 
 ---
 
-## SLIDE 37: When to Use Each Approach
+## SLIDE 38: When to Use Each Approach
 
 So when should you use each approach? Context engineering, fine-tuning, or scaling up to a bigger model?
 
@@ -512,7 +524,7 @@ Let me walk you through the decision tree — it's on the next slide.
 
 ---
 
-## SLIDE 38: The Decision Tree
+## SLIDE 39: The Decision Tree
 
 *[GESTURE at the decision flow]*
 
@@ -526,7 +538,7 @@ One thing to note: hybrid strategies are common in practice. Many production sys
 
 ---
 
-## SLIDE 39: It Takes a Village
+## SLIDE 40: It Takes a Village
 
 One more thing before we move to the playbook. Context engineering isn't a solo sport. It's cross-disciplinary by nature.
 
@@ -534,47 +546,41 @@ You need data engineers for retrieval pipelines and chunking. You need domain ex
 
 ---
 
-## SLIDE 40: Section Divider: Monday Morning Playbook
+## SLIDE 41: Section Divider: Monday Morning Playbook
 *[PAUSE]*
 
 Okay, I've given you the theory, the pillars, and the evidence. Now let's get practical. What can you actually do with this? I've distilled everything down into seven items for your Monday morning playbook. Things you can start doing this week.
 
 ---
 
-## SLIDE 41: Playbook Items 1-4
+## SLIDE 42: Playbook Items 1-4
 
-**Item 1: Audit your system prompt.** That's Pillar 1 — Instructions. Is it specific to your domain and task? Or is it generic? If you're using "You are a helpful assistant," you're leaving value on the table. Write a system prompt that's actually specific to what you need. Here's a quick test: read your system prompt out loud. If it could apply to any company in any industry, it's too generic.
+**Item 1: Audit your system prompt.** Is it specific to your domain and task, or generic? Read it aloud — if it could apply to any company, it's too generic.
 
-**Item 2: Check your retrieval relevance.** That's Pillar 2 — Retrieval. Take 20 queries you've actually seen in production. Look at the documents you're retrieving for each one. Are they relevant? Or are they noise? If more than 10% are irrelevant, you have a retrieval problem that dwarfs any model problem. This is a one-afternoon exercise that will tell you more about your system's failure modes than any model benchmark.
+**Item 2: Check your retrieval relevance.** Sample 20 production queries. Are the retrieved docs relevant? If more than 10% are noise, you have a retrieval problem that dwarfs any model issue.
 
 ---
 
-## SLIDE 42: Playbook: Structure & Memory
+## SLIDE 43: Playbook: Structure & Memory
 *[GESTURE at the two cards]*
 
-Items 3 and 4 — the two most commonly overlooked by teams.
+**Item 3: Map your information architecture.** Where does critical information live — working context, session, long-term memory? Draw it out. You'll find it's either duplicated or missing.
 
-Item 3: map your information architecture. That's Pillar 3 — Memory. Where does critical information live? Working context? Session? Long-term memory? Draw it on a whiteboard. You'll probably find that important information is either duplicated in three places or missing from all of them.
-
-Item 4: structure your most common prompts. That's Pillar 4 — Formatting. Take your five most frequent tasks. Use XML, JSON, or markdown headers. This takes 30 seconds per prompt and can cut error rates dramatically.
-
-These two items together take less than a day and often produce the most surprising results.
+**Item 4: Structure your common prompts.** Use XML, JSON, or markdown headers. Takes 30 seconds per prompt. Often produces surprising results.
 
 ---
 
-## SLIDE 43: Playbook Items 5-7
+## SLIDE 44: Playbook Items 5-7
 
-**Item 5: Compress thoughtfully.** That's Pillar 3 again — Memory. Memory compression can meaningfully reduce token usage, but measure quality to make sure you're not losing important information. The goal isn't minimum tokens — it's maximum signal per token. Prune what doesn't contribute, but verify that what remains still gives the model what it needs.
+**Item 5: Compress thoughtfully.** Measure quality — prune aggressively but verify signal remains.
 
-**Item 6: Decompose your most complex task.** That's Pillar 6 — Decomposition. Take one high-stakes task in your system. Instead of doing it in one massive prompt, decompose it into steps. Each step gets the context it actually needs. See what improves. According to the ACE research and consistent practitioner reports, decomposition can improve task accuracy meaningfully — often on the order of 15-25% on complex workflows — just by reducing context noise at each step. Your results will depend on the complexity of the task and the quality of your current context.
+**Item 6: Decompose your most complex task.** Break it into steps. Each step gets focused context. Decomposition typically improves accuracy by 15-25% on complex workflows by reducing context noise.
 
-**Item 7: Measure context quality.** This one cuts across all the pillars. Before you start optimizing context, measure your current accuracy, hallucination rate, and latency. You can't know if your changes worked if you don't know where you started. Pick 20 representative tasks, run them through your system, and score them. That's your baseline. Everything else is measured against it.
-
-These seven items will keep you busy for a month. And I promise you — you'll find major opportunities in at least three of them.
+**Item 7: Measure context quality.** Before optimizing, establish your baseline: accuracy, hallucination rate, latency on 20 representative tasks.
 
 ---
 
-## SLIDE 44: How Do You Know It's Working?
+## SLIDE 45: How Do You Know It's Working?
 
 Now, how do you actually measure whether your context engineering efforts are paying off? Here are eight key metrics, organized in two categories.
 
@@ -596,15 +602,13 @@ Now, how do you actually measure whether your context engineering efforts are pa
 - **Redundancy** — how much duplicate information is in there?
 - **Latency** — how fast is context retrieval and processing?
 
-Here's what I want you to notice: teams measure output quality all the time. But they rarely measure context health. And the two are deeply connected. If your retrieval precision is poor, your accuracy will follow. If you have high redundancy, your latency suffers. Context quality drives output quality. Start measuring both.
+Teams measure output quality constantly but rarely measure context health. Yet the two are deeply connected: poor retrieval precision → poor accuracy; high redundancy → poor latency. Context quality drives output quality.
 
-Think about our login bug one more time. Before context fixes: the system pulled in irrelevant docs, gave a generic answer, took 8 seconds. After: relevant error logs, targeted fix, 3 seconds. That's what these metrics capture — the before and after of real context work.
-
-To make this concrete — a production case study reported task success rates improving from 58% to 76%, hallucination rates dropping from 18% to 7%, and average latency cut in half, all from context restructuring alone. These are representative numbers, not a controlled study, but the pattern is consistent with what multiple teams and the ACE research report.
+Before context fixes: irrelevant docs, generic answer, 8 seconds. After: relevant error logs, targeted fix, 3 seconds. Production data shows success rates improving from 58% to 76%, hallucination dropping from 18% to 7%, latency cut in half — all from context restructuring.
 
 ---
 
-## SLIDE 45: Your Five-Step Eval Recipe
+## SLIDE 46: Your Five-Step Eval Recipe
 *[GESTURE at the five steps]*
 
 Here's a practical evaluation recipe you can start tomorrow.
@@ -617,7 +621,7 @@ This gives you a clear, attributable picture of what's working and what's not. N
 
 ---
 
-## SLIDE 46: The Road Ahead
+## SLIDE 47: The Road Ahead
 
 Let me leave you with where this is heading.
 
@@ -629,7 +633,7 @@ And here's my personal prediction — this is opinion, not a sourced forecast: b
 
 ---
 
-## SLIDE 47: Reveal Part 1 - The Viral Post Unpacked
+## SLIDE 48: Reveal Part 1 - The Viral Post Unpacked
 *[GESTURE back to the opening]*
 
 So let me bring it full circle, and answer the question I posed at the very beginning.
@@ -652,7 +656,7 @@ The model didn't magically know what to build. The context was so well-engineere
 
 ---
 
-## SLIDE 48: Reveal Part 2 - The Real Insight
+## SLIDE 49: Reveal Part 2 - The Real Insight
 *[GESTURE at the big reveal]*
 
 And this is the real insight I want you to carry with you.
@@ -673,7 +677,7 @@ It was about context engineering.
 
 ---
 
-## SLIDE 49: Now the AI Knows What You Mean
+## SLIDE 50: Now the AI Knows What You Mean
 *[SLOW DOWN — this is the closing moment]*
 
 So let me bring it all together.
@@ -696,14 +700,14 @@ Thank you.
 
 ---
 
-## SLIDE 50: Questions
+## SLIDE 51: Questions
 *[OPEN FOR Q&A]*
 
 I'm ready for questions. What do you want to dig into?
 
 ---
 
-## SLIDE 51: CLOSING SLIDE
+## SLIDE 52: CLOSING SLIDE
 *[Hold this briefly]*
 
 Thank you all for your time and attention today. My contact info is on screen — training@getskillsnow.com is the best way to reach me. And you can find more of my work at techskillstransformations.com and getskillsnow.com. If you're working on context engineering challenges at your organization, I'd genuinely love to hear about it.
@@ -714,18 +718,6 @@ Remember: better context often beats bigger models. Audit, prune, structure, mea
 
 # Timing & Pacing Guide
 
-| Slide | Duration | Section |
-|-------|----------|---------|
-| 1-3 | ~1 min | Version, title, about me |
-| 4 | ~1 min | "This isn't funny" hook — teaser for reveal |
-| 5 | ~2 min | "The AI should have known" + audience poll |
-| 6-9 | ~4 min | Definition, evolution, enterprise moment, cost of bad context |
-| 10-11 | ~1 min | Six pillars intro and overview |
-| 12-15 | ~5 min | Pillar 1: Instructions, before/after, system prompt win, tool bloat |
-| 16-19 | ~4 min | Pillar 2: Retrieval, principles, RAG vs context engine, evolution |
-| 20-22 | ~5 min | Pillar 3: Memory, positioning, context layers |
-| 23 | ~1.5 min | Context rot — memory degradation pattern |
-| 24-25 | ~5 min | Pillar 4: Formatting & structure |
 | 26-28 | ~5 min | Pillar 5: Constraints, context smells, diagnosis |
 | 29-31 | ~5 min | Pillar 6: Decomposition, strategies, multi-agent |
 | 32-33 | ~5 min | Does it work? Support bot case study |
@@ -742,36 +734,140 @@ Remember: better context often beats bigger models. Audit, prune, structure, mea
 
 # Key Changes Made in v11
 
-1. ✓ **NEW Slide 4: "This isn't funny" hook**: Introduces the viral Claude Code post as a teaser. Brief (~1 min) — sets up the reveal at the end without spoiling it.
 
-2. ✓ **Renumbered Slides 4-46 (old) → 5-51 (new)**: All old slides shifted by +1 due to new Slide 4 insertion.
-
-3. ✓ **NEW Slide 23: Context Rot**: Inserted after Slide 22 (Context Layers Architecture). Covers progressive context degradation, three-stage pattern (clean, noise building, full rot), root causes, and mitigations. Renumbered all subsequent slides +2 total.
-
-4. ✓ **NEW Slide 47: Reveal Part 1**: First half of the reveal — unpacking what the viral post actually showed (a year of context engineering work enabled the fast execution).
-
-5. ✓ **NEW Slide 48: Reveal Part 2**: Second half — the big insight that the post demonstrates context engineering mastery, not just model capability.
-
-6. ✓ **Renumbered old Slide 44 → Slide 49** (closing): Updated closing script to incorporate the reveal callback and reinforce that the viral post was about context, not just the model.
-
-7. ✓ **Renumbered old Slides 45-46 → Slides 50-51**: Questions and thank you slides.
-
-8. ✓ **Timing Guide Updated**: Now covers all 51 slides with adjusted durations reflecting new content (~65 min total, up from ~60 min).
-
-9. ✓ **Slide 9 Engineering Framing**: Script now includes: "every one of these pillars can be tuned and measured independently. This isn't aesthetic prompt writing; it's systems engineering."
-
-10. ✓ **Slide 34 ACE Caveat Strengthened**: Added: "To be clear — this is strong evidence for the direction of the field, not a guarantee that context engineering replaces model choice in every scenario."
 
 ---
 
-**Voice Notes**: The "This isn't funny" hook (Slide 4) is deliberately vague — it promises a payoff later without explaining it, creating narrative tension. The Reveal slides (47-48) deliver that payoff and tie the entire talk together: the viral post demonstrates context engineering in action, not just model capability. The closing (Slide 49) now explicitly calls back to the reveal. Context Rot (Slide 23) fits naturally into the Memory section, explaining a critical failure pattern that audiences recognize immediately. Timing increased from ~60 min to ~65 min; adjust Optional Expansion points accordingly.
 
-## Optional Expansion Points (if talk runs short)
 
-Use these if delivery is brisk and you need to fill time:
+## SLIDE 53: Q&A REFERENCE
 
-1. **After Slide 28 (diagnostic ladder)**: Extended audience exercise — "Turn to your neighbor and diagnose one AI system using the five-step ladder. You have 90 seconds." (~2 min)
+*Expand any question below to see the suggested response.*
 
-2. **After Slide 34 (ACE results)**: "Let me walk you through how I'd debug an AI system live. Give me a use case from the audience." (~3 min)
+<div class="qa-index">
 
-3. **After Slide 37 (decision framework)**: Quick show-of-hands poll — "How many of you have tried context engineering before fine-tuning? Before upgrading the model? Before both?" (~1 min)
+<div class="qa-section-title">Questions About the Core Concept</div>
+
+<details>
+<summary>How is context engineering different from prompt engineering?</summary>
+<div class="qa-answer">Prompt engineering is a subset of context engineering. Prompt engineering focuses on crafting the text of a single input. Context engineering is the full system: instructions, retrieval pipelines, memory architecture, formatting, constraints, and workflow decomposition. It's the difference between writing one email well and designing the entire communication system. The Anthropic engineering blog frames it as "what configuration of context is most likely to generate the desired behavior" — that's a systems design question, not a copywriting question.</div>
+</details>
+
+<details>
+<summary>Isn't this just RAG with extra steps?</summary>
+<div class="qa-answer">RAG is one pillar (Retrieval) out of six. A team can have excellent RAG and still fail because their system prompt is generic, their context window is unstructured, they have no constraints, and they're cramming everything into one massive prompt. Context engineering treats all six pillars as an integrated system. RAG is necessary but not sufficient.</div>
+</details>
+
+<details>
+<summary>Does context engineering work with all models, or only frontier models?</summary>
+<div class="qa-answer">It works across models — that's actually one of the key findings. The ACE framework research showed context-engineered systems matching GPT-4.1-based agents without fine-tuning. In practice, a well-contexted smaller model often outperforms a poorly-contexted larger one. Start with context engineering on whatever model you have; upgrade the model only after you've optimized context.</div>
+</details>
+
+<details>
+<summary>You mentioned the ACE framework showed +10.6% accuracy. Is that a meaningful improvement?</summary>
+<div class="qa-answer">In the context of agentic tasks, yes — these are complex, multi-step workflows where even small accuracy gains cascade across steps. But the more striking number is the 86.9% latency reduction. Faster AND better is rare in AI. The mechanism is straightforward: focused context means fewer wasted tokens, which means faster inference and less noise for the model to parse. As noted in the talk, it's one study — strong directional evidence, not the final word.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About Implementation</div>
+
+<details>
+<summary>Where do I start? All six pillars feel overwhelming.</summary>
+<div class="qa-answer">Use the diagnostic ladder from the talk: (1) Is your system prompt specific? (2) Is retrieval pulling relevant docs? (3) Is context structured? (4) Are constraints explicit? (5) Should the task be decomposed? Work top to bottom. Most teams find their biggest win in pillar 1 (rewriting a generic system prompt) or pillar 2 (fixing retrieval relevance). The Monday morning playbook gives you seven concrete steps — start with items 1 and 2 this week.</div>
+</details>
+
+<details>
+<summary>How do I measure context quality vs. model quality?</summary>
+<div class="qa-answer">Use the five-step eval recipe: freeze the model, change exactly one context lever, score 20 representative tasks on accuracy/relevance/latency, then repeat with the next lever. Track both output quality metrics (accuracy, relevance, consistency, confidence) and context health metrics (retrieval precision, coverage, redundancy, latency). If improving context moves the output metrics, context was the bottleneck.</div>
+</details>
+
+<details>
+<summary>How much time does context engineering actually take?</summary>
+<div class="qa-answer">The system prompt rewrite example in the talk took 20 minutes and caught a race condition the old prompt missed. Structuring prompts with XML tags takes 30 seconds per prompt. The support bot case study was two weeks of work for a hallucination drop from 23% to under 4%. The ROI is typically very fast because you're not training models or building new infrastructure — you're reorganizing information you already have.</div>
+</details>
+
+<details>
+<summary>What tools should I use for context engineering?</summary>
+<div class="qa-answer">There's no single "context engineering tool" — it's a practice applied across your stack. For retrieval: whatever vector DB you're using (ChromaDB to start, Pinecone/Weaviate at scale). For memory: session stores and summarization pipelines. For evaluation: custom scoring scripts against your 20 representative tasks. The tooling is less important than the methodology.</div>
+</details>
+
+<details>
+<summary>How do I handle context rot in production?</summary>
+<div class="qa-answer">Four practical mitigations: context pruning (remove irrelevant old messages), summarization (condense conversation history into digests), session resets (start fresh when context gets too long), and sliding windows (keep only the last N relevant turns). Monitor conversation length vs. output quality — when you see accuracy drop at a consistent turn count, that's your pruning threshold.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About Retrieval & RAG</div>
+
+<details>
+<summary>What's the right chunk size for RAG?</summary>
+<div class="qa-answer">There's no universal answer, but the litmus test from the talk is useful: if a chunk makes sense to a human on its own, it will make sense to the model. Fixed 512-token chunks that break mid-paragraph are a common anti-pattern. Use semantic chunking that respects document structure — paragraphs, sections, code blocks. Start with larger chunks and shrink only if retrieval precision drops.</div>
+</details>
+
+<details>
+<summary>How do I handle deprecated docs in my RAG index?</summary>
+<div class="qa-answer">Add a "last-verified" metadata tag and a recency filter to your retrieval pipeline. When docs are updated, flag old versions. The talk describes a documentation agent giving wrong API answers because deprecated docs were still in the index — a recency filter and metadata tag eliminated the problem overnight.</div>
+</details>
+
+<details>
+<summary>What's the difference between naive RAG and a context engine?</summary>
+<div class="qa-answer">Naive RAG: embed query → find similar documents → dump them in the prompt. A context engine: retrieval + verification (is this doc current and accurate?) + reasoning (is this relevant to THIS specific question?) + access control (is this user authorized to see this?). The operational difference is between "here are the 5 most similar documents" and "here are the 3 documents that are verified current, relevant to this question type, and authorized for this user."</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About Memory & Formatting</div>
+
+<details>
+<summary>Can you explain the "lost in the middle" problem more?</summary>
+<div class="qa-answer">Stanford/UC Berkeley/Samaya AI research found that LLMs use information at the beginning and end of the context window effectively, but information placed in the middle gets significantly less attention. This is an architectural property of transformer attention mechanisms. The practical fix: front-load your most important information, back-load constraints and output format, compress the middle aggressively.</div>
+</details>
+
+<details>
+<summary>How should I structure my prompts? XML, JSON, or markdown?</summary>
+<div class="qa-answer">All three work — the key is using any consistent semantic structure rather than unstructured text. XML tags are popular because they create clear, labeled boundaries the model can parse. JSON works well for structured data. Markdown headers work for document-style context. The FlowHunt analysis cited in the talk found 30-40% error rate reductions just from structuring inputs. Pick one format and be consistent.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About Multi-Agent & Decomposition</div>
+
+<details>
+<summary>When should I use multi-agent architectures vs. a single prompt?</summary>
+<div class="qa-answer">Use multi-agent when specialization is real — when different steps of your workflow genuinely benefit from different context. The code review example in the talk decomposes into: understand the ticket → diff against style guide → check test coverage → validate deployment config. Each step has focused context and produces better results. Don't create agents for the sake of it — only when context separation genuinely helps.</div>
+</details>
+
+<details>
+<summary>How do agents share context without losing information?</summary>
+<div class="qa-answer">Through an orchestrator that manages context routing. Each specialist agent gets only what it needs, and the orchestrator aggregates results. The key is explicit interfaces between agents — what information flows in, what flows out. Think of it like microservices: clear contracts, focused responsibilities.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Skeptical / Pushback Questions</div>
+
+<details>
+<summary>Isn't this just good software engineering applied to AI?</summary>
+<div class="qa-answer">Yes, and that's the point. The talk frames context engineering as "systems engineering, not aesthetic prompt writing." The same principles that make software systems reliable — clear interfaces, focused components, structured data, explicit constraints, measurable outcomes — apply directly to AI systems. The gap is that most teams treat AI prompts as one-off text rather than engineered systems.</div>
+</details>
+
+<details>
+<summary>My team doesn't have time for this. We're shipping features.</summary>
+<div class="qa-answer">The system prompt rewrite takes 20 minutes. Structuring your 5 most common prompts takes an afternoon. The support bot case study was 2 weeks. Compare that to weeks spent debugging inconsistent AI outputs, or months evaluating model upgrades that don't solve the actual problem. Context engineering is typically the fastest path to better AI output because you're reorganizing existing information, not building new systems.</div>
+</details>
+
+<details>
+<summary>Won't this all be automated away as models get smarter?</summary>
+<div class="qa-answer">Possibly some of it — the talk's road ahead section mentions context engineering partially automating itself. But even the ACE research showed that structured context still dramatically outperforms unstructured context on frontier models. As long as models operate on context windows, the quality of what goes in will determine the quality of what comes out. And as agents become more autonomous, context engineering becomes more important, not less — an agent with bad context makes confident mistakes at scale.</div>
+</details>
+
+<details>
+<summary>We tried RAG and it didn't work. Why would context engineering be different?</summary>
+<div class="qa-answer">RAG failing is often a symptom of broader context problems — bad chunking, no recency filtering, no relevance verification, irrelevant docs in the index. The six-pillar framework helps you diagnose which specific aspect failed. Was it the retrieval itself, the formatting of retrieved content, missing constraints, or trying to do too much in one prompt? "RAG didn't work" usually means one specific pillar needs fixing, not that the approach is wrong.</div>
+</details>
+
+<hr>
+
+</div>

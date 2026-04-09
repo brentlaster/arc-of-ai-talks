@@ -460,6 +460,17 @@ def md_to_html(text):
     """Minimal markdown to HTML conversion."""
     import html as html_mod
     text = html_mod.escape(text)
+    # Restore allowed HTML tags for Q&A expand/collapse sections
+    for tag in ("details", "summary", "div", "span", "hr"):
+        text = text.replace(f"&lt;{tag}&gt;", f"<{tag}>")
+        text = text.replace(f"&lt;/{tag}&gt;", f"</{tag}>")
+        # Handle tags with attributes (e.g. <div class="qa-index">)
+        # After html.escape(), quotes become &quot; so we match broadly
+        text = re.sub(
+            rf"&lt;({tag}\s+.*?)&gt;",
+            lambda m: "<" + m.group(1).replace("&quot;", '"') + ">",
+            text,
+        )
     text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
     text = re.sub(r"\*(.+?)\*", r"<em>\1</em>", text)
     text = re.sub(r"_(.+?)_", r"<em>\1</em>", text)
@@ -1016,6 +1027,46 @@ HTML_PAGE = r"""<!DOCTYPE html>
   .teleprompter strong { color: var(--accent); }
   .teleprompter em { color: #f0c040; }
   .teleprompter.mirror { transform: scaleX(-1); }
+
+  /* Q&A expand/collapse index */
+  .qa-index { margin-top: 0.5em; }
+  .qa-index h2 { font-size: 1.4em; color: var(--accent); margin-bottom: 0.4em; }
+  .qa-index hr { border: none; border-top: 1px solid var(--border); margin: 0.5em 0; }
+  .qa-index .qa-section-title { font-size: 1.1em; color: #2E75B6; margin: 0.6em 0 0.2em; }
+  .qa-index details {
+    margin: 0.15em 0;
+    border-left: 3px solid var(--border);
+    padding-left: 0.5em;
+    transition: border-color 0.2s;
+  }
+  .qa-index details[open] { border-left-color: var(--accent); }
+  .qa-index summary {
+    cursor: pointer;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--text);
+    padding: 0.25em 0;
+    list-style: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4em;
+  }
+  .qa-index summary::before {
+    content: '\25B6';
+    font-size: 0.6em;
+    color: var(--dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .qa-index details[open] > summary::before { transform: rotate(90deg); color: var(--accent); }
+  .qa-index summary::-webkit-details-marker { display: none; }
+  .qa-index .qa-answer {
+    font-size: 0.65em;
+    font-weight: 400;
+    color: #ccc;
+    line-height: 1.6;
+    padding: 0.3em 0 0.5em 0;
+  }
 
   /* Auto-scroll progress bar at top of text area */
   .scroll-progress {

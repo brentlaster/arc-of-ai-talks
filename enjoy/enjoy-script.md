@@ -426,7 +426,23 @@ Without that context, AI will suggest generic optimizations that may not apply t
 
 ---
 
-## SLIDE 37: SHIFT 4 — WORKFLOW PAIRING
+## SLIDE 37: [LIVE DEMO] Verification Tax & Context-First Prompting
+
+**[SECTION DIVIDER — LIVE DEMO]**
+
+[DEMO: Run demo-verification-tax.py]
+
+"Let's make this concrete. I'm going to show you the verification tax in real time — and then show you what happens when you apply context-first prompting.
+
+The demo runs the same task three different ways: first with a vague prompt that triggers the verification spiral, then with a context-rich prompt that gets it right the first time, and finally with a structured workflow that eliminates the tax entirely.
+
+Watch the token counts and iteration counts. You'll see the 'cheaper' vague prompt actually costs 3-4x more in total computation. That's the verification tax — and once you see it, you can't unsee it.
+
+Let's run it."
+
+---
+
+## SLIDE 38: SHIFT 4 — WORKFLOW PAIRING
 
 Fourth shift. Stop bolting AI onto your existing process. Instead, design workflows where AI and humans take turns. AI drafts, human reviews. AI refines based on feedback, human approves. It's like pair programming, but your pair is the AI.
 
@@ -438,7 +454,7 @@ The key insight is that organizations that redesigned workflows WITH AI got ROI.
 
 ---
 
-## SLIDE 38: CASE STUDY — AI CODE REVIEW
+## SLIDE 39: CASE STUDY — AI CODE REVIEW
 
 Here's a composite pattern drawn from multiple engineering teams adopting AI review tools. A team starts using AI for code review. Initially it works well — AI catches formatting issues, obvious bugs, style inconsistencies. But then the team starts letting AI approve PRs on its own. Human reviewers start rubber-stamping. "AI already looked at it."
 
@@ -452,7 +468,7 @@ Quality improves. Because now humans and AI each have clear roles. The fix wasn'
 
 ---
 
-## SLIDE 39: SHIFT 5 — GUARDRAILS
+## SLIDE 40: SHIFT 5 — GUARDRAILS
 
 Fifth shift. Put structure around your AI use. Not management overhead — engineering discipline. Same idea as linting or CI gates: structure that protects quality without slowing you down.
 
@@ -464,7 +480,7 @@ When everyone knows the rules, you stop second-guessing yourself. The mental loa
 
 ---
 
-## SLIDE 40: TRAINING CHANGES EVERYTHING
+## SLIDE 41: TRAINING CHANGES EVERYTHING
 
 Remember that finding about skill erosion anxiety dropping when organizations provided support? The key number is five hours. Five hours of structured, hands-on training with your actual tools and workflows. Not a webinar. Not a Slack link to documentation. Actual practice time.
 
@@ -474,7 +490,7 @@ Teams that get this training stop being afraid. They become confident. They know
 
 ---
 
-## SLIDE 41: WHEN AI ACTUALLY SHINES
+## SLIDE 42: WHEN AI ACTUALLY SHINES
 
 I don't want to leave you thinking AI is the problem. AI is extraordinary when you use it right. Let me give you three places where it genuinely transforms engineering work.
 
@@ -490,7 +506,7 @@ The key is intentionality. You know what job you're assigning AI, and it's a job
 
 ---
 
-## SLIDE 42: VIBE CODING — THE FUN AND THE RISK
+## SLIDE 43: VIBE CODING — THE FUN AND THE RISK
 
 Now, some of you have been thinking — "What about vibe coding? That's the part I actually enjoy." And you're right. Andrej Karpathy coined the term in early 2025: "Fully give in to the vibes, embrace exponentials, and forget that the code even exists." It was Collins Dictionary's Word of the Year. It's become how a lot of developers describe their best AI experience.
 
@@ -506,7 +522,7 @@ The goal isn't to kill the vibe. It's to keep the vibe AND keep the quality. Tha
 
 ---
 
-## SLIDE 43: LEAD THE SHIFT — AUGMENTATION, NOT AUTOMATION
+## SLIDE 44: LEAD THE SHIFT — AUGMENTATION, NOT AUTOMATION
 
 If you have any leadership influence — whether you're a tech lead, a manager, or an architect — here's the mindset shift that matters most. Stop thinking about automation. Start thinking about augmentation. The goal isn't "replace the human." The goal is "make the human better."
 
@@ -519,7 +535,7 @@ That's not just better for productivity. It's better for your team. Engineers wh
 [TIMING: 47:15]
 
 ---
-## SLIDE 44: YOUR SANE ADOPTION PLAYBOOK
+## SLIDE 45: YOUR SANE ADOPTION PLAYBOOK
 
 Here's your playbook for this week. Five things, one per day.
 
@@ -537,7 +553,7 @@ Friday: schedule five hours of hands-on training. Put it on the calendar. This w
 
 ---
 
-## SLIDE 45: USING AI AND ENJOYING IT
+## SLIDE 46: USING AI AND ENJOYING IT
 
 Let me bring this home.
 
@@ -557,7 +573,7 @@ One week. One workflow. That's how you start.
 
 ---
 
-## SLIDE 46: QUESTIONS
+## SLIDE 47: QUESTIONS
 
 I'd love to hear what's on your mind. What resonated? What didn't? What's the biggest challenge you're facing with AI on your team right now?
 
@@ -566,7 +582,7 @@ I'd love to hear what's on your mind. What resonated? What didn't? What's the bi
 ---
 
 
-## SLIDE 47: CLOSING SLIDE
+## SLIDE 48: CLOSING SLIDE
 
 Thank you so much. If you want to stay in touch, my contact info is on the slide. I'd love to hear how the playbook works for your team.
 
@@ -609,3 +625,141 @@ Thank you. Enjoy the rest of the conference.
 ## WORD COUNT: ~7,600 spoken words | ~51 min content + ~9 min Q&A = 60 min
 
 NOTE ON TIMING: At a natural speaking pace with audience pauses, show-of-hands moments, and laughter, expect content delivery closer to 54-56 minutes before Q&A. Budget 4-6 minutes for Q&A rather than 10 if the talk runs long in rehearsal. The vibe coding section is self-contained — if you're running hot in rehearsal, it's the easiest section to tighten or cut.
+
+
+## SLIDE 49: Q&A REFERENCE
+
+*Expand any question below to see the suggested response.*
+
+<div class="qa-index">
+
+<div class="qa-section-title">Questions About the Core Problem</div>
+
+<details>
+<summary>You say adoption is up but confidence is down. What's the actual data behind that?</summary>
+<div class="qa-answer">Two separate studies tell the same story. Qualtrics found 52% of workers are actively using AI tools. ManpowerGroup found that worker confidence in using technology at work fell 18 percentage points over roughly the same period. Stack Overflow's 2025 developer survey: only about one in three developers trust AI output accuracy, while 46% actively distrust it. More developers distrust AI-generated code than trust it. And Pew found 52% of workers are more worried than hopeful about AI at work. Different studies, different methodologies, same directional finding.</div>
+</details>
+
+<details>
+<summary>Is this really an AI problem, or just normal technology adoption friction?</summary>
+<div class="qa-answer">Both, but AI has unique characteristics that amplify the friction. The "almost right" problem is specific to generative AI — traditional tools either work or they don't. AI produces output that looks correct, compiles, passes tests, but is subtly incomplete. That verification burden is structurally different from learning any previous technology. BCG's "brain fry" research found 14% more mental effort, 12% more mental fatigue, 19% more information overload, and 33% more decision fatigue among heavy AI users. That's not normal adoption friction.</div>
+</details>
+
+<details>
+<summary>The "verification tax" — is that a real measurement or an analogy?</summary>
+<div class="qa-answer">It's a pattern observed across engineering teams: AI generates code in about 2 minutes, but the review cycle (reading line by line, comparing against requirements, checking edge cases, testing, fixing) often takes 15+ minutes. It's not a precise universal measurement — it varies by task and developer — but the directional finding is consistent: when review overhead exceeds generation time, you're not automating, you're just moving work from one column to another. The talk uses it as a framework for thinking about where AI actually saves time vs. where it shifts the burden.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About the Five Barriers</div>
+
+<details>
+<summary>Tool sprawl — how many AI tools should a developer actually use?</summary>
+<div class="qa-answer">BCG's 2026 research found productivity gains rose from 1 to 2 tools, peaked at 3, and dropped past 4, while cognitive strain kept climbing. The recommendation: pick your best 2-3 tools, go deep, learn their strengths, build muscle memory, let the rest go. The problem isn't having options — it's that none of the tools share context with each other, so YOU become the integration layer, re-explaining the same problem to 4 different systems.</div>
+</details>
+
+<details>
+<summary>What do you mean by "nobody told us where AI fits"?</summary>
+<div class="qa-answer">Most organizations adopted AI by bolting it onto existing workflows without redesigning anything. They said "here's a new tool, figure out where it goes." So developers make ad hoc decisions — sometimes using AI, sometimes not — with no shared understanding of where it adds value. The bigger problem is ownership: when nobody defines who owns correctness, edge cases, and final judgment at each step, AI-generated work creates hidden review debt. BCG found organizations that communicated clearly about where AI fits in specific workflows saw notably better adoption and satisfaction.</div>
+</details>
+
+<details>
+<summary>You mentioned "AI brain fry" — is that a clinical term?</summary>
+<div class="qa-answer">It's BCG's term from their March 2026 study with Harvard Business Review, surveying nearly 1,500 workers. They found meaningful increases in mental effort (+14%), mental fatigue (+12%), information overload (+19%), and decision fatigue (+33%) among heavy AI users. 14% of knowledge workers reported significant cognitive strain, with software development flagged as one of the highest-prevalence roles. ActivTrak's analysis of 443 million hours confirmed the pattern: focus sessions dropped 9% while collaboration time surged after AI adoption.</div>
+</details>
+
+<details>
+<summary>The pressure to keep up — is that real or just FOMO?</summary>
+<div class="qa-answer">Real, with data behind it. Pew found 52% are more worried than hopeful. BCG identified skill erosion — fear that AI hollows out human capabilities — as a top workforce concern. For engineers specifically: fear of losing debugging skill, developing shallow understanding of systems, being judged slower than AI-heavy peers, and losing engineering judgment. But here's the key finding: when organizations provided structured support (5+ hours of hands-on training), that anxiety dropped substantially. The pressure isn't inherent to AI — it's created by lack of support.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About the Five Shifts</div>
+
+<details>
+<summary>Shift 1 — How do I decide which tasks to give AI vs. keep human?</summary>
+<div class="qa-answer">The delegation test: think of AI as a capable junior engineer with no project context. Would you hand this task to that person? If the cost of being wrong is low and you can verify the output quickly — AI task. If accuracy is critical and deep domain knowledge is needed to evaluate the output — human task, with AI as support at most. Green light tasks: scaffolding, boilerplate, code explanation, test generation with context, PR summaries. Red light tasks: security reviews, architecture decisions, performance tuning without knowing your constraints.</div>
+</details>
+
+<details>
+<summary>Shift 2 — "Lighter mental models" — can you explain what that means practically?</summary>
+<div class="qa-answer">Stop expecting oracle-level answers and start expecting useful first drafts. Think of AI as a capable junior engineer: you give them tasks, review the output, provide directional feedback, send them back to fix things. That recalibrates your expectations. Instead of being frustrated that AI gave you "almost right" code, you expect a good first draft and plan to review. The trust spectrum helps: for boilerplate, lean toward trust. For security code, lean toward verification. Being intentional about where you sit on that spectrum for each task type is what turns AI from anxiety into predictable leverage.</div>
+</details>
+
+<details>
+<summary>Shift 3 — Context-first prompting sounds simple. What's the actual formula?</summary>
+<div class="qa-answer">Context + Task + Constraints = better output. Tell the model what it needs to know about YOUR system before telling it what to do. Example: instead of "Write unit tests for the auth module" (generic), specify "JWT auth with Flask and pytest, edge cases: expired tokens, invalid issuer, missing scopes, revoked sessions, using our custom TokenManager class." The talk cites a rule of thumb: 30 extra seconds of context tends to save 20 minutes of re-prompting. The "Spot the Missing Context" exercise is a good habit: before every prompt, ask "what context is missing?"</div>
+</details>
+
+<details>
+<summary>Shift 4 — What does workflow pairing actually look like day-to-day?</summary>
+<div class="qa-answer">Instead of bolting AI onto your existing process, design handoffs. For a code refactoring task: AI does the initial refactoring → you review the logic and check production behavior (connection pooling, caching, query plans) → AI refines based on your feedback → you do final approval. The key insight from research: organizations that redesigned workflows WITH AI got ROI; organizations that just added AI to existing workflows didn't. The difference is integration vs. bolt-on.</div>
+</details>
+
+<details>
+<summary>Shift 5 — What are the specific guardrails you recommend?</summary>
+<div class="qa-answer">Five: (1) Pick your 2-3 tools and commit — less context rebuilding. (2) Time-box AI work — if the verification burden exceeds what the task would take manually, switch approaches. (3) Build in AI-free time — deep-focus work keeps core skills sharp. (4) Require human review before anything ships. (5) Invest in training — 5 hours of structured, hands-on training with your actual tools and workflows. Not a webinar, not a Slack link — actual practice time.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About Vibe Coding</div>
+
+<details>
+<summary>You mentioned vibe coding. Are you saying it's bad?</summary>
+<div class="qa-answer">Not at all — the talk is careful about this. Vibe coding (Andrej Karpathy's term) is genuinely enjoyable, and developers report 3-5x productivity gains on scaffolding and prototyping. The flow state is real. But vibe coding without guardrails is Barrier 3 at scale — the "almost right" problem turbocharged. Security researchers found 45% of AI-generated code contains vulnerabilities. Fast.ai coined "dark flow" — productive momentum where you don't realize until weeks later the code is unmaintainable. The goal isn't to kill the vibe. It's to keep the vibe AND keep the quality by applying the five shifts.</div>
+</details>
+
+<details>
+<summary>How do I vibe code responsibly?</summary>
+<div class="qa-answer">Four rules: (1) Assign it to the right tasks — scaffolding and prototyping are green-light territory. (2) Use context-first prompting even in the zone. (3) Keep a human review checkpoint before anything ships to production. (4) Time-box the sessions so dark flow doesn't eat your whole sprint. Vibe code for prototyping, then shift to careful review before production.</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Questions About the Playbook</div>
+
+<details>
+<summary>The Monday playbook has five items. Do I really need to do all five?</summary>
+<div class="qa-answer">Start with any one. The most impactful for most teams: Monday's tool audit (if you're drowning in tools) or Wednesday's red zone definition (if you're unsure where AI shouldn't be used). Each item is independent. But the full sequence is designed to build on itself — audit tools → pick one workflow to redesign → define red zones → add review checkpoints → schedule training. One item per day, one week, measurable improvement.</div>
+</details>
+
+<details>
+<summary>Five hours of training — that seems like a lot. What should it cover?</summary>
+<div class="qa-answer">Not AI theory. Hands-on practice with your actual tools on your actual workflows. Where does the IDE copilot help most? What prompting patterns work for your codebase? Where does AI consistently get your domain wrong? When should you stop re-prompting and just write the code? The training should produce muscle memory, not knowledge. The BCG finding was specific: 5+ hours of structured, hands-on training dropped anxiety substantially. Less than that and the effect was minimal.</div>
+</details>
+
+<details>
+<summary>How do I convince my team lead or manager to invest in these changes?</summary>
+<div class="qa-answer">Use the data: only 1 in 4 organizations have achieved repeatable AI ROI (MIT/Wharton). Focus sessions dropped 9% after AI adoption (ActivTrak). 46% of developers distrust AI accuracy (Stack Overflow). Then show the fix: 30 seconds of context saves 20 minutes of re-prompting. Organizations that communicated where AI fits saw better adoption. 5 hours of training drops anxiety and improves adoption. Frame it as: "We're already spending time on AI. Let's spend it effectively instead of wastefully."</div>
+</details>
+
+<hr>
+
+<div class="qa-section-title">Skeptical / Pushback Questions</div>
+
+<details>
+<summary>Isn't this just telling people to be more careful? That's not new advice.</summary>
+<div class="qa-answer">The five shifts are structural changes, not just mindfulness. Shift 1 (task matrix) gives teams a decision framework they can reference. Shift 3 (context-first prompting) is a concrete technique with measurable results. Shift 4 (workflow pairing) requires process redesign, not just individual discipline. Shift 5 (guardrails) builds organizational infrastructure — time-boxed AI sessions, mandatory review checkpoints, training schedules. "Be more careful" is a hope. The five shifts are an implementation plan.</div>
+</details>
+
+<details>
+<summary>My team is already overwhelmed. Adding process seems counterproductive.</summary>
+<div class="qa-answer">The five shifts reduce process overhead, not add it. Picking 2-3 tools instead of 7 removes context-switching. Defining red zones eliminates ambiguity about when to use AI. Time-boxing prevents rabbit holes. The Monday playbook is specifically designed as one item per day — not a new process to adopt all at once. The research shows that teams with clear AI boundaries experience less cognitive load, not more.</div>
+</details>
+
+<details>
+<summary>AI is getting better fast. Won't these problems just solve themselves?</summary>
+<div class="qa-answer">Some will. Models will get more accurate, which reduces the verification tax on some tasks. But the structural problems — tool sprawl, workflow confusion, cognitive overload from constant context-switching — are organizational, not technical. A better model doesn't fix 7 tools that don't share context. A better model doesn't tell your team where AI fits in their workflow. And as AI gets more capable, the stakes of "almost right" get higher, not lower. The five shifts are about organizational readiness, which remains relevant regardless of model capability.</div>
+</details>
+
+<details>
+<summary>You're essentially saying AI isn't as helpful as advertised. Isn't that pessimistic?</summary>
+<div class="qa-answer">The talk ends with "When AI Actually Shines" for a reason. AI is extraordinary for boilerplate, code explanation, test generation with context, and scaffolding. The problem isn't AI — it's how we're implementing it. The talk's thesis is that AI becomes useful when task boundaries are clear and the correctness burden drops. That's an optimistic message: the frustration is fixable with specific, achievable changes. The goal isn't less AI — it's less friction.</div>
+</details>
+
+<hr>
+
+</div>
