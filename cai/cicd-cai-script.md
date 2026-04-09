@@ -33,7 +33,7 @@ Today, I want to change that. I want to talk about evolving CI/CD for a new era:
 
 Let me be blunt about where we are. Today's CI/CD pipeline does essentially this: build, test, pass/fail, deploy or don't. It's binary. There's no reasoning. There's no learning. There's no memory. Most pipelines don't learn in any meaningful, systematic way from prior runs. Your pipeline processed ten thousand builds last year, and in most cases, it's no smarter for any of them.
 
-Quick story: a team I work with had a PR merged late on a Tuesday. CI failed with a misleading timeout error. Two developers spent 40 minutes combing through logs before discovering the root cause was a stale Docker cache — something that had happened before and been fixed before, but nobody remembered. Forty minutes of engineering time, wasted on something a system with memory would have solved in seconds. That's exactly the gap we're talking about.
+Here's a scenario that plays out constantly across the industry. A PR gets merged late on a Tuesday. CI fails with a misleading timeout error. Two developers spend 40 minutes combing through logs before discovering the root cause is a stale Docker cache — something that had happened before and been fixed before, but nobody remembered. A case study published by techbuddies.io found that cache-related failures accounted for up to 15% of all CI failures before teams implemented proper caching strategies. Forty minutes of engineering time, wasted on something a system with memory would have solved in seconds. That's exactly the gap we're talking about.
 
 Here's my thesis: the CI/CD pipeline is the *natural home* for AI. It processes structured data — logs, test results, metrics, diffs. It runs deterministically and repeatedly. It's the perfect place to embed automated reasoning and continuous improvement.
 
@@ -509,7 +509,7 @@ So you're sold on the vision. But what does the infrastructure actually look lik
 
 Here's the minimum viable CAI stack — six components, each one essential, none of them optional if you want production-grade results.
 
-First: your CI runner — whatever you're already using. No change needed. Second: a redaction layer. Before any log or error message hits an AI model, strip secrets, sanitize credentials, mask PII. I've seen teams send raw build logs — complete with API keys — straight to an external LLM. Don't be that team. Build the redaction step first.
+First: your CI runner — whatever you're already using. No change needed. Second: a redaction layer. Before any log or error message hits an AI model, strip secrets, sanitize credentials, mask PII. This isn't hypothetical — in March 2025, the tj-actions/changed-files GitHub Action was compromised, exposing CI secrets including AWS keys and GitHub tokens across 23,000 repositories. GitHub reported detecting over 39 million leaked secrets on their platform in 2024 alone. Don't let your AI pipeline become another vector. Build the redaction step first.
 
 Third: a model gateway — rate limiting, retry logic, fallback rules. This is what makes the difference between a demo and a production system. Fourth: a vector store for your RAG knowledge base — past failures, resolutions, runbooks. The memory layer.
 
@@ -551,7 +551,7 @@ The key insight: each script maps to one of the six patterns we discussed. Log s
 
 ## [SLIDE 41 — Where CAI Pays for Itself]
 
-Now — and this is a question I get every time — what does all this cost? Is it worth it?
+Now — and this is the natural next question — what does all this cost? Is it worth it?
 
 *[GESTURE at the table]*
 
@@ -565,7 +565,7 @@ Test synthesis and release gates — those are where you want a frontier model, 
 
 Risk scoring can often be a heuristic — a weighted point system like we discussed earlier — with no model call at all. That's free compute with immediate value.
 
-Here's the practical principle: start with the tasks where a small, cheap model gives you the biggest ROI — log summarization, failure classification — and reserve frontier models for high-stakes decisions where reasoning quality matters. Most teams find that 80% of their CAI value comes from the cheapest 20% of their AI spend.
+Here's the practical principle: start with the tasks where a small, cheap model gives you the biggest ROI — log summarization, failure classification — and reserve frontier models for high-stakes decisions where reasoning quality matters. Think of it as the Pareto principle applied to AI spend — the bulk of your pipeline intelligence comes from the cheapest, highest-volume tasks, not from the expensive frontier model calls.
 
 ---
 
@@ -623,7 +623,7 @@ Gate override rate: how often do humans override the AI's recommendation? Below 
 
 Two most critical: classifier precision and gate override rate. Those two numbers tell you whether your system is earning trust.
 
-To make this concrete: one team tracked triage time before and after adding classification. Before: median 28 minutes. After 60 days: median 4 minutes. Gate override rate started at 31% and dropped to 8% after two months of threshold tuning.
+To make this concrete: Metaview published a case study on their engineering blog showing they cut triage time by 80% using AI-powered observability. Their traditional incident triage took 30 to 45 minutes per incident — almost all of that time spent gathering data, not thinking. After automating the data-gathering step with AI, that time dropped dramatically. And that's the pattern you'll see: classification and triage are where the immediate, measurable wins show up first.
 
 ---
 
@@ -752,12 +752,12 @@ I'd love to take questions. We've got some time — who wants to go first?
 
 <details>
 <summary>What about the cost of API calls in CI? Our pipeline runs hundreds of times a day.</summary>
-<div class="qa-answer">Match model investment to task value. Log summarization and failure classification: use a small, fast model (cheap, high-volume). RAG lookups use embeddings, not generative models — cheap compute. Risk scoring can be a pure heuristic with no model call at all. Reserve frontier models for test synthesis and release gates where reasoning quality matters. Most teams find 80% of CAI value comes from the cheapest 20% of AI spend. Also: log summarization and test synthesis can run asynchronously — they don't need real-time responses.</div>
+<div class="qa-answer">Match model investment to task value. Log summarization and failure classification: use a small, fast model (cheap, high-volume). RAG lookups use embeddings, not generative models — cheap compute. Risk scoring can be a pure heuristic with no model call at all. Reserve frontier models for test synthesis and release gates where reasoning quality matters. Think Pareto principle — the bulk of your pipeline intelligence comes from the cheapest, highest-volume AI tasks. Also: log summarization and test synthesis can run asynchronously — they don't need real-time responses.</div>
 </details>
 
 <details>
 <summary>How do we handle sending build logs to external LLMs? What about secrets?</summary>
-<div class="qa-answer">Build the redaction layer FIRST, before anything touches a model. Sanitize logs to strip API keys, environment variables, database connection strings, and internal URLs before they leave your perimeter. This is non-negotiable. The talk explicitly warns: "I've seen teams send raw build logs — complete with API keys — straight to an external LLM. Don't be that team." A log sanitizer is a 50-line script. Build it on day one.</div>
+<div class="qa-answer">Build the redaction layer FIRST, before anything touches a model. Sanitize logs to strip API keys, environment variables, database connection strings, and internal URLs before they leave your perimeter. This is non-negotiable. The talk explicitly warns against sending raw build logs to external LLMs — in March 2025, the tj-actions/changed-files GitHub Action compromise exposed CI secrets across 23,000 repos, and GitHub detected over 39 million leaked secrets on their platform in 2024. A log sanitizer is a 50-line script. Build it on day one.</div>
 </details>
 
 <details>
@@ -767,7 +767,7 @@ I'd love to take questions. We've got some time — who wants to go first?
 
 <details>
 <summary>How do we get buy-in from leadership?</summary>
-<div class="qa-answer">Don't pitch a 6-month transformation. Ship one AI-powered log summary to Slack this week. Show the before/after: "Build #4521 failed" vs. "Build failed: TypeScript compilation ran out of memory on 847 files. Fix: increase runner to 8GB." Then share the metric: median triage time went from 28 minutes to 4 minutes. Leadership funds what demonstrably works. One undeniable win beats six half-finished experiments.</div>
+<div class="qa-answer">Don't pitch a 6-month transformation. Ship one AI-powered log summary to Slack this week. Show the before/after: "Build #4521 failed" vs. "Build failed: TypeScript compilation ran out of memory on 847 files. Fix: increase runner to 8GB." Then share the metric: Metaview published an 80% reduction in triage time using AI-powered observability. Leadership funds what demonstrably works. One undeniable win beats six half-finished experiments.</div>
 </details>
 
 <hr>
@@ -800,7 +800,7 @@ I'd love to take questions. We've got some time — who wants to go first?
 
 <details>
 <summary>This sounds like a lot of complexity for incremental improvement.</summary>
-<div class="qa-answer">The complexity is incremental too. Log summarization is one API call on failure — 20 minutes of work. Failure classification is one more step. You don't build the full architecture on day one. The team that failed in the talk tried all six patterns across three pipelines simultaneously and got nothing. The team that succeeded started with one pattern on one pipeline. Start small, prove value, expand.</div>
+<div class="qa-answer">The complexity is incremental too. Log summarization is one API call on failure — 20 minutes of work. Failure classification is one more step. You don't build the full architecture on day one. The anti-pattern is trying all six patterns across three pipelines simultaneously — that's a recipe for getting nothing done. The approach that works is starting with one pattern on one pipeline, proving value, then expanding. Start small, prove value, expand.</div>
 </details>
 
 <details>
