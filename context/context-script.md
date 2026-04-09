@@ -1,8 +1,8 @@
-# Context Engineering: Because the Model Isn't the Problem — v10 Improved Speaker Script
+# Context Engineering: Because the Model Isn't the Problem — v11 Improved Speaker Script
 
-**Duration:** ~60 minutes (raw spoken ~47 min + ~10 min pauses, polls, transitions + ~3 min buffer)
-**Target pace:** ~140 words/min | **Spoken word count:** ~6,600 words
-**v10 Changes:** Fixed missed "IS output quality" on Slide 40 deck (now matches script "drives"); added "tunable and measurable" engineering framing at Slide 9; added ACE delivery caveat at Slide 32; added optional expansion notes in timing guide.
+**Duration:** ~65 minutes (raw spoken ~50 min + ~10 min pauses, polls, transitions + ~5 min buffer)
+**Target pace:** ~140 words/min | **Spoken word count:** ~7,000 words
+**v11 Changes:** Added NEW Slide 4 ("This isn't funny" hook with viral post setup), NEW Slide 23 (Context Rot), and NEW Slides 47-48 (Reveal Part 1 & 2 callback). Renumbered slides 4-46 (old) → 5-51 (new). Updated timing guide, Key Changes section, and Optional Expansion Points with corrected slide numbers. Strengthened engineering framing at Slide 9 and ACE caveat at Slide 32.
 
 ---
 
@@ -11,11 +11,8 @@
 
 ---
 
-
 ## SLIDE 2: TITLE
 *[Skip — advance immediately]*
-
-
 
 *[Wait for audience to settle]*
 
@@ -27,15 +24,26 @@ I should say upfront — this isn't an abstract, theoretical talk. This is about
 
 ---
 
-
 ## SLIDE 3: ABOUT ME
 
 [Brief personal introduction - use content on slide]
 
 ---
 
+## SLIDE 4: "This Isn't Funny" - Viral Post Hook
+*[GESTURE at the screenshot]*
 
-## SLIDE 4: "The AI Should Have Known What I Meant"
+Before we dive in, I want to show you something. This post went viral in the AI community recently. *[PAUSE for effect]* Take a look at what it says. Someone claiming Claude Code replicated a year of their team's work in about an hour.
+
+Your gut reaction is probably — wow, these models are getting incredible. That's the obvious read. And yeah, these tools are powerful. But hold that thought. We're going to come back to this slide later in the talk, and I think you'll see it very differently.
+
+*[PAUSE]*
+
+Because the answer to "how did that happen?" is going to reveal everything I want you to understand about context engineering. Stick with me.
+
+---
+
+## SLIDE 5: "The AI Should Have Known What I Meant"
 *[PAUSE — let the title land]*
 
 So let me start with a scenario that I think every single person in this room has experienced. You're working with an AI — could be ChatGPT, Claude, Copilot, whatever your tool of choice is — and you type something like: "Fix the login bug."
@@ -50,7 +58,7 @@ Here's what I'm going to tell you: that's probably backwards. The model isn't th
 
 ---
 
-## SLIDE 5: What Is Context Engineering?
+## SLIDE 6: What Is Context Engineering?
 
 *[GESTURE at the definition block]*
 
@@ -62,7 +70,7 @@ That's the gap we're going to close today.
 
 ---
 
-## SLIDE 6: From Prompts to Systems
+## SLIDE 7: From Prompts to Systems
 
 *[GESTURE at the evolution diagram]*
 
@@ -76,7 +84,7 @@ Think about it this way. When a new engineer joins your team, you don't just giv
 
 ---
 
-## SLIDE 7: The Enterprise AI Moment
+## SLIDE 8: The Enterprise AI Moment
 
 *[GESTURE at the big "40%" number]*
 
@@ -88,7 +96,7 @@ Teams that invest in context engineering now will have a structural advantage as
 
 ---
 
-## SLIDE 8: The Cost of Bad Context
+## SLIDE 9: The Cost of Bad Context
 
 *[GESTURE across the four cards]*
 
@@ -106,14 +114,14 @@ Context problems masquerade as model problems. And that's the core insight: most
 
 ---
 
-## SLIDE 9: The Six Pillars of Context Engineering
+## SLIDE 10: The Six Pillars of Context Engineering
 *[PAUSE — let the section divider land]*
 
 Alright, now we know *why* context matters. Let's talk about *what* to actually do about it. I've organized the practice of context engineering into six pillars — six dimensions you can tune independently.
 
 ---
 
-## SLIDE 10: Six Pillars Overview
+## SLIDE 11: Six Pillars Overview
 
 *[GESTURE at the pillar diagram]*
 
@@ -123,7 +131,7 @@ Each pillar is a lever. Pull one, and you get improvement. Pull them together, a
 
 ---
 
-## SLIDE 11: Pillar 1: Instructions & System Prompts
+## SLIDE 12: Pillar 1: Instructions & System Prompts
 
 Pillar one: instructions and system prompts. This is the most foundational thing you can do, because it sets the entire context for how the model will interpret everything that follows.
 
@@ -137,7 +145,7 @@ And as the Anthropic blog puts it: be thoughtful and keep your context informati
 
 ---
 
-## SLIDE 12: System Prompts: Before & After
+## SLIDE 13: System Prompts: Before & After
 
 *[GESTURE at the two-column comparison]*
 
@@ -150,7 +158,8 @@ That's specific, actionable, constrained. The model knows who it is and what suc
 And here's the payoff — with the generic prompt, the model gives you boilerplate. "Check your authentication logic." With the specific one, it says: "Pod crash-loop in auth-service is caused by a misconfigured OIDC callback URL in deployment manifest line 47." Same model. Night and day.
 
 ---
-## SLIDE 13: The System Prompt Win
+
+## SLIDE 14: The System Prompt Win
 *[GESTURE at the before/after card]*
 
 This is the example I want you to take home. Imagine a code review agent producing useless, generic feedback — "consider adding error handling," "this could be more efficient." The agent has a three-line system prompt.
@@ -162,7 +171,8 @@ Rewrite it in 20 minutes: specific role, language stack, coding standards, revie
 No model upgrade. No new data. Just a better system prompt. That's the kind of win I want you to walk away with today.
 
 ---
-## SLIDE 14: Anti-Pattern: Tool Bloat
+
+## SLIDE 15: Anti-Pattern: Tool Bloat
 
 Now, one particular thing under instructions that breaks a lot of production systems: tool overload.
 
@@ -176,7 +186,7 @@ The model can only reason from what it's given. Clarity beats volume every time.
 
 ---
 
-## SLIDE 15: Pillar 2: Retrieval — The Right Information
+## SLIDE 16: Pillar 2: Retrieval — The Right Information
 
 Pillar two: retrieval and data selection. This is where a lot of systems start to fail.
 
@@ -189,7 +199,8 @@ A good litmus test: if a chunk makes sense to a human on its own, it will make s
 Here's a common failure pattern. A documentation agent gives confidently wrong answers about an API. The root cause? Retrieval is pulling from deprecated docs that haven't been removed from the index. The model has no way to know the docs are stale — it treats them as ground truth. Add a recency filter and a "last-verified" metadata tag, and the accuracy problem can disappear overnight. Same model, same embeddings — just smarter retrieval.
 
 ---
-## SLIDE 16: Three Retrieval Principles
+
+## SLIDE 17: Three Retrieval Principles
 *[GESTURE across the three cards]*
 
 Three principles that fix most retrieval problems.
@@ -201,7 +212,8 @@ Second — recency matters. Remember the deprecated docs example from a moment a
 And third — measure impact. Every time you change your retrieval, track retrieval precision alongside output accuracy. If you're not measuring context quality, you're guessing.
 
 ---
-## SLIDE 17: Naive RAG vs. Context Engine
+
+## SLIDE 18: Naive RAG vs. Context Engine
 
 *[GESTURE at the comparison diagram]*
 
@@ -213,7 +225,7 @@ Put simply: a context engine is not just retrieval — it's the system that sele
 
 ---
 
-## SLIDE 18: The Retrieval Evolution (Practitioner Mental Model)
+## SLIDE 19: The Retrieval Evolution (Practitioner Mental Model)
 
 *[GESTURE at the timeline]*
 
@@ -227,7 +239,7 @@ If your retrieval system is still doing basic similarity search while the state 
 
 ---
 
-## SLIDE 19: Pillar 3: Memory
+## SLIDE 20: Pillar 3: Memory
 
 Pillar three — memory. And this is where things get really fascinating, because there's a fundamental, well-documented problem with how language models handle long contexts.
 
@@ -240,7 +252,8 @@ The answer is dramatic. Information at the beginning of the context — models u
 Why does this happen? It's an architectural consequence. Transformer models have certain structural properties in their attention mechanism. Tokens at the beginning of the context get attended to by every subsequent token — they accumulate enormous attention weight. Tokens at the end benefit from recency. But information in the middle? In practice, it's often used less effectively. The exact mechanism varies by architecture, but the operational takeaway is consistent across models.
 
 ---
-## SLIDE 20: Position Your Context Wisely
+
+## SLIDE 21: Position Your Context Wisely
 *[GESTURE at the position diagram]*
 
 So what do you do with the lost-in-the-middle finding? Three practical actions.
@@ -252,7 +265,8 @@ The action items: front-load your most important information. Back-load your con
 Some teams report meaningful token savings while preserving the information that actually matters, though results vary significantly by task and implementation.
 
 ---
-## SLIDE 21: Context Layers Architecture
+
+## SLIDE 22: Context Layers Architecture
 
 Here's how to think about memory architecturally. I find this four-layer model really useful.
 
@@ -268,7 +282,29 @@ Let me make this concrete with our support bot. Working context: the current cus
 
 ---
 
-## SLIDE 22: Pillar 4: Formatting & Structure
+## SLIDE 23: Context Rot
+
+*[GESTURE at the degradation diagram]*
+
+There's one more memory-related concept I want you to internalize before we move to formatting: context rot. This is the progressive degradation of context quality as conversations grow longer.
+
+*[PAUSE]*
+
+Picture this. You start a conversation with an AI — early turns, clean. The model has the system prompt, your initial question, maybe some retrieved docs. High accuracy, focused answers. That's Turns 1-5.
+
+Then the conversation grows. By Turns 10-20, you've got accumulated history. Earlier exchanges are still in context. Some of them are relevant to where you are now. Some aren't. Noise is building. Model drift starts — answers become less precise because the model has more contradictory information to parse. Accuracy declines.
+
+By Turns 30 and beyond? Full context rot. Conversations deteriorate. Hallucinations appear. The model's generating answers based on information overload, contradictions, and stale references. You're seeing the same phenomenon: a longer context isn't always better. Sometimes it's actively worse.
+
+Why does this happen? Information overload — contradictions pile up. Stale references — early context becomes outdated by later messages. Lost focus — the model's attention drifts across too many conversational threads.
+
+How do you mitigate it? Context pruning — remove irrelevant old messages. Summarization — condense conversation history into a digest. Session resets — start fresh when context gets too long. Sliding windows — keep only the last N relevant turns. These are practical moves that happen in production systems constantly.
+
+If you've ever noticed an AI conversation getting worse the longer it goes, you've experienced context rot firsthand. It's not a model problem — it's a memory architecture problem. And it's fixable.
+
+---
+
+## SLIDE 24: Pillar 4: Formatting & Structure
 
 Pillar four — and this one genuinely surprises people when I show them the data.
 
@@ -282,7 +318,7 @@ And positioning matters too. Remember the lost-in-the-middle problem? That's not
 
 ---
 
-## SLIDE 23: Structure Changes Everything
+## SLIDE 25: Structure Changes Everything
 
 Here's a concrete example that makes the point viscerally.
 
@@ -300,7 +336,7 @@ This takes maybe 30 seconds longer to format. The difference in output quality i
 
 ---
 
-## SLIDE 24: Pillar 5: Constraints & Guardrails
+## SLIDE 26: Pillar 5: Constraints & Guardrails
 
 Pillar five — constraints. And I want to be really direct about this: telling the model what *not* to do is every bit as important as telling it what to do.
 
@@ -312,7 +348,7 @@ Most teams spend 90% of their prompt engineering energy on instructions — what
 
 ---
 
-## SLIDE 25: Context Smells: Red Flags to Watch For
+## SLIDE 27: Context Smells: Red Flags to Watch For
 
 Before we move to the last pillar, I want to show you six bad patterns — what I call "context smells." These are warning signs that your context engineering is off the rails. And if you see them, something needs fixing.
 
@@ -337,7 +373,8 @@ And sixth: **Premature model upgrades** — Scaling up without measuring the rea
 How many of you recognized at least three of these? Yeah, I see some uncomfortable laughter. You're in good company. These six patterns are endemic in early-stage AI deployments — most teams have dealt with at least three of them. The good news is once you know what they look like, they're fixable.
 
 ---
-## SLIDE 26: Diagnose Your System
+
+## SLIDE 28: Diagnose Your System
 *[GESTURE at the five-step ladder]*
 
 Here's the diagnostic ladder I promised. Think about a system you work with right now. Run it through these five steps.
@@ -351,7 +388,8 @@ And only if all five are solid — *then* ask whether the model itself is the bo
 Most teams jump straight to "we need a better model" without checking any of these five. That's where the money gets wasted.
 
 ---
-## SLIDE 27: Pillar 6: Workflow Decomposition
+
+## SLIDE 29: Pillar 6: Workflow Decomposition
 
 And finally, pillar six — decomposition. This is the architectural pillar, and for complex tasks, it's often the most impactful.
 
@@ -361,7 +399,7 @@ The key idea here is on this slide: instead of cramming everything into one mass
 
 ---
 
-## SLIDE 28: Four Context Strategies
+## SLIDE 30: Four Context Strategies
 
 Here are four high-level strategies for managing context, and they directly support that decomposition principle.
 
@@ -375,7 +413,7 @@ Decomposed approach: Step one — the agent reads the ticket to understand the i
 
 ---
 
-## SLIDE 29: Multi-Agent Context Architecture
+## SLIDE 31: Multi-Agent Context Architecture
 
 And this is where the industry is heading — multi-agent architectures. Gartner predicts that by 2027, one-third of agentic AI implementations will combine agents with different skills to manage complex tasks.
 
@@ -387,7 +425,7 @@ Same principle, applied to AI agents. One caveat: this is useful when specializa
 
 ---
 
-## SLIDE 30: Section Divider: Does It Actually Work?
+## SLIDE 32: Section Divider: Does It Actually Work?
 *[PAUSE — let the audience reset]*
 
 Alright, so I've laid out the theory. I've shown you six pillars, practical techniques, before-and-after examples. The natural question is: does this actually work? Is there rigorous evidence that better context engineering leads to measurably better outcomes?
@@ -401,7 +439,8 @@ The failure mode? The agent hallucinated product features. A customer would ask 
 The first instinct was to upgrade to a bigger model. Sound familiar?
 
 ---
-## SLIDE 31: Support Bot: The Six-Pillar Fix
+
+## SLIDE 33: Support Bot: The Six-Pillar Fix
 *[GESTURE across the six cards]*
 
 Here's how the fix broke down, pillar by pillar. Instructions — they rewrote the system prompt with a specific role and an explicit constraint: "If the answer is not in the retrieved docs, say you don't know and escalate."
@@ -413,7 +452,8 @@ Retrieval — they switched to a focused pipeline pulling only from verified, cu
 The result? Hallucination rate dropped from 23% to under 4%. Same model. Two weeks of work. That's what systematic context engineering looks like.
 
 ---
-## SLIDE 32: ACE Framework Results
+
+## SLIDE 34: ACE Framework Results
 
 This is the research that made me sit up straight in my chair when I first read it. The ACE framework — Agentic Context Engineering — developed by a team at Stanford, SambaNova, and UC Berkeley. Published in October 2025.
 
@@ -425,10 +465,11 @@ And look at this secondary stat: 86.9% average latency reduction. Faster AND bet
 
 What ACE showed is that, in that specific benchmarked setup, context-engineered systems matched GPT-4.1-based agents without any model fine-tuning. It treats contexts as evolving playbooks that accumulate, refine, and organize strategies through a cycle of generation, reflection, and curation.
 
-That last point is profound: the context itself evolves and improves over time. The system learns what context works and what doesn't. Now, to be clear — this is strong evidence for the direction of the field, not a guarantee that context engineering replaces model choice in every scenario. It's one study, not the final word — but it strongly reinforces the pattern practitioners are already seeing.
+To be clear — this is strong evidence for the direction of the field, not a guarantee that context engineering replaces model choice in every scenario. It's one study, not the final word — but it strongly reinforces the pattern practitioners are already seeing.
 
 ---
-## SLIDE 33: Context Beats Model Upgrades
+
+## SLIDE 35: Context Beats Model Upgrades
 *[GESTURE at the two-column layout]*
 
 And here's how the ACE findings map to practical experience. Remember the support bot case from a few slides back? The hallucination rate dropped from 23% to under 4% — not from a model upgrade, but from restructured retrieval and one added constraint. That's the same pattern ACE demonstrated at the benchmark level.
@@ -440,7 +481,8 @@ The consistency is the point. Whether it's academic benchmarks or production dep
 That pattern — fix the context first, measure what changes — is the single most important takeaway from this section.
 
 ---
-## SLIDE 34: When the Model Actually IS the Problem
+
+## SLIDE 36: When the Model Actually IS the Problem
 
 But I'd be doing you a disservice if I stopped there. Context engineering has real limits.
 
@@ -454,7 +496,7 @@ Here's the rule of thumb: fix context first, measure what changes, then decide. 
 
 ---
 
-## SLIDE 35: When to Use Each Approach
+## SLIDE 37: When to Use Each Approach
 
 So when should you use each approach? Context engineering, fine-tuning, or scaling up to a bigger model?
 
@@ -470,7 +512,7 @@ Let me walk you through the decision tree — it's on the next slide.
 
 ---
 
-## SLIDE 35b: The Decision Tree
+## SLIDE 38: The Decision Tree
 
 *[GESTURE at the decision flow]*
 
@@ -484,7 +526,7 @@ One thing to note: hybrid strategies are common in practice. Many production sys
 
 ---
 
-## SLIDE 36: It Takes a Village
+## SLIDE 39: It Takes a Village
 
 One more thing before we move to the playbook. Context engineering isn't a solo sport. It's cross-disciplinary by nature.
 
@@ -492,21 +534,22 @@ You need data engineers for retrieval pipelines and chunking. You need domain ex
 
 ---
 
-## SLIDE 37: Section Divider: Monday Morning Playbook
+## SLIDE 40: Section Divider: Monday Morning Playbook
 *[PAUSE]*
 
 Okay, I've given you the theory, the pillars, and the evidence. Now let's get practical. What can you actually do with this? I've distilled everything down into seven items for your Monday morning playbook. Things you can start doing this week.
 
 ---
 
-## SLIDE 38: Playbook Items 1-4
+## SLIDE 41: Playbook Items 1-4
 
 **Item 1: Audit your system prompt.** That's Pillar 1 — Instructions. Is it specific to your domain and task? Or is it generic? If you're using "You are a helpful assistant," you're leaving value on the table. Write a system prompt that's actually specific to what you need. Here's a quick test: read your system prompt out loud. If it could apply to any company in any industry, it's too generic.
 
 **Item 2: Check your retrieval relevance.** That's Pillar 2 — Retrieval. Take 20 queries you've actually seen in production. Look at the documents you're retrieving for each one. Are they relevant? Or are they noise? If more than 10% are irrelevant, you have a retrieval problem that dwarfs any model problem. This is a one-afternoon exercise that will tell you more about your system's failure modes than any model benchmark.
 
 ---
-## SLIDE 39: Playbook: Structure & Memory
+
+## SLIDE 42: Playbook: Structure & Memory
 *[GESTURE at the two cards]*
 
 Items 3 and 4 — the two most commonly overlooked by teams.
@@ -518,7 +561,8 @@ Item 4: structure your most common prompts. That's Pillar 4 — Formatting. Take
 These two items together take less than a day and often produce the most surprising results.
 
 ---
-## SLIDE 40: Playbook Items 5-7
+
+## SLIDE 43: Playbook Items 5-7
 
 **Item 5: Compress thoughtfully.** That's Pillar 3 again — Memory. Memory compression can meaningfully reduce token usage, but measure quality to make sure you're not losing important information. The goal isn't minimum tokens — it's maximum signal per token. Prune what doesn't contribute, but verify that what remains still gives the model what it needs.
 
@@ -530,7 +574,7 @@ These seven items will keep you busy for a month. And I promise you — you'll f
 
 ---
 
-## SLIDE 41: How Do You Know It's Working?
+## SLIDE 44: How Do You Know It's Working?
 
 Now, how do you actually measure whether your context engineering efforts are paying off? Here are eight key metrics, organized in two categories.
 
@@ -559,7 +603,8 @@ Think about our login bug one more time. Before context fixes: the system pulled
 To make this concrete — a production case study reported task success rates improving from 58% to 76%, hallucination rates dropping from 18% to 7%, and average latency cut in half, all from context restructuring alone. These are representative numbers, not a controlled study, but the pattern is consistent with what multiple teams and the ACE research report.
 
 ---
-## SLIDE 42: Your Five-Step Eval Recipe
+
+## SLIDE 45: Your Five-Step Eval Recipe
 *[GESTURE at the five steps]*
 
 Here's a practical evaluation recipe you can start tomorrow.
@@ -571,7 +616,8 @@ One lever at a time, measured against the same baseline. That's how you build co
 This gives you a clear, attributable picture of what's working and what's not. No guessing.
 
 ---
-## SLIDE 43: The Road Ahead
+
+## SLIDE 46: The Road Ahead
 
 Let me leave you with where this is heading.
 
@@ -583,10 +629,54 @@ And here's my personal prediction — this is opinion, not a sourced forecast: b
 
 ---
 
-## SLIDE 44: Now the AI Knows What You Mean
+## SLIDE 47: Reveal Part 1 - The Viral Post Unpacked
+*[GESTURE back to the opening]*
+
+So let me bring it full circle, and answer the question I posed at the very beginning.
+
+Remember that viral post I showed you? "This isn't funny." Claude Code replicated a year of work in an hour?
+
+*[LONG PAUSE]*
+
+Let's look at what actually happened.
+
+The team posting had been iterating on distributed agent orchestrators for a year. Not from scratch — they'd built several versions already. They'd figured out the architecture. They'd iterated on the prompts. They'd refined what to ask for. They'd debugged the context.
+
+A year's worth of context engineering work.
+
+What they did with Claude Code was take all of that accumulated understanding and, yes, implement the polished version much faster than they could manually code it. That's what the model is good at. But the intelligence in that implementation? The architecture? The constraints? The context? All of that came from a year of human work understanding the problem deeply.
+
+*[PAUSE]*
+
+The model didn't magically know what to build. The context was so well-engineered that the model could execute on it perfectly.
+
+---
+
+## SLIDE 48: Reveal Part 2 - The Real Insight
+*[GESTURE at the big reveal]*
+
+And this is the real insight I want you to carry with you.
+
+That post that went viral — everyone read it as "look how powerful the model is." But if you understand context engineering, you read it as something else entirely: "look what becomes possible when you engineer your context right."
+
+The model isn't the problem. The context is. And conversely, when the context is good, the model becomes phenomenally capable.
+
+That's not diminishing the model. That's clarifying the relationship. The model and the context are partners. A capable model with bad context fails. A capable model with good context succeeds spectacularly.
+
+*[PAUSE]*
+
+You now have the six pillars. You understand the stakes. You have a playbook. You know how to measure. You know when context is the bottleneck and when to escalate to the model.
+
+And you understand that that viral post wasn't about the model at all.
+
+It was about context engineering.
+
+---
+
+## SLIDE 49: Now the AI Knows What You Mean
 *[SLOW DOWN — this is the closing moment]*
 
-So let me bring it full circle.
+So let me bring it all together.
 
 Remember "fix the login bug"? The AI that didn't know what you meant?
 
@@ -596,6 +686,8 @@ The model often wasn't the main problem. The context was. And now you know how t
 
 You've got six pillars to work with. Seven concrete steps you can take this week. Research increasingly showing that context engineering can rival or outperform heavier interventions on many production-style tasks. And a new lens for evaluating every AI system you touch.
 
+And you now know the story behind that viral post — that wasn't about the model's raw power. It was about context engineering done right.
+
 Here's what I want you to do: Audit one system this week. Improve its context. Measure what changes. And I promise you — you'll discover opportunities you didn't know were there.
 
 If you remember nothing else, remember four words: **Audit, prune, structure, measure.** That's your Monday morning starting point.
@@ -604,15 +696,14 @@ Thank you.
 
 ---
 
-## SLIDE 45: Questions
+## SLIDE 50: Questions
 *[OPEN FOR Q&A]*
 
 I'm ready for questions. What do you want to dig into?
 
 ---
 
-
-## SLIDE 46: CLOSING SLIDE
+## SLIDE 51: CLOSING SLIDE
 *[Hold this briefly]*
 
 Thank you all for your time and attention today. My contact info is on screen — training@getskillsnow.com is the best way to reach me. And you can find more of my work at techskillstransformations.com and getskillsnow.com. If you're working on context engineering challenges at your organization, I'd genuinely love to hear about it.
@@ -626,44 +717,61 @@ Remember: better context often beats bigger models. Audit, prune, structure, mea
 | Slide | Duration | Section |
 |-------|----------|---------|
 | 1-3 | ~1 min | Version, title, about me |
-| 4 | ~2 min | "The AI should have known" + audience poll |
-| 5-8 | ~4 min | Definition, evolution, enterprise moment, cost of bad context |
-| 9-10 | ~1 min | Six pillars intro and overview |
-| 11-14 | ~5 min | Pillar 1: Instructions, before/after, system prompt win, tool bloat |
-| 15-18 | ~4 min | Pillar 2: Retrieval, principles, RAG vs context engine, evolution |
-| 19-21 | ~5 min | Pillar 3: Memory, positioning, context layers |
-| 22-23 | ~5 min | Pillar 4: Formatting & structure |
-| 24-26 | ~5 min | Pillar 5: Constraints, context smells, diagnosis |
-| 27-29 | ~5 min | Pillar 6: Decomposition, strategies, multi-agent |
-| 30-31 | ~5 min | Does it work? Support bot case study |
-| 32 | ~2 min | Evidence: ACE framework |
-| 33-36 | ~4.5 min | Context beats model upgrades, boundary conditions, decision framework, collaboration |
-| 37-40 | ~5 min | Monday morning playbook |
-| 41-42 | ~4 min | Metrics, measurement, eval recipe |
-| 43 | ~3 min | Road ahead |
-| 44-46 | ~3 min | Closing, questions, thank you |
-| **Total** | **~60 min** | **Core spoken ~46 min + ~10 min pauses, polls, transitions; ~4 min buffer** |
+| 4 | ~1 min | "This isn't funny" hook — teaser for reveal |
+| 5 | ~2 min | "The AI should have known" + audience poll |
+| 6-9 | ~4 min | Definition, evolution, enterprise moment, cost of bad context |
+| 10-11 | ~1 min | Six pillars intro and overview |
+| 12-15 | ~5 min | Pillar 1: Instructions, before/after, system prompt win, tool bloat |
+| 16-19 | ~4 min | Pillar 2: Retrieval, principles, RAG vs context engine, evolution |
+| 20-22 | ~5 min | Pillar 3: Memory, positioning, context layers |
+| 23 | ~1.5 min | Context rot — memory degradation pattern |
+| 24-25 | ~5 min | Pillar 4: Formatting & structure |
+| 26-28 | ~5 min | Pillar 5: Constraints, context smells, diagnosis |
+| 29-31 | ~5 min | Pillar 6: Decomposition, strategies, multi-agent |
+| 32-33 | ~5 min | Does it work? Support bot case study |
+| 34 | ~2 min | Evidence: ACE framework |
+| 35-39 | ~4.5 min | Context beats model upgrades, boundary conditions, decision framework, collaboration |
+| 40-43 | ~5 min | Monday morning playbook (7 items) |
+| 44-45 | ~4 min | Metrics, measurement, eval recipe |
+| 46 | ~3 min | Road ahead |
+| 47-48 | ~2 min | Reveal Part 1 & 2 — viral post callback |
+| 49-51 | ~3 min | Closing, questions, thank you |
+| **Total** | **~65 min** | **Core spoken ~50 min + ~10 min pauses, polls, transitions; ~5 min buffer** |
 
 ---
 
-# Key Changes Made in v10
+# Key Changes Made in v11
 
-1. ✓ **Slide 40 (Missed "IS" instance fixed)**: Deck playbook item 7 description changed from "Context quality IS output quality" to "Context quality drives output quality." Both Slide 40 (playbook) and Slide 41 (metrics) now match the script.
+1. ✓ **NEW Slide 4: "This isn't funny" hook**: Introduces the viral Claude Code post as a teaser. Brief (~1 min) — sets up the reveal at the end without spoiling it.
 
-2. ✓ **Slide 9 (Engineering framing added)**: Script now includes: "every one of these pillars can be tuned and measured independently. This isn't aesthetic prompt writing; it's systems engineering." Sets the measurement mindset early.
+2. ✓ **Renumbered Slides 4-46 (old) → 5-51 (new)**: All old slides shifted by +1 due to new Slide 4 insertion.
 
-3. ✓ **Slide 32 (ACE delivery caveat strengthened)**: Added: "to be clear — this is strong evidence for the direction of the field, not a guarantee that context engineering replaces model choice in every scenario."
+3. ✓ **NEW Slide 23: Context Rot**: Inserted after Slide 22 (Context Layers Architecture). Covers progressive context degradation, three-stage pattern (clean, noise building, full rot), root causes, and mitigations. Renumbered all subsequent slides +2 total.
 
-4. ✓ **Timing guide: optional expansion notes added**: Three optional expansion points documented for protecting against delivery underrun.
+4. ✓ **NEW Slide 47: Reveal Part 1**: First half of the reveal — unpacking what the viral post actually showed (a year of context engineering work enabled the fast execution).
+
+5. ✓ **NEW Slide 48: Reveal Part 2**: Second half — the big insight that the post demonstrates context engineering mastery, not just model capability.
+
+6. ✓ **Renumbered old Slide 44 → Slide 49** (closing): Updated closing script to incorporate the reveal callback and reinforce that the viral post was about context, not just the model.
+
+7. ✓ **Renumbered old Slides 45-46 → Slides 50-51**: Questions and thank you slides.
+
+8. ✓ **Timing Guide Updated**: Now covers all 51 slides with adjusted durations reflecting new content (~65 min total, up from ~60 min).
+
+9. ✓ **Slide 9 Engineering Framing**: Script now includes: "every one of these pillars can be tuned and measured independently. This isn't aesthetic prompt writing; it's systems engineering."
+
+10. ✓ **Slide 34 ACE Caveat Strengthened**: Added: "To be clear — this is strong evidence for the direction of the field, not a guarantee that context engineering replaces model choice in every scenario."
 
 ---
 
-**Voice Notes**: All deck instances of "IS output quality" are now corrected. The engineering-measurement framing at Slide 9 primes the audience for the metrics section. The ACE caveat (Slide 32) is now a three-layer defense: visible "(one benchmarked setup)" on the slide, "in that specific benchmarked setup" in the main script, and "not a guarantee" follow-up line. All slide-level claims match or are softer than the spoken script.
+**Voice Notes**: The "This isn't funny" hook (Slide 4) is deliberately vague — it promises a payoff later without explaining it, creating narrative tension. The Reveal slides (47-48) deliver that payoff and tie the entire talk together: the viral post demonstrates context engineering in action, not just model capability. The closing (Slide 49) now explicitly calls back to the reveal. Context Rot (Slide 23) fits naturally into the Memory section, explaining a critical failure pattern that audiences recognize immediately. Timing increased from ~60 min to ~65 min; adjust Optional Expansion points accordingly.
 
 ## Optional Expansion Points (if talk runs short)
 
 Use these if delivery is brisk and you need to fill time:
 
-1. **After Slide 26 (diagnostic ladder)**: Extended audience exercise — "Turn to your neighbor and diagnose one AI system using the five-step ladder. You have 90 seconds." (~2 min)
-2. **After Slide 32 (ACE results)**: "Let me walk you through how I'd debug an AI system live. Give me a use case from the audience." (~3 min)
-3. **After Slide 35 (decision framework)**: Quick show-of-hands poll — "How many of you have tried context engineering before fine-tuning? Before upgrading the model? Before both?" (~1 min)
+1. **After Slide 28 (diagnostic ladder)**: Extended audience exercise — "Turn to your neighbor and diagnose one AI system using the five-step ladder. You have 90 seconds." (~2 min)
+
+2. **After Slide 34 (ACE results)**: "Let me walk you through how I'd debug an AI system live. Give me a use case from the audience." (~3 min)
+
+3. **After Slide 37 (decision framework)**: Quick show-of-hands poll — "How many of you have tried context engineering before fine-tuning? Before upgrading the model? Before both?" (~1 min)

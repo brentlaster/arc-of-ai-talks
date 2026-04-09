@@ -665,9 +665,26 @@ REMOTE_PAGE = r"""<!DOCTYPE html>
     color: var(--dim);
     margin-top: 10px;
   }
+
+  /* Keep-alive pixel — continuous animation prevents screen sleep */
+  .keep-alive {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    height: 1px;
+    opacity: 0.01;
+    animation: keepAlive 1s infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes keepAlive {
+    from { transform: translateX(0); }
+    to { transform: translateX(1px); }
+  }
 </style>
 </head>
 <body>
+<div class="keep-alive"></div>
 
 <h1>Teleprompter Remote</h1>
 <div class="slide-info" id="slideInfo">&mdash;</div>
@@ -881,37 +898,24 @@ document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'visible') requestWakeLock();
 });
 
-// Method 2: NoSleep fallback — plays a tiny silent video to prevent sleep
-// Works on iOS Safari and older Android browsers where Wake Lock isn't supported
+// Method 2: Hidden canvas redraws every second to signal screen activity
 (function() {
-  var noSleepVideo = document.createElement('video');
-  noSleepVideo.setAttribute('playsinline', '');
-  noSleepVideo.setAttribute('muted', '');
-  noSleepVideo.setAttribute('loop', '');
-  noSleepVideo.style.position = 'fixed';
-  noSleepVideo.style.top = '-1px';
-  noSleepVideo.style.left = '-1px';
-  noSleepVideo.style.width = '1px';
-  noSleepVideo.style.height = '1px';
-  noSleepVideo.style.opacity = '0.01';
-  // Tiny inline base64 silent mp4
-  noSleepVideo.src = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAA+ttZGF0AAACrwYF//+r3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE1MiByMjg1NCBlOWE1OTAzIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAxNyAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTMgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0zIGJfcHlyYW1pZD0yIGJfYWRhcHQ9MSBiX2JpYXM9MCBkaXJlY3Q9MSB3ZWlnaHRiPTEgb3Blbl9nb3A9MCB3ZWlnaHRwPTIga2V5aW50PTI1MCBrZXlpbnRfbWluPTEgc2NlbmVjdXQ9NDAgaW50cmFfcmVmcmVzaD0wIHJjX2xvb2thaGVhZD00MCByYz1jcmYgbWJ0cmVlPTEgY3JmPTIzLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MToxLjAwAIAAAABhZYiEAD//8m+P5OXfBeLGOfKE3xkODvFZuBflHv/+VwJIta6cbpIo6eKig8e6WPxJBjSJKMOpaijRfTbNPHfBe3E6MnMnij0yMjJJZFNlMGMIEQIACAAHABAAAAMAAAMAIhAAAARBbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAB9AAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAkV0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAB9AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAACAAAAAgAAAAAAAkRlZHRzAAAAHGVsc3QAAAAAAAAAAQAABLAAAAQAAAEAAAABvW1kaWEAAAAgbWRoZAAAAAAAAAAAAAAAAAAAMgAAAAIAVcQAAAAAAC1oZGxyAAAAAAAAAAB2aWRlAAAAAAAAAAAAAAAAVmlkZW9IYW5kbGVyAAAAaG1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAChzdGJsAAAAGHN0c2QAAAAAAAAAAQAAAAhhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAgACABIAAAASAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGP//AAAALWF2Y0MBQsAK/+EAFmdCwArZhQlpiwEQAAA+kAAOpgBA4iB4AAAAABBwYXNwAAAAAQAAAAEAAAAYc3R0cwAAAAAAAAABAAAAAgAAAgAAAAAcc3RzYwAAAAAAAAABAAAAAQAAAAIAAAABAAAAFHN0c3oAAAAAAAAABgAAAAIAAAAMc3RjbwAAAAAAAAABAAAAMAAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNTcuODMuMTAw';
-  document.body.appendChild(noSleepVideo);
-
-  function startNoSleep() {
-    noSleepVideo.play().catch(function(){});
-  }
-
-  // Auto-play on first user interaction (required by mobile browsers)
-  document.addEventListener('touchstart', startNoSleep, { once: true });
-  document.addEventListener('click', startNoSleep, { once: true });
+  var c = document.createElement('canvas');
+  c.width = 2; c.height = 2;
+  c.style.cssText = 'position:fixed;bottom:0;right:0;width:1px;height:1px;opacity:0.01;pointer-events:none;';
+  document.body.appendChild(c);
+  var ctx = c.getContext('2d');
+  setInterval(function() {
+    ctx.fillStyle = 'rgba(' + (Math.random()*255|0) + ',0,0,0.01)';
+    ctx.fillRect(0, 0, 2, 2);
+  }, 1000);
 })();
 
-// Method 3: Periodic title change to keep page "active"
+// Method 3: Periodic fetch + title toggle to keep browser active
 setInterval(function() {
   document.title = document.title === 'Teleprompter Remote' ?
     'Teleprompter Remote ' : 'Teleprompter Remote';
-}, 15000);
+}, 10000);
 </script>
 </body>
 </html>

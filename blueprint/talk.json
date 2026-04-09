@@ -1,6 +1,6 @@
 {
-    "deck": "ai-security-blueprint.pptm",
-    "script": "ai-security-blueprint-script.md",
+    "deck": "blueprint.pptm",
+    "script": "blueprint-script.md",
     "port": 8765,
     "auto_start": false
 }

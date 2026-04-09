@@ -10,9 +10,30 @@
 ---
 
 
+Good morning, everyone. Before we dig in, let's take a quick trip down memory lane. Remember when AI's biggest problems were actually... entertaining?
+
+[ADVANCE to bloopers]
+
+---
 
 
-Good morning, everyone. Before we start, quick show of hands. How many of you saved 15 minutes this week using AI? [PAUSE for hands] Good number. Now how many of you had it cost you 30?
+## SLIDE 3: AI BLOOPERS — "REMEMBER WHEN AI WAS JUST... FUNNY?"
+
+These are all real. Actually served to real users by Google's AI Overviews. Cook your spaghetti in gasoline. Eat at least one small rock per day — for your health, of course. And my personal favorite — add a little non-toxic glue to your pizza sauce for better cheese adhesion.
+
+[PAUSE for laughter]
+
+---
+
+## SLIDE 4: AI BLOOPERS — "THOSE WERE THE FUN FAILURES"
+
+And it gets better. Need to figure out if your neighbor is an alien? AI's got you covered. And apparently, doctors recommend two to three cigarettes per day during pregnancy.
+
+[PAUSE for laughter]
+
+Those were the fun failures. They went viral, we all laughed, Google was embarrassed. But here's the thing — those failures are obvious. You KNOW not to eat rocks. You KNOW not to cook with gasoline. The problem we're going to talk about today is that the failures aren't funny anymore. They're subtle. And subtle wrong is much more dangerous than obviously wrong.
+
+Quick show of hands. How many of you saved 15 minutes this week using AI? [PAUSE for hands] Good number. Now how many of you had it cost you 30?
 
 [PAUSE] Yeah. That's the talk.
 
@@ -20,19 +41,19 @@ I'm Brent Laster. I've been working in engineering and technical training for ov
 
 That's what we're going to dig into today. We'll look at five specific barriers that are making AI feel harder than it should. Then we'll walk through five achievable shifts — things you can implement this week — that change the experience. And we'll close with a playbook you can take back to your team on Monday.
 
-[TIMING: 2:30]
+[TIMING: 3:30]
 
 ---
 
 
-## SLIDE 3: ABOUT ME
+## SLIDE 5: ABOUT ME
 
 [Brief personal introduction - use content on slide]
 
 ---
 
 
-## SLIDE 4: A SHOW OF HANDS
+## SLIDE 6: A SHOW OF HANDS
 
 Let's start with the numbers. Across recent workforce studies, a clear pattern is emerging. About 52% of workers are actively using AI tools — that's from Qualtrics. But here's the catch — a separate study from ManpowerGroup found that worker confidence in using technology at work fell sharply by 18 percentage points over roughly the same period, even as AI use rose. Two different studies, same story: adoption going up, confidence going down.
 
@@ -42,7 +63,7 @@ Now, these are broad workforce numbers — not engineering-specific. But the sam
 
 ---
 
-## SLIDE 5: AI PRODUCTIVITY PARADOX
+## SLIDE 7: AI PRODUCTIVITY PARADOX
 
 Now let me hit you with the uncomfortable numbers. Only about one in four organizations have achieved repeatable ROI from AI across multiple use cases — that's from research by MIT and Wharton. The rest are still trying to figure out how to make this work beyond pilots and proofs of concept.
 
@@ -56,7 +77,7 @@ We're using it more. We're enjoying it less. Let's figure out why.
 
 ---
 
-## SLIDE 6: THE TEST THAT PASSED
+## SLIDE 8: THE TEST THAT PASSED
 
 Let me walk you through a scenario that plays out constantly across engineering teams — it's a well-documented pattern, not a single incident.
 
@@ -72,7 +93,7 @@ That gap — between looking correct and being correct — is exactly what makes
 
 ---
 
-## SLIDE 7: THE TEST DETAILS
+## SLIDE 9: THE TEST DETAILS
 
 Here's the breakdown of what the AI test actually covered and what it missed.
 
@@ -85,7 +106,7 @@ This is why "the code compiles" and "the code passes" aren't the same as "the co
 [TIMING: 7:45]
 
 ---
-## SLIDE 8: SECTION DIVIDER — "WHY DOES AI FEEL SO HARD?"
+## SLIDE 10: SECTION DIVIDER — "WHY DOES AI FEEL SO HARD?"
 
 So why is this happening? Why does a tool that's supposed to make our lives easier feel like it's making things harder? After digging into the research — surveys from Stack Overflow, BCG, Pew, and others — plus community discussions across engineering forums, five specific barriers keep surfacing. Not philosophical barriers. Concrete, fixable problems. Let's walk through them.
 
@@ -93,7 +114,7 @@ So why is this happening? Why does a tool that's supposed to make our lives easi
 
 ---
 
-## SLIDE 9: FIVE BARRIERS OVERVIEW
+## SLIDE 11: FIVE BARRIERS OVERVIEW
 
 Here are the five:
 
@@ -105,7 +126,7 @@ Each one feeds the others. Tool sprawl creates confusion about where AI fits, wh
 
 ---
 
-## SLIDE 10: BARRIER 1 — TOO MANY TOOLS, NOT ENOUGH GLUE
+## SLIDE 12: BARRIER 1 — TOO MANY TOOLS, NOT ENOUGH GLUE
 
 First barrier. Survey data tells us developers are juggling more AI tools than ever — ActivTrak's 2026 report found the average organization now uses seven AI tools, up from two just two years ago, with 83% of organizations using six or more. IDE copilot, chat interfaces, code search, review assistants, doc generators. Each one is independently useful. But none of them share context with each other.
 
@@ -115,7 +136,7 @@ So YOU become the integration layer. You re-explain the same problem four times 
 
 ---
 
-## SLIDE 11: THREE-TOOL THRESHOLD
+## SLIDE 13: THREE-TOOL THRESHOLD
 
 Here's a finding from BCG's 2026 brain fry research that stuck with me: when they looked at AI tool usage patterns, productivity gains rose from one to two tools, peaked at three, and actually dropped past four. At the same time, cognitive strain kept climbing.
 
@@ -127,7 +148,7 @@ My recommendation: pick your best two to three tools. Go deep. Learn their stren
 
 ---
 
-## SLIDE 12: ENGINEER'S AI TOOLBOX
+## SLIDE 14: ENGINEER'S AI TOOLBOX
 
 Let me make this concrete. Look at a typical engineer's AI stack. You've got an IDE Copilot for inline suggestions. A chat interface for broader questions. A code search tool for codebase Q&A. A review assistant for PR analysis. A ticket summarizer.
 
@@ -139,7 +160,7 @@ You're sitting there thinking, "AI is supposed to save me time." But you're spen
 
 ---
 
-## SLIDE 13: BARRIER 2 — NOBODY TOLD US WHERE AI FITS
+## SLIDE 15: BARRIER 2 — NOBODY TOLD US WHERE AI FITS
 
 Second barrier. Most organizations adopted AI by bolting it onto existing workflows. They didn't redesign anything. They just said, "Here's a new tool. Figure out where it goes." And so developers are making ad hoc decisions — sometimes using AI, sometimes not — with no shared understanding of where it adds value and where it doesn't.
 
@@ -151,7 +172,7 @@ BCG found that organizations that communicated clearly about where AI fits in sp
 
 ---
 
-## SLIDE 14: ENGINEERING WORKFLOW — THREE REALITIES
+## SLIDE 16: ENGINEERING WORKFLOW — THREE REALITIES
 
 Let me show you what this looks like in practice. Three columns — remember this one, because we'll come back to it.
 
@@ -167,7 +188,7 @@ The middle column is the frustration zone. The right column is what we're aiming
 
 ---
 
-## SLIDE 15: BARRIER 3 — PROMISE VS. REALITY
+## SLIDE 17: BARRIER 3 — PROMISE VS. REALITY
 
 Third barrier. AI is almost right a lot of the time. And "almost right" is the most dangerous kind of wrong. If it were obviously broken, you'd catch it. If it were always correct, you could trust it. But "almost right" means you have to verify everything, and the review feels pointless because the output usually looks fine.
 
@@ -179,7 +200,7 @@ Many organizations still struggle to demonstrate repeatable, measurable ROI from
 
 ---
 
-## SLIDE 16: WHEN AI CODE LOOKS RIGHT BUT ISN'T
+## SLIDE 18: WHEN AI CODE LOOKS RIGHT BUT ISN'T
 
 Here's an illustrative example of what "almost right" looks like in code. This slide shows a JWT token validation function. Syntactically perfect. Well-structured. It validates the token signature. It would pass generic unit tests.
 
@@ -190,7 +211,7 @@ It's like hiring a contractor to build a beautiful kitchen — granite counterto
 [TIMING: 19:15]
 
 ---
-## SLIDE 17: PR SUMMARY — LOOKS RIGHT BUT ISN'T
+## SLIDE 19: PR SUMMARY — LOOKS RIGHT BUT ISN'T
 
 Here's a composite example drawn from a pattern that shows up consistently in engineering teams adopting AI review tools.
 
@@ -204,7 +225,7 @@ That's not a code bug. That's a process failure created by incomplete AI output 
 
 ---
 
-## SLIDE 18: BARRIER 4 — AI BRAIN FRY
+## SLIDE 20: BARRIER 4 — AI BRAIN FRY
 
 Fourth barrier, and this is the one that hits hardest. AI brain fry. For engineers, it's the constant loop of prompting, validating output line by line, re-prompting when it's wrong, and context-switching between tools — all while keeping your own mental model intact. A March 2026 study by BCG and Harvard Business Review surveyed nearly 1,500 workers and coined the term "AI brain fry" — mental fatigue from excessive AI oversight. They found meaningful increases among heavy AI users: 14% more mental effort, 12% more mental fatigue, 19% more information overload, and 33% more decision fatigue. Fourteen percent of knowledge workers reported significant cognitive strain, with software development flagged as one of the highest-prevalence roles. For engineering, that pattern is likely intensified by the verification load we've been talking about.
 
@@ -214,7 +235,7 @@ And here's the irony: AI was supposed to lighten workloads. But ActivTrak's anal
 
 ---
 
-## SLIDE 19: DEVELOPER BRAIN FRY CYCLE
+## SLIDE 21: DEVELOPER BRAIN FRY CYCLE
 
 For engineers specifically, the cycle looks like this. Step one: write a detailed prompt. Step two: inspect the output line by line. Step three: compare against your requirements. Step four: patch what AI got wrong. Step five: re-run and test. Step six: re-validate — did the patch break something else? Step seven: context-switch to the next task.
 
@@ -223,7 +244,7 @@ And this isn't once a day. This cycle happens ten, fifteen, twenty times a day. 
 [TIMING: 22:15]
 
 ---
-## SLIDE 20: WHERE THE TIME ACTUALLY GOES
+## SLIDE 22: WHERE THE TIME ACTUALLY GOES
 
 Here's the data behind brain fry. BCG's research found directional evidence — not universal benchmarks — that for organizations using AI heavily, collaboration overhead increased meaningfully while focused work time dropped. ActivTrak's large-scale tracking confirmed the pattern: focus sessions down 9%, now averaging just 13 minutes each.
 
@@ -237,7 +258,7 @@ So the paradox: a tool that's supposed to save mental effort actually increases 
 
 ---
 
-## SLIDE 21: THE VERIFICATION TAX
+## SLIDE 23: THE VERIFICATION TAX
 
 There's a pattern here that I want to make visual. Think about what happens every time you use AI for a coding task. The AI generates code in about two minutes. But then you need to read it line by line, compare it against requirements, check for edge cases, test it, and fix what's wrong. That verification process often takes fifteen minutes or more.
 
@@ -249,7 +270,7 @@ This is the single biggest insight from the brain fry research: the generation i
 
 ---
 
-## SLIDE 22: AUDIENCE CHECK — WHICH BARRIER?
+## SLIDE 24: AUDIENCE CHECK — WHICH BARRIER?
 
 Quick check. Look around this room for a second. [PAUSE] How many people here are dealing with all five of these barriers at once? [PAUSE — count hands] Yeah, that's about what I expected.
 
@@ -263,7 +284,7 @@ Cognitive overload tends to get the most recognition — BCG's survey found 14% 
 
 ---
 
-## SLIDE 23: BARRIER 5 — PRESSURE TO KEEP UP
+## SLIDE 25: BARRIER 5 — PRESSURE TO KEEP UP
 
 Last barrier. Pew Research found that 52% of US workers are more worried than hopeful about AI at work. And BCG identifies skill erosion — the fear that AI is hollowing out human capabilities — as a top workforce concern. For engineers specifically, that shows up as: fear of losing debugging skill when you stop writing code from scratch. Fear of developing shallow understanding of systems you only interact with through generated code. Fear of being judged slower than AI-heavy peers. And fear of losing the engineering judgment that comes from working through hard problems yourself.
 
@@ -275,7 +296,7 @@ But here's the important part: when organizations provided structured support �
 
 ---
 
-## SLIDE 24: SECTION DIVIDER — "FIVE ACHIEVABLE SHIFTS"
+## SLIDE 26: SECTION DIVIDER — "FIVE ACHIEVABLE SHIFTS"
 
 Okay. We've mapped the problem. Now let's talk about what to do about it. Five shifts. Not theoretical. Not "maybe someday." Things you can implement this week.
 
@@ -283,7 +304,7 @@ Okay. We've mapped the problem. Now let's talk about what to do about it. Five s
 
 ---
 
-## SLIDE 25: FIVE SHIFTS OVERVIEW
+## SLIDE 27: FIVE SHIFTS OVERVIEW
 
 Shift one: assign AI the right jobs. Shift two: lighter mental models. Shift three: context-first prompting. Shift four: workflow pairing. Shift five: guardrails.
 
@@ -293,7 +314,7 @@ Each one addresses one of the barriers we just covered. Together, they restore c
 
 ---
 
-## SLIDE 26: EACH SHIFT ADDRESSES A BARRIER
+## SLIDE 28: EACH SHIFT ADDRESSES A BARRIER
 
 [GESTURE across the five mapping rows on screen]
 
@@ -303,7 +324,7 @@ Notice that some shifts address multiple barriers, and some barriers need multip
 
 [TIMING: 26:30]
 
-## SLIDE 27: SHIFT 1 — ASSIGN AI THE RIGHT JOBS
+## SLIDE 29: SHIFT 1 — ASSIGN AI THE RIGHT JOBS
 
 First shift. Not every task should be AI-assisted. The question to ask: "Is this a task where AI's strengths — pattern matching, fast generation, handling repetitive structure — actually solve a real problem?" If yes, great. If you're just using AI because it's there, you're adding overhead for no benefit.
 
@@ -313,7 +334,7 @@ The delegation test: think of AI as a capable junior engineer with no project co
 
 ---
 
-## SLIDE 28: TASK MATRIX
+## SLIDE 30: TASK MATRIX
 
 Here's a simple matrix. One axis is cognitive load — how much thinking does this task require? The other is human judgment value — how much does quality depend on human decision-making?
 
@@ -327,7 +348,7 @@ The danger zone is when teams put high-touch tasks in the AI-leads bucket. That'
 
 ---
 
-## SLIDE 29: KNOW YOUR AI SWEET SPOTS
+## SLIDE 31: KNOW YOUR AI SWEET SPOTS
 
 Let me make this specific for engineers.
 
@@ -343,7 +364,7 @@ Simple rule: if the time you spend validating AI output exceeds the time it save
 
 ---
 
-## SLIDE 30: SHIFT 2 — LIGHTER MENTAL MODELS
+## SLIDE 32: SHIFT 2 — LIGHTER MENTAL MODELS
 
 Second shift. Think of AI as a capable junior engineer with no project context. Smart, fast, eager, sometimes wrong about important things. You wouldn't micromanage them into paralysis. But you also wouldn't hand them the keys to production.
 
@@ -355,7 +376,7 @@ Or think of it another way: we said we wanted pair programming. We just forgot t
 
 ---
 
-## SLIDE 31: TRUST SWEET SPOT
+## SLIDE 33: TRUST SWEET SPOT
 
 There's a spectrum. On one end: blind trust. You accept whatever AI gives you. Dangerous. On the other end: total skepticism. You verify every single line. Exhausting.
 
@@ -367,7 +388,7 @@ Being intentional about where you sit on that spectrum for each task type — th
 
 ---
 
-## SLIDE 32: SHIFT 3 — CONTEXT-FIRST PROMPTING
+## SLIDE 34: SHIFT 3 — CONTEXT-FIRST PROMPTING
 
 Third shift, and this one will change how you use AI tomorrow. Most people prompt with a task: "Write tests for this module." And then they're surprised when the output is generic.
 
@@ -377,7 +398,7 @@ Flip the order. Context first, then task, then constraints. Tell AI what it need
 
 ---
 
-## SLIDE 33: CONTEXT MAKES THE DIFFERENCE
+## SLIDE 35: CONTEXT MAKES THE DIFFERENCE
 
 Look at the difference on this slide. On the left: "Write unit tests for the authentication module." No context. The AI generates generic happy-path tests. Misses token expiry, role-based access, rate limiting, session invalidation. You spend 20 minutes re-prompting.
 
@@ -389,7 +410,7 @@ Same model. Same capability. Here's a rule of thumb I keep coming back to: thirt
 
 ---
 
-## SLIDE 34: SPOT THE MISSING CONTEXT
+## SLIDE 36: SPOT THE MISSING CONTEXT
 
 Let's try this. Here's a prompt: "Refactor the database query in users.py to be faster. It's running slow in production."
 
@@ -405,7 +426,7 @@ Without that context, AI will suggest generic optimizations that may not apply t
 
 ---
 
-## SLIDE 35: SHIFT 4 — WORKFLOW PAIRING
+## SLIDE 37: SHIFT 4 — WORKFLOW PAIRING
 
 Fourth shift. Stop bolting AI onto your existing process. Instead, design workflows where AI and humans take turns. AI drafts, human reviews. AI refines based on feedback, human approves. It's like pair programming, but your pair is the AI.
 
@@ -417,7 +438,7 @@ The key insight is that organizations that redesigned workflows WITH AI got ROI.
 
 ---
 
-## SLIDE 36: CASE STUDY — AI CODE REVIEW
+## SLIDE 38: CASE STUDY — AI CODE REVIEW
 
 Here's a composite pattern drawn from multiple engineering teams adopting AI review tools. A team starts using AI for code review. Initially it works well — AI catches formatting issues, obvious bugs, style inconsistencies. But then the team starts letting AI approve PRs on its own. Human reviewers start rubber-stamping. "AI already looked at it."
 
@@ -431,7 +452,7 @@ Quality improves. Because now humans and AI each have clear roles. The fix wasn'
 
 ---
 
-## SLIDE 37: SHIFT 5 — GUARDRAILS
+## SLIDE 39: SHIFT 5 — GUARDRAILS
 
 Fifth shift. Put structure around your AI use. Not management overhead — engineering discipline. Same idea as linting or CI gates: structure that protects quality without slowing you down.
 
@@ -443,7 +464,7 @@ When everyone knows the rules, you stop second-guessing yourself. The mental loa
 
 ---
 
-## SLIDE 38: TRAINING CHANGES EVERYTHING
+## SLIDE 40: TRAINING CHANGES EVERYTHING
 
 Remember that finding about skill erosion anxiety dropping when organizations provided support? The key number is five hours. Five hours of structured, hands-on training with your actual tools and workflows. Not a webinar. Not a Slack link to documentation. Actual practice time.
 
@@ -453,7 +474,7 @@ Teams that get this training stop being afraid. They become confident. They know
 
 ---
 
-## SLIDE 39: WHEN AI ACTUALLY SHINES
+## SLIDE 41: WHEN AI ACTUALLY SHINES
 
 I don't want to leave you thinking AI is the problem. AI is extraordinary when you use it right. Let me give you three places where it genuinely transforms engineering work.
 
@@ -469,7 +490,7 @@ The key is intentionality. You know what job you're assigning AI, and it's a job
 
 ---
 
-## SLIDE 40: VIBE CODING — THE FUN AND THE RISK
+## SLIDE 42: VIBE CODING — THE FUN AND THE RISK
 
 Now, some of you have been thinking — "What about vibe coding? That's the part I actually enjoy." And you're right. Andrej Karpathy coined the term in early 2025: "Fully give in to the vibes, embrace exponentials, and forget that the code even exists." It was Collins Dictionary's Word of the Year. It's become how a lot of developers describe their best AI experience.
 
@@ -485,7 +506,7 @@ The goal isn't to kill the vibe. It's to keep the vibe AND keep the quality. Tha
 
 ---
 
-## SLIDE 41: LEAD THE SHIFT — AUGMENTATION, NOT AUTOMATION
+## SLIDE 43: LEAD THE SHIFT — AUGMENTATION, NOT AUTOMATION
 
 If you have any leadership influence — whether you're a tech lead, a manager, or an architect — here's the mindset shift that matters most. Stop thinking about automation. Start thinking about augmentation. The goal isn't "replace the human." The goal is "make the human better."
 
@@ -498,7 +519,7 @@ That's not just better for productivity. It's better for your team. Engineers wh
 [TIMING: 47:15]
 
 ---
-## SLIDE 42: YOUR SANE ADOPTION PLAYBOOK
+## SLIDE 44: YOUR SANE ADOPTION PLAYBOOK
 
 Here's your playbook for this week. Five things, one per day.
 
@@ -516,7 +537,7 @@ Friday: schedule five hours of hands-on training. Put it on the calendar. This w
 
 ---
 
-## SLIDE 43: USING AI AND ENJOYING IT
+## SLIDE 45: USING AI AND ENJOYING IT
 
 Let me bring this home.
 
@@ -536,7 +557,7 @@ One week. One workflow. That's how you start.
 
 ---
 
-## SLIDE 44: QUESTIONS
+## SLIDE 46: QUESTIONS
 
 I'd love to hear what's on your mind. What resonated? What didn't? What's the biggest challenge you're facing with AI on your team right now?
 
@@ -545,7 +566,7 @@ I'd love to hear what's on your mind. What resonated? What didn't? What's the bi
 ---
 
 
-## SLIDE 45: CLOSING SLIDE
+## SLIDE 47: CLOSING SLIDE
 
 Thank you so much. If you want to stay in touch, my contact info is on the slide. I'd love to hear how the playbook works for your team.
 
@@ -561,26 +582,27 @@ Thank you. Enjoy the rest of the conference.
 
 | Section | Slides | Cumulative Time |
 |---------|--------|----------------|
-| Opening & framing | 1-5 | 7:15 |
-| Illustrative scenario | 6-7 | 7:45 |
-| Barriers intro | 8-9 | 8:30 |
-| Barrier 1: Tool sprawl | 10-12 | 12:45 |
-| Barrier 2: Workflow fit | 13-14 | 16:30 |
-| Barrier 3: Promise vs reality | 15-17 | 19:45 |
-| Barrier 4: Brain fry | 18-21 | 23:30 |
-| Midpoint interaction | 22 | 24:30 |
-| Barrier 5: Pressure | 23 | 25:00 |
-| Shifts intro | 24-26 | 26:30 |
-| Shift 1: Right jobs | 27-29 | 30:15 |
-| Shift 2: Mental models | 30-31 | 33:00 |
-| Shift 3: Context-first | 32-34 | 37:45 |
-| Shift 4: Workflow pairing | 35-36 | 41:00 |
-| Shift 5: Guardrails + training | 37-38 | 43:45 |
-| When AI shines + vibe coding | 39-40 | 47:30 |
-| Leadership + playbook | 41-42 | 49:30 |
-| Close + challenge | 43 | 50:45 |
-| Q&A | 44 | ~59:00 |
-| Ending | 45 | ~60:00 |
+| AI bloopers + opening | 1-4 | 3:30 |
+| About me & framing | 5-7 | 7:15 |
+| Illustrative scenario | 8-9 | 7:45 |
+| Barriers intro | 10-11 | 8:30 |
+| Barrier 1: Tool sprawl | 12-14 | 12:45 |
+| Barrier 2: Workflow fit | 15-16 | 16:30 |
+| Barrier 3: Promise vs reality | 17-19 | 19:45 |
+| Barrier 4: Brain fry | 20-23 | 23:30 |
+| Midpoint interaction | 24 | 24:30 |
+| Barrier 5: Pressure | 25 | 25:00 |
+| Shifts intro | 26-28 | 26:30 |
+| Shift 1: Right jobs | 29-31 | 30:15 |
+| Shift 2: Mental models | 32-33 | 33:00 |
+| Shift 3: Context-first | 34-36 | 37:45 |
+| Shift 4: Workflow pairing | 37-38 | 41:00 |
+| Shift 5: Guardrails + training | 39-40 | 43:45 |
+| When AI shines + vibe coding | 41-42 | 47:30 |
+| Leadership + playbook | 43-44 | 49:30 |
+| Close + challenge | 45 | 50:45 |
+| Q&A | 46 | ~59:00 |
+| Ending | 47 | ~60:00 |
 
 ---
 
