@@ -270,8 +270,6 @@ Pattern: tokens issued before 02:00 UTC failing after rotation
 # token_manager.py lines 138-155
 def refresh(self, token):
     decoded = jwt.decode(token, self.signing_key, algorithms=["HS256"])
-    # BUG: uses current key, not the key that signed the original token
-    # Key rotation at 02:00 UTC invalidated all pre-rotation tokens
     new_token = jwt.encode({**decoded, "exp": time.time() + 3600}, self.signing_key)
     return new_token
 </code_context>
