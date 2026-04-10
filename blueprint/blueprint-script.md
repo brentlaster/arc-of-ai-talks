@@ -593,28 +593,11 @@ Before we move to the scenarios, here's a quick thought experiment. Imagine you'
 
 There's no wrong answer, but think about what it reveals. If you said kill switch, you're worried about incidents you can't contain. Audit trail — you're worried about not knowing what's happening. Tenant isolation — you're worried about data leakage between customers. The blueprint says you need all three, but the order you choose tells you where your biggest gap is right now. Keep that in mind as we walk through the scenarios.
 
-Now let me show you how the blueprint works when it's in place — by walking through two real-world scenarios.
+Now let me show you how the blueprint works when it's in place — by walking through two real-world scenarios where the blueprint either saved the day or would have.
 
 ---
 
-## SLIDE 44: [LIVE DEMO] Blueprint Defenses in Action
-
-**[SECTION DIVIDER — LIVE DEMO]**
-
-[DEMO: Run demo-security-blueprint.py]
-
-"Now let's see the blueprint in action. We're going to throw real prompt injection attacks at a system protected by our six-layer defense.
-
-The demo shows three increasingly sophisticated attacks — from a naive 'ignore your instructions' attempt to a subtle context-poisoned RAG retrieval. For each attack, you'll see exactly what's being sent to the model, which defense layers activate, and how the system responds.
-
-Pay attention to the defense scores — you'll see how layered defenses catch what individual layers miss. That's the whole point of the blueprint: no single layer is perfect, but together they're remarkably resilient.
-
-Let's run it."
-
----
-
-
-## SLIDE 45: Scenario 1: Customer-Facing AI Chatbot
+## SLIDE 44: Scenario 1: Customer-Facing AI Chatbot
 
 Scenario one: a customer-facing AI chatbot — probably the most common enterprise AI deployment, and it touches every layer. Imagine you're the platform lead at a financial services company. The product team wants an AI chatbot for customer support — live in six weeks. It needs customer data, every interaction is a compliance event, and if it goes wrong, the consequences are regulatory, legal, and reputational.
 
@@ -630,7 +613,7 @@ Most of you probably said DENY or ESCALATE — and you're right. The chatbot's s
 
 ---
 
-## SLIDE 46: Scenario 2: Internal AI Coding Assistant
+## SLIDE 45: Scenario 2: Internal AI Coding Assistant
 
 Scenario two: an internal coding assistant. Let me tell this one as an incident story.
 
@@ -646,7 +629,7 @@ The developer's experience didn't change. The organization's exposure did.
 
 ---
 
-## SLIDE 47: Scenario 2: The Near-Miss That Changed Policy
+## SLIDE 46: Scenario 2: The Near-Miss That Changed Policy
 
 Here's the critical moment distilled. Three independent layers caught it: content classification tagged the code as proprietary before the developer touched it. Model selection routed trade-secret code to the internal model. DLP scanning checked outbound requests as a final checkpoint.
 
@@ -660,7 +643,7 @@ So those are the scenarios — the blueprint applied to real deployments. Now le
 
 ---
 
-## SLIDE 48: What Most Teams Get Wrong
+## SLIDE 47: What Most Teams Get Wrong
 
 *[PAUSE — let the slide land]*
 
@@ -672,7 +655,7 @@ And here's a quick way to test where you stand.
 
 ---
 
-## SLIDE 49: 5 Questions Every AI Team Should Answer
+## SLIDE 48: 5 Questions Every AI Team Should Answer
 
 *[SLOW DOWN — let the audience reflect]*
 
@@ -692,7 +675,7 @@ If you can't answer yes to all five, you know where to start. And here's the roa
 
 ---
 
-## SLIDE 50: Implementation Roadmap
+## SLIDE 49: Implementation Roadmap
 
 *[GESTURE at diagram]*
 
@@ -712,7 +695,7 @@ Each phase builds on the previous one. Ship Phase 0 this week.
 
 ---
 
-## SLIDE 51: Your Monday Morning Checklist (1 of 2)
+## SLIDE 50: Your Monday Morning Checklist (1 of 2)
 
 *[GESTURE at the checklist]*
 
@@ -724,7 +707,7 @@ These four are the foundation. Now let's look at the operational layer.
 
 ---
 
-## SLIDE 52: Your Monday Morning Checklist (2 of 2)
+## SLIDE 51: Your Monday Morning Checklist (2 of 2)
 
 *[GESTURE at items 5-8]*
 
@@ -736,7 +719,7 @@ Start this week. Iterate this quarter. Mature this year.
 
 ---
 
-## SLIDE 53: The Road Ahead
+## SLIDE 52: The Road Ahead
 
 The regulatory and technical landscape is moving fast.
 
@@ -748,7 +731,7 @@ Agentic AI security is the next frontier. Agents that act autonomously — calli
 
 ---
 
-## SLIDE 54: Closing: Security Enables Innovation
+## SLIDE 53: Closing: Security Enables Innovation
 *[SLOW DOWN — closing moment]*
 
 97% of organizations that experienced an AI breach had no proper access controls. Remember the opening incidents — the Chevy chatbot, DPD, EchoLeak, Copilot secrets. Every one maps to missing layers in this blueprint. Not technology problems — architecture problems.
@@ -763,7 +746,7 @@ Thank you.
 
 ---
 
-## SLIDE 55: Questions
+## SLIDE 54: Questions
 *[PAUSE]*
 
 I'd love to take questions. We've got some time — who wants to go first?
