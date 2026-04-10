@@ -88,9 +88,12 @@ End Sub
 current_slide = 1
 total_slides = 1
 script_sections = []
+slide_titles = []
 slideshow_active = False
 mode = "vba"  # "vba" or "keyboard"
 deck_path = None  # path to .pptx/.pptm file (set via config or --deck)
+live_screenshot_path = None  # path to latest screenshot of slideshow window
+live_screenshot_lock = threading.Lock()
 
 # ── Demo mode state ──
 demo_mode = False
@@ -129,7 +132,8 @@ def _activate_slideshow(slide_num):
 
 
 def parse_script(filepath):
-    """Parse a markdown script file into sections split by SLIDE markers."""
+    """Parse a markdown script file into sections split by SLIDE markers.
+    Returns (sections, titles) where titles[i] is the marker text for section i."""
     text = Path(filepath).read_text(encoding="utf-8")
 
     # Match lines like:
@@ -143,19 +147,30 @@ def parse_script(filepath):
         re.IGNORECASE | re.MULTILINE,
     )
 
+    # Find all marker lines (for titles)
+    markers = marker.findall(text)
+
     # Split on marker lines
     parts = marker.split(text)
 
     # parts[0] = text before first SLIDE marker (preamble)
     # parts[1..] = text after each SLIDE marker
     if len(parts) < 2:
-        return [text.strip()]
+        return [text.strip()], [""]
 
     sections = []
-    for part in parts[1:]:
+    titles = []
+    for i, part in enumerate(parts[1:]):
         sections.append(part.strip())
+        # Clean up marker text to extract title
+        raw = markers[i] if i < len(markers) else ""
+        # Strip markdown formatting: #, *, [, ], --, —
+        clean = re.sub(r'^[#*\-\s\[]*', '', raw)
+        clean = re.sub(r'[\]*]*$', '', clean)
+        clean = clean.strip()
+        titles.append(clean)
 
-    return sections
+    return sections, titles
 
 
 # ── Slide navigation ──
@@ -180,6 +195,9 @@ def _receive_slide(idx, tot):
     if tot > 0:
         total_slides = tot
     slideshow_active = True
+    # Trigger immediate screenshot for portrait preview
+    if platform.system() == "Darwin":
+        threading.Thread(target=_capture_slideshow_screenshot, daemon=True).start()
 
 
 def _receive_stopped():
@@ -236,6 +254,26 @@ def _ppt_applescript(action, deck_path=None):
             '  end if\n'
             'end tell'
         )
+    elif action == "stop":
+        # End the slideshow
+        script = (
+            'tell application "Microsoft PowerPoint"\n'
+            '  if (count of slide show windows) > 0 then\n'
+            '    exit slide show slide show view of slide show window 1\n'
+            '  end if\n'
+            'end tell'
+        )
+    elif action == "check":
+        # Check if slideshow is running, return "running" or "stopped"
+        script = (
+            'tell application "Microsoft PowerPoint"\n'
+            '  if (count of slide show windows) > 0 then\n'
+            '    return "running"\n'
+            '  else\n'
+            '    return "stopped"\n'
+            '  end if\n'
+            'end tell'
+        )
     elif action == "open" and deck_path:
         # Open a presentation file
         abs_path = str(Path(deck_path).resolve())
@@ -260,6 +298,166 @@ def _ppt_applescript(action, deck_path=None):
         return False, "AppleScript timed out"
     except Exception as e:
         return False, str(e)
+
+
+_ppt_window_id_cache = {"wid": None, "info": None, "found": False}
+
+
+def _find_ppt_slideshow_window_id():
+    """Find the CGWindowID for the PowerPoint Slide Show window using Quartz."""
+    try:
+        import Quartz
+        window_list = Quartz.CGWindowListCopyWindowInfo(
+            Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements,
+            Quartz.kCGNullWindowID
+        )
+        # Collect all PowerPoint windows for debugging
+        ppt_windows = []
+        for win in window_list:
+            owner = win.get(Quartz.kCGWindowOwnerName, "")
+            if "PowerPoint" in owner or "powerpoint" in owner.lower():
+                name = win.get(Quartz.kCGWindowName, "")
+                bounds = win.get(Quartz.kCGWindowBounds, {})
+                w = bounds.get("Width", 0)
+                h = bounds.get("Height", 0)
+                wid = win.get(Quartz.kCGWindowNumber, 0)
+                layer = win.get(Quartz.kCGWindowLayer, -1)
+                ppt_windows.append({
+                    "wid": wid, "owner": owner, "name": name,
+                    "w": w, "h": h, "layer": layer
+                })
+
+        if not ppt_windows:
+            return None, "No PowerPoint windows found on screen"
+
+        # Pick the largest PowerPoint window (likely the slideshow)
+        ppt_windows.sort(key=lambda x: x["w"] * x["h"], reverse=True)
+        best = ppt_windows[0]
+        if best["w"] > 400 and best["h"] > 300:
+            info = f"{best['owner']}/{best['name']} ({best['w']}x{best['h']}, layer={best['layer']})"
+            return best["wid"], info
+
+        all_info = "; ".join(f"{w['name']}({w['w']}x{w['h']})" for w in ppt_windows)
+        return None, f"PowerPoint windows too small: {all_info}"
+    except ImportError:
+        return None, "Quartz module not available (pip install pyobjc-framework-Quartz)"
+    except Exception as e:
+        return None, f"Quartz error: {e}"
+
+
+_screenshot_method = None  # "window", "fullscreen", or None (auto-detect)
+_screenshot_wid = None     # cached window ID for window mode
+
+
+def _capture_slideshow_screenshot():
+    """Capture a screenshot of the PowerPoint slideshow window."""
+    global live_screenshot_path, _screenshot_method, _screenshot_wid
+    if platform.system() != "Darwin":
+        return
+
+    import tempfile
+    tmp_path = os.path.join(tempfile.gettempdir(), "teleprompter_live.jpg")
+    # Use a write-then-rename pattern to avoid serving partial files
+    tmp_write = tmp_path + ".tmp"
+
+    def _try_capture(cmd, label):
+        """Run screencapture and return True if a valid image was produced."""
+        try:
+            # Remove old tmp file to detect fresh writes
+            if os.path.exists(tmp_write):
+                os.unlink(tmp_write)
+            result = subprocess.run(cmd, capture_output=True, timeout=5)
+            if result.returncode == 0 and os.path.exists(tmp_write):
+                fsize = os.path.getsize(tmp_write)
+                if fsize > 100:
+                    os.replace(tmp_write, tmp_path)  # atomic rename
+                    with live_screenshot_lock:
+                        live_screenshot_path = tmp_path
+                    return True
+                else:
+                    print(f"  {label}: file too small ({fsize}B) - Screen Recording permission may be needed")
+            elif result.returncode == 0:
+                # Command succeeded but no file produced
+                print(f"  {label}: command ok but no file written")
+            else:
+                stderr_msg = result.stderr.decode() if result.stderr else ""
+                print(f"  {label}: rc={result.returncode} {stderr_msg}")
+        except subprocess.TimeoutExpired:
+            print(f"  {label}: timed out")
+        except Exception as e:
+            print(f"  {label}: {type(e).__name__}: {e}")
+        return False
+
+    try:
+        # If we already locked to fullscreen, use it
+        if _screenshot_method == "fullscreen":
+            _try_capture(["screencapture", "-x", "-t", "jpg", tmp_write], "fullscreen")
+            return
+
+        # If we have a cached working window ID, try it first
+        if _screenshot_method == "window" and _screenshot_wid:
+            if _try_capture(
+                ["screencapture", "-x", "-t", "jpg", "-l", str(_screenshot_wid), tmp_write],
+                f"window(cached={_screenshot_wid})"
+            ):
+                return
+            # Cached ID failed (window may have changed), reset and re-detect
+            print("  Cached window ID failed, re-detecting...")
+            _screenshot_method = None
+            _screenshot_wid = None
+
+        # Try window-specific capture
+        wid, info = _find_ppt_slideshow_window_id()
+        if wid:
+            wid_int = int(wid)  # ensure integer for screencapture -l
+            if _try_capture(
+                ["screencapture", "-x", "-t", "jpg", "-l", str(wid_int), tmp_write],
+                f"window(id={wid_int})"
+            ):
+                _screenshot_method = "window"
+                _screenshot_wid = wid_int
+                print(f"  Using window capture: {info}")
+                return
+            # Window capture failed — fall through to fullscreen
+            print(f"  Window capture failed for {info}, trying fullscreen...")
+        else:
+            print(f"  {info}")
+
+        # Fallback: capture the full screen
+        if _try_capture(["screencapture", "-x", "-t", "jpg", tmp_write], "fullscreen"):
+            _screenshot_method = "fullscreen"
+            print("  Locked to fullscreen capture mode")
+        else:
+            print("  All capture methods failed")
+    except Exception as e:
+        print(f"  Screenshot error: {type(e).__name__}: {e}")
+
+
+def _run_screenshot_loop():
+    """Background loop that captures slideshow screenshots every 2 seconds."""
+    import time as _time
+    capture_count = 0
+    while True:
+        _time.sleep(2)
+        if slideshow_active:
+            _capture_slideshow_screenshot()
+            capture_count += 1
+            if capture_count <= 3:
+                with live_screenshot_lock:
+                    path = live_screenshot_path
+                if path and os.path.exists(path):
+                    fsize = os.path.getsize(path)
+                    wid, winfo = _find_ppt_slideshow_window_id()
+                    print(f"  Screenshot #{capture_count}: {fsize} bytes (window: {winfo}, id={wid})")
+                else:
+                    print(f"  Screenshot #{capture_count}: FAILED - no file produced")
+        else:
+            global _screenshot_method, _screenshot_wid
+            with live_screenshot_lock:
+                live_screenshot_path = None
+            _screenshot_method = None  # re-detect next slideshow
+            _screenshot_wid = None
+            capture_count = 0
 
 
 def _demo_toggle():
@@ -467,9 +665,12 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
             with scroll_lock:
                 scroll_copy = dict(scroll_command)
 
+            title = slide_titles[section_idx] if section_idx < len(slide_titles) else ""
+
             state = {
                 "slide": current_slide,
                 "totalSlides": total_slides,
+                "slideTitle": title,
                 "scriptHtml": md_to_html(script_text),
                 "totalSections": len(script_sections),
                 "active": slideshow_active,
@@ -525,6 +726,8 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
             if ok and result and "/" in result:
                 idx, tot = result.split("/", 1)
                 _activate_slideshow(int(idx))
+                # Trigger immediate screenshot so portrait preview updates quickly
+                threading.Thread(target=_capture_slideshow_screenshot, daemon=True).start()
             self._json_response({"ok": ok, "error": result if not ok else None})
 
         elif self.path == "/api/ppt/prev":
@@ -532,6 +735,7 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
             if ok and result and "/" in result:
                 idx, tot = result.split("/", 1)
                 _activate_slideshow(int(idx))
+                threading.Thread(target=_capture_slideshow_screenshot, daemon=True).start()
             self._json_response({"ok": ok, "error": result if not ok else None})
 
         elif self.path == "/api/ppt/start":
@@ -539,6 +743,12 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
             if ok:
                 # Activate teleprompter on slide 1 since VBA won't fire for the initial slide
                 _activate_slideshow(1)
+            self._json_response({"ok": ok, "error": err})
+
+        elif self.path == "/api/ppt/stop":
+            ok, err = _ppt_applescript("stop")
+            if ok:
+                _receive_stopped()
             self._json_response({"ok": ok, "error": err})
 
         elif self.path.startswith("/api/scroll/"):
@@ -571,6 +781,50 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
                 "demoScript": Path(demo_script).name if demo_script else None,
                 "available": demo_script is not None,
             })
+
+        elif self.path == "/api/slide-image-debug":
+            # Debug endpoint to check screenshot pipeline status
+            import tempfile
+            tmp_path = os.path.join(tempfile.gettempdir(), "teleprompter_live.jpg")
+            with live_screenshot_lock:
+                current_path = live_screenshot_path
+            wid, winfo = _find_ppt_slideshow_window_id()
+            info = {
+                "slideshow_active": slideshow_active,
+                "live_screenshot_path": current_path,
+                "tmp_path_exists": os.path.exists(tmp_path),
+                "tmp_path_size": os.path.getsize(tmp_path) if os.path.exists(tmp_path) else 0,
+                "platform": platform.system(),
+                "ppt_window_id": wid,
+                "ppt_window_info": winfo,
+            }
+            self._json_response(info)
+
+        elif self.path.startswith("/api/slide-image"):
+            # Serve live screenshot of the PowerPoint slideshow
+            with live_screenshot_lock:
+                path = live_screenshot_path
+            try:
+                if path:
+                    with open(path, "rb") as f:
+                        img_data = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "image/jpeg")
+                    self.send_header("Content-Length", str(len(img_data)))
+                    self.send_header("Cache-Control", "no-cache, no-store")
+                    self.end_headers()
+                    self.wfile.write(img_data)
+                else:
+                    self.send_response(404)
+                    self.send_header("Content-Type", "text/plain")
+                    self.end_headers()
+                    msg = f"No screenshot available. active={slideshow_active}, path={path}"
+                    self.wfile.write(msg.encode())
+            except (FileNotFoundError, OSError):
+                self.send_response(404)
+                self.send_header("Content-Type", "text/plain")
+                self.end_headers()
+                self.wfile.write(b"Screenshot file was removed during read")
 
         else:
             self.send_response(404)
@@ -899,6 +1153,13 @@ REMOTE_PAGE = r"""<!DOCTYPE html>
   <button class="ctrl-btn" ontouchend="adjWordSp(2,event)" onclick="adjWordSp(2,event)">+</button>
 </div>
 
+<!-- Highlight bar -->
+<div class="section-label">Highlight Bar <span id="hlRemoteVal" style="float:right;opacity:0.7;">Off</span></div>
+<div class="ctrl-row">
+  <input type="range" min="0" max="100" value="0" id="highlightRemoteSlider"
+    style="width:100%;accent-color:#f0c040;height:36px;" />
+</div>
+
 <div class="status-bar" id="statusBar">Connecting...</div>
 
 <script>
@@ -1015,6 +1276,11 @@ function updateUI() {
   document.getElementById('fontVal').textContent = (settings.fontSize || 2.8).toFixed(1);
   document.getElementById('widthVal').textContent = (settings.textWidth || 1800);
   document.getElementById('wordSpVal').textContent = (settings.wordSpacing || 0) + 'px';
+  var hlSlider = document.getElementById('highlightRemoteSlider');
+  var hlVal = document.getElementById('hlRemoteVal');
+  var hl = settings.highlightLevel || 0;
+  if (hlSlider && parseInt(hlSlider.value) !== hl) hlSlider.value = hl;
+  if (hlVal) hlVal.textContent = hl === 0 ? 'Off' : hl + '%';
 }
 
 function poll() {
@@ -1053,6 +1319,11 @@ function poll() {
 
 setInterval(poll, 500);
 poll();
+
+// ── Highlight slider on remote ──
+document.getElementById('highlightRemoteSlider').addEventListener('input', function() {
+  postSettings({ highlightLevel: parseInt(this.value) });
+});
 
 // ── Keep screen awake ──
 // Method 1: Wake Lock API (modern browsers)
@@ -1178,16 +1449,44 @@ HTML_PAGE = r"""<!DOCTYPE html>
     padding: 48px 40px;
     line-height: 1.9;
     font-size: 2.8rem;
+    position: relative;
   }
   .teleprompter .inner {
     max-width: 1800px;
     margin: 0 auto;
     transition: opacity 0.12s;
+    padding-bottom: 100vh;  /* allows scrolling text fully off the top */
   }
   .teleprompter p { margin-bottom: 1.1em; }
   .teleprompter strong { color: var(--accent); }
   .teleprompter em { color: #f0c040; }
   .teleprompter.mirror { transform: scaleX(-1); }
+
+  /* Highlight bar at top of teleprompter */
+  .highlight-bar {
+    display: none;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.8em;
+    background: rgba(255, 245, 140, var(--hl-opacity, 0));
+    border-bottom: 2px solid rgba(255, 230, 50, calc(var(--hl-opacity, 0) * 2.5));
+    pointer-events: none;
+    z-index: 5;
+    margin-bottom: -3.8em;
+  }
+  body.highlight-on .highlight-bar {
+    display: block;
+  }
+
+  /* Highlight slider styling in control panel */
+  .cp-highlight-slider {
+    width: 100%;
+    margin: 2px 0;
+    accent-color: #f0c040;
+    cursor: pointer;
+  }
 
   /* Q&A expand/collapse index */
   .qa-index { margin-top: 0.5em; }
@@ -1229,6 +1528,67 @@ HTML_PAGE = r"""<!DOCTYPE html>
     padding: 0.3em 0 0.5em 0;
   }
 
+  /* ── Portrait mode: slide info panel at bottom ── */
+  .slide-panel {
+    display: none;
+    flex-shrink: 0;
+    background: #0d0d14;
+    border-top: 2px solid var(--border);
+    padding: 16px 24px;
+  }
+  .slide-panel-preview {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .slide-panel-preview img {
+    max-width: 100%;
+    max-height: 30vh;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: #000;
+    object-fit: contain;
+  }
+  .slide-panel-preview img[src=""] { display: none; }
+  .slide-panel-preview img:not([src=""]):not([src]) { display: none; }
+  .slide-panel-info {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .slide-panel .slide-panel-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+  .slide-panel .slide-panel-title {
+    font-size: 1.1rem;
+    color: var(--dim);
+    font-weight: 500;
+  }
+  .slide-panel .slide-panel-nav {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .slide-panel .slide-panel-btn {
+    padding: 10px 28px;
+    border-radius: 10px;
+    border: 2px solid #1a6b3a;
+    background: #1a6b3a;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: 0.12s;
+  }
+  .slide-panel .slide-panel-btn:hover { background: #238c4e; border-color: #238c4e; }
+  .slide-panel .slide-panel-btn:active { transform: scale(0.95); }
+
+  body.portrait .slide-panel { display: block; }
+  body.portrait .teleprompter { flex: 1; }
+  body.portrait .footer { display: none; }
+
   .waiting-msg {
     display: flex;
     flex-direction: column;
@@ -1254,6 +1614,9 @@ HTML_PAGE = r"""<!DOCTYPE html>
     z-index: 20;
     backdrop-filter: blur(8px);
     min-width: 340px;
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     transition: opacity 0.2s;
     touch-action: manipulation;
@@ -1276,12 +1639,13 @@ HTML_PAGE = r"""<!DOCTYPE html>
     color: var(--dim);
     touch-action: manipulation;
     min-height: 54px;
+    flex-shrink: 0;
   }
   .control-panel.collapsed .cp-header { border-bottom: none; }
   .cp-header:hover { color: var(--text); }
   .cp-toggle { font-size: 0.85rem; color: var(--dim); }
 
-  .cp-body { padding: 16px 18px; }
+  .cp-body { padding: 16px 18px; overflow-y: auto; flex: 1; min-height: 0; }
 
   .cp-row {
     display: flex;
@@ -1487,6 +1851,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
 
 <div class="main">
   <div class="teleprompter" id="teleprompter">
+    <div class="highlight-bar" id="highlightBar"></div>
     <div class="inner" id="scriptContent">
       <div class="waiting-msg" id="waitingMsg">
         <div class="icon">&#x1F4E1;</div>
@@ -1518,6 +1883,23 @@ HTML_PAGE = r"""<!DOCTYPE html>
       <div class="cp-slide-row">
         <button class="cp-slide-btn" id="cpPrevSlide">&#x25C0; Prev Slide</button>
         <button class="cp-slide-btn" id="cpNextSlide">Next Slide &#x25B6;</button>
+      </div>
+
+      <!-- Portrait mode -->
+      <div class="cp-row">
+        <span class="cp-label">Portrait</span>
+        <div class="cp-btn-group">
+          <button class="cp-btn" id="portraitBtn">Off</button>
+        </div>
+      </div>
+
+      <!-- Highlight bar -->
+      <div class="cp-row" style="flex-wrap:wrap;">
+        <span class="cp-label">Highlight</span>
+        <span class="cp-value" id="highlightValue" style="margin-left:auto;font-size:0.85rem;">Off</span>
+      </div>
+      <div style="padding:0 18px 8px;">
+        <input type="range" min="0" max="100" value="0" class="cp-highlight-slider" id="highlightSlider" />
       </div>
 
       <!-- Demo mode toggle -->
@@ -1567,8 +1949,25 @@ HTML_PAGE = r"""<!DOCTYPE html>
   </div>
 </div>
 
+<!-- Slide info panel (portrait mode) -->
+<div class="slide-panel" id="slidePanel">
+  <div class="slide-panel-preview" id="slidePanelPreview">
+    <img id="slidePanelImg" alt="" />
+  </div>
+  <div class="slide-panel-info">
+    <div class="slide-panel-num" id="slidePanelNum">&mdash;</div>
+    <div class="slide-panel-title" id="slidePanelTitle"></div>
+  </div>
+  <div class="slide-panel-nav">
+    <button class="slide-panel-btn" id="panelPrevSlide">&#x25C0; Prev</button>
+    <button class="slide-panel-btn" id="panelNextSlide">Next &#x25B6;</button>
+  </div>
+</div>
+
 <div class="footer" id="footer">
   <span><kbd>D</kbd> Demo mode</span>
+  <span><kbd>P</kbd> Portrait</span>
+  <span><kbd>H</kbd> Highlight</span>
   <span><kbd>T</kbd> Timer</span>
   <span>Open <strong>/remote</strong> on your phone to control without touching this screen</span>
   <span id="modeHint">Syncs via VBA</span>
@@ -1576,6 +1975,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
 
 <script>
 var lastSlide = -1;
+var slideshow_active_flag = false;
 var fontSize = 2.8;
 var timerRunning = false;
 var timerStart = 0;
@@ -1624,7 +2024,8 @@ function pushSettings() {
       fontSize: fontSize,
       textWidth: textWidth,
       wordSpacing: wordSpacing,
-      mirror: mirrorOn
+      mirror: mirrorOn,
+      highlightLevel: highlightLevel
     })
   }).catch(function() {});
 }
@@ -1651,6 +2052,9 @@ function applyServerSettings(s) {
     mirrorOn = s.mirror;
     document.getElementById('teleprompter').classList.toggle('mirror', mirrorOn);
     document.getElementById('mirrorBtn').textContent = mirrorOn ? 'On' : 'Off';
+  }
+  if (typeof s.highlightLevel !== 'undefined' && s.highlightLevel !== highlightLevel) {
+    setHighlightLevel(s.highlightLevel);
   }
 }
 
@@ -1767,12 +2171,14 @@ async function pollState() {
       data.active = true;
     }
 
+    slideshow_active_flag = data.active;
     if (data.active) {
       dot.className = 'status-dot active';
       if (data.mode !== 'keyboard') statusText.textContent = 'Slideshow active';
 
       document.getElementById('slideInfo').textContent =
         'Slide ' + data.slide + ' / ' + data.totalSlides;
+      updateSlidePanel(data);
 
       var pct = data.totalSlides > 1
         ? ((data.slide - 1) / (data.totalSlides - 1)) * 100 : 100;
@@ -1798,6 +2204,7 @@ async function pollState() {
       statusText.textContent = wasActive ? 'Slideshow ended' : 'Waiting for slideshow...';
       document.getElementById('slideInfo').textContent = '\u2014';
       document.getElementById('progressFill').style.width = '0%';
+      updateSlidePanel(data);
       if (lastSlide !== -1) {
         content.innerHTML =
           '<div class="waiting-msg"><div class="icon">&#x1F4E1;</div>' +
@@ -1847,6 +2254,86 @@ function toggleMirror() {
   pushSettings();
 }
 
+// ── Portrait mode ──
+var portraitOn = false;
+function togglePortrait() {
+  portraitOn = !portraitOn;
+  document.body.classList.toggle('portrait', portraitOn);
+  document.getElementById('portraitBtn').textContent = portraitOn ? 'On' : 'Off';
+  if (portraitOn && slideshow_active_flag) {
+    startSlideImageRefresh();
+  } else {
+    stopSlideImageRefresh();
+  }
+}
+
+// ── Highlight bar ──
+var highlightOn = false;
+var highlightLevel = 0;  // 0-100
+
+function setHighlightLevel(val) {
+  highlightLevel = Math.max(0, Math.min(100, Math.round(val)));
+  highlightOn = highlightLevel > 0;
+  document.body.classList.toggle('highlight-on', highlightOn);
+  // Map 0-100 to opacity 0.0-0.45 for the yellow tint
+  var opacity = (highlightLevel / 100) * 0.45;
+  document.documentElement.style.setProperty('--hl-opacity', opacity.toFixed(3));
+  var slider = document.getElementById('highlightSlider');
+  if (slider) slider.value = highlightLevel;
+  var label = document.getElementById('highlightValue');
+  if (label) label.textContent = highlightLevel === 0 ? 'Off' : highlightLevel + '%';
+  pushSettings();
+}
+
+function toggleHighlight() {
+  // Keyboard shortcut: toggle between 0 and 50%
+  setHighlightLevel(highlightOn ? 0 : 50);
+}
+
+var slideImgTimer = null;
+function updateSlidePanel(data) {
+  var numEl = document.getElementById('slidePanelNum');
+  var titleEl = document.getElementById('slidePanelTitle');
+  var imgEl = document.getElementById('slidePanelImg');
+  if (data.active) {
+    numEl.textContent = 'Slide ' + data.slide + ' / ' + data.totalSlides;
+    titleEl.textContent = data.slideTitle || '';
+    // Start refreshing the live screenshot if not already running
+    if (!slideImgTimer && portraitOn) startSlideImageRefresh();
+  } else {
+    numEl.innerHTML = '&mdash;';
+    titleEl.textContent = '';
+    imgEl.src = '';
+    imgEl.style.display = 'none';
+    stopSlideImageRefresh();
+  }
+}
+
+function refreshSlideImage() {
+  var imgEl = document.getElementById('slidePanelImg');
+  var newImg = new Image();
+  newImg.onload = function() {
+    imgEl.src = newImg.src;
+    imgEl.style.display = 'block';
+  };
+  newImg.onerror = function() {};
+  // Cache-bust with timestamp
+  newImg.src = '/api/slide-image?t=' + Date.now();
+}
+
+function startSlideImageRefresh() {
+  if (slideImgTimer) return;
+  refreshSlideImage();
+  slideImgTimer = setInterval(refreshSlideImage, 2000);
+}
+
+function stopSlideImageRefresh() {
+  if (slideImgTimer) {
+    clearInterval(slideImgTimer);
+    slideImgTimer = null;
+  }
+}
+
 // ── Keyboard shortcuts (no Space — conflicts with PowerPoint) ──
 document.addEventListener('keydown', function(e) {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1855,6 +2342,8 @@ document.addEventListener('keydown', function(e) {
     case '-': case '_': changeFontSize(-0.3); break;
     case 't': case 'T': toggleTimer(); break;
     case 'm': case 'M': toggleMirror(); break;
+    case 'p': case 'P': togglePortrait(); break;
+    case 'h': case 'H': toggleHighlight(); break;
     case 'd': case 'D': toggleDemoMode(); break;
   }
 });
@@ -1889,6 +2378,16 @@ addTouchButton('widthDown', function() { changeWidth(-WIDTH_STEP); });
 addTouchButton('wordSpUp', function() { changeWordSpacing(WORDSP_STEP); });
 addTouchButton('wordSpDown', function() { changeWordSpacing(-WORDSP_STEP); });
 addTouchButton('mirrorBtn', toggleMirror);
+addTouchButton('portraitBtn', togglePortrait);
+document.getElementById('highlightSlider').addEventListener('input', function() {
+  setHighlightLevel(parseInt(this.value));
+});
+addTouchButton('panelPrevSlide', function() {
+  fetch('/api/ppt/prev').catch(function(){});
+});
+addTouchButton('panelNextSlide', function() {
+  fetch('/api/ppt/next').catch(function(){});
+});
 addTouchButton('demoToggleBtn', toggleDemoMode);
 
 // ── Collapsible panel (touch-safe) ──
@@ -2025,7 +2524,7 @@ def main():
         print(f"Error: Script file not found: {script_file}")
         sys.exit(1)
 
-    script_sections = parse_script(str(script_path))
+    script_sections, slide_titles = parse_script(str(script_path))
     total_slides = len(script_sections)
     print(f"Loaded {total_slides} script sections from {script_path.name}")
 
@@ -2087,6 +2586,12 @@ def main():
         else:
             print(f"  Warning: Deck file not found: {deck_path}")
 
+    # ── Live screenshot capture loop ──
+    if platform.system() == "Darwin":
+        print("Live slide preview enabled (captures PowerPoint window every 2s)")
+        print("  Note: macOS may require Screen Recording permission for Terminal/Python")
+        threading.Thread(target=_run_screenshot_loop, daemon=True).start()
+
     # ── Start HTTP server ──
     server = http.server.HTTPServer(("0.0.0.0", port), TeleprompterHandler)
 
@@ -2118,6 +2623,21 @@ def main():
                 print(f"  Warning: Could not start slideshow: {err}")
         t = threading.Thread(target=_delayed_start, daemon=True)
         t.start()
+
+    # ── Background slideshow status checker ──
+    # Periodically checks if PowerPoint slideshow is still running
+    # so the UI updates even without the VBA callback
+    if platform.system() == "Darwin":
+        def _check_slideshow_status():
+            import time as _time
+            while True:
+                _time.sleep(3)
+                if slideshow_active:
+                    ok, result = _ppt_applescript("check")
+                    if ok and result == "stopped":
+                        _receive_stopped()
+                        print("  Slideshow ended (detected by status check)")
+        threading.Thread(target=_check_slideshow_status, daemon=True).start()
 
     try:
         server.serve_forever()
