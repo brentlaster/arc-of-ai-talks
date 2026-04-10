@@ -300,141 +300,95 @@ def _ppt_applescript(action, deck_path=None):
         return False, str(e)
 
 
-_ppt_window_id_cache = {"wid": None, "info": None, "found": False}
+_screenshot_display = None  # cached: integer display number for -D flag
 
 
-def _find_ppt_slideshow_window_id():
-    """Find the CGWindowID for the PowerPoint Slide Show window using Quartz."""
+def _detect_display_count():
+    """Return the number of connected displays using system_profiler."""
     try:
-        import Quartz
-        window_list = Quartz.CGWindowListCopyWindowInfo(
-            Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements,
-            Quartz.kCGNullWindowID
+        result = subprocess.run(
+            ["system_profiler", "SPDisplaysDataType"],
+            capture_output=True, text=True, timeout=5
         )
-        # Collect all PowerPoint windows for debugging
-        ppt_windows = []
-        for win in window_list:
-            owner = win.get(Quartz.kCGWindowOwnerName, "")
-            if "PowerPoint" in owner or "powerpoint" in owner.lower():
-                name = win.get(Quartz.kCGWindowName, "")
-                bounds = win.get(Quartz.kCGWindowBounds, {})
-                w = bounds.get("Width", 0)
-                h = bounds.get("Height", 0)
-                wid = win.get(Quartz.kCGWindowNumber, 0)
-                layer = win.get(Quartz.kCGWindowLayer, -1)
-                ppt_windows.append({
-                    "wid": wid, "owner": owner, "name": name,
-                    "w": w, "h": h, "layer": layer
-                })
-
-        if not ppt_windows:
-            return None, "No PowerPoint windows found on screen"
-
-        # Pick the largest PowerPoint window (likely the slideshow)
-        ppt_windows.sort(key=lambda x: x["w"] * x["h"], reverse=True)
-        best = ppt_windows[0]
-        if best["w"] > 400 and best["h"] > 300:
-            info = f"{best['owner']}/{best['name']} ({best['w']}x{best['h']}, layer={best['layer']})"
-            return best["wid"], info
-
-        all_info = "; ".join(f"{w['name']}({w['w']}x{w['h']})" for w in ppt_windows)
-        return None, f"PowerPoint windows too small: {all_info}"
-    except ImportError:
-        return None, "Quartz module not available (pip install pyobjc-framework-Quartz)"
-    except Exception as e:
-        return None, f"Quartz error: {e}"
+        # Count lines containing "Resolution:" — one per display
+        count = sum(1 for line in result.stdout.splitlines() if "Resolution:" in line)
+        return max(count, 1)
+    except Exception:
+        return 1
 
 
-_screenshot_method = None  # "window", "fullscreen", or None (auto-detect)
-_screenshot_wid = None     # cached window ID for window mode
+def _try_screencapture(cmd, tmp_write, tmp_path):
+    """Run a screencapture command. Returns True if a valid image was produced."""
+    try:
+        if os.path.exists(tmp_write):
+            os.unlink(tmp_write)
+        result = subprocess.run(cmd, capture_output=True, timeout=5)
+        if result.returncode == 0 and os.path.exists(tmp_write):
+            fsize = os.path.getsize(tmp_write)
+            if fsize > 100:
+                os.replace(tmp_write, tmp_path)
+                return True
+    except Exception:
+        pass
+    return False
+
+
+def _set_screenshot_display(display_num):
+    """Set which display to capture for the slide preview. None = auto-detect."""
+    global _screenshot_display
+    _screenshot_display = display_num
+    label = "auto-detect" if display_num is None else f"display {display_num}"
+    print(f"  Screenshot display set to: {label}")
 
 
 def _capture_slideshow_screenshot():
-    """Capture a screenshot of the PowerPoint slideshow window."""
-    global live_screenshot_path, _screenshot_method, _screenshot_wid
+    """Capture a screenshot of the configured display.
+
+    Uses _screenshot_display if set (via Controls panel or auto-detect).
+    Auto-detection tries display 2 first, then 3, etc., then 1 as fallback.
+    """
+    global live_screenshot_path, _screenshot_display
     if platform.system() != "Darwin":
         return
 
     import tempfile
     tmp_path = os.path.join(tempfile.gettempdir(), "teleprompter_live.jpg")
-    # Use a write-then-rename pattern to avoid serving partial files
     tmp_write = tmp_path + ".tmp"
 
-    def _try_capture(cmd, label):
-        """Run screencapture and return True if a valid image was produced."""
-        try:
-            # Remove old tmp file to detect fresh writes
-            if os.path.exists(tmp_write):
-                os.unlink(tmp_write)
-            result = subprocess.run(cmd, capture_output=True, timeout=5)
-            if result.returncode == 0 and os.path.exists(tmp_write):
-                fsize = os.path.getsize(tmp_write)
-                if fsize > 100:
-                    os.replace(tmp_write, tmp_path)  # atomic rename
-                    with live_screenshot_lock:
-                        live_screenshot_path = tmp_path
-                    return True
-                else:
-                    print(f"  {label}: file too small ({fsize}B) - Screen Recording permission may be needed")
-            elif result.returncode == 0:
-                # Command succeeded but no file produced
-                print(f"  {label}: command ok but no file written")
-            else:
-                stderr_msg = result.stderr.decode() if result.stderr else ""
-                print(f"  {label}: rc={result.returncode} {stderr_msg}")
-        except subprocess.TimeoutExpired:
-            print(f"  {label}: timed out")
-        except Exception as e:
-            print(f"  {label}: {type(e).__name__}: {e}")
-        return False
+    # If we already know which display to use, use it
+    if _screenshot_display is not None:
+        if _try_screencapture(
+            ["screencapture", "-x", "-t", "jpg", "-D", str(_screenshot_display), tmp_write],
+            tmp_write, tmp_path
+        ):
+            with live_screenshot_lock:
+                live_screenshot_path = tmp_path
+        return
 
-    try:
-        # If we already locked to fullscreen, use it
-        if _screenshot_method == "fullscreen":
-            _try_capture(["screencapture", "-x", "-t", "jpg", tmp_write], "fullscreen")
+    # Auto-detect: try each display, preferring non-main (display 2+)
+    num_displays = _detect_display_count()
+    print(f"  Detecting displays: {num_displays} found")
+
+    # Try secondary displays first (2, 3, ...), then main (1) as fallback
+    display_order = list(range(2, num_displays + 1)) + [1]
+    for d in display_order:
+        if _try_screencapture(
+            ["screencapture", "-x", "-t", "jpg", "-D", str(d), tmp_write],
+            tmp_write, tmp_path
+        ):
+            _screenshot_display = d
+            with live_screenshot_lock:
+                live_screenshot_path = tmp_path
+            label = "secondary" if d > 1 else "main (single display)"
+            print(f"  Using display {d} ({label}) for slide preview")
             return
 
-        # If we have a cached working window ID, try it first
-        if _screenshot_method == "window" and _screenshot_wid:
-            if _try_capture(
-                ["screencapture", "-x", "-t", "jpg", "-l", str(_screenshot_wid), tmp_write],
-                f"window(cached={_screenshot_wid})"
-            ):
-                return
-            # Cached ID failed (window may have changed), reset and re-detect
-            print("  Cached window ID failed, re-detecting...")
-            _screenshot_method = None
-            _screenshot_wid = None
-
-        # Try window-specific capture
-        wid, info = _find_ppt_slideshow_window_id()
-        if wid:
-            wid_int = int(wid)  # ensure integer for screencapture -l
-            if _try_capture(
-                ["screencapture", "-x", "-t", "jpg", "-l", str(wid_int), tmp_write],
-                f"window(id={wid_int})"
-            ):
-                _screenshot_method = "window"
-                _screenshot_wid = wid_int
-                print(f"  Using window capture: {info}")
-                return
-            # Window capture failed — fall through to fullscreen
-            print(f"  Window capture failed for {info}, trying fullscreen...")
-        else:
-            print(f"  {info}")
-
-        # Fallback: capture the full screen
-        if _try_capture(["screencapture", "-x", "-t", "jpg", tmp_write], "fullscreen"):
-            _screenshot_method = "fullscreen"
-            print("  Locked to fullscreen capture mode")
-        else:
-            print("  All capture methods failed")
-    except Exception as e:
-        print(f"  Screenshot error: {type(e).__name__}: {e}")
+    print("  screencapture: all displays failed")
 
 
 def _run_screenshot_loop():
     """Background loop that captures slideshow screenshots every 2 seconds."""
+    global _screenshot_display
     import time as _time
     capture_count = 0
     while True:
@@ -447,16 +401,13 @@ def _run_screenshot_loop():
                     path = live_screenshot_path
                 if path and os.path.exists(path):
                     fsize = os.path.getsize(path)
-                    wid, winfo = _find_ppt_slideshow_window_id()
-                    print(f"  Screenshot #{capture_count}: {fsize} bytes (window: {winfo}, id={wid})")
+                    print(f"  Screenshot #{capture_count}: {fsize} bytes (display={_screenshot_display})")
                 else:
                     print(f"  Screenshot #{capture_count}: FAILED - no file produced")
         else:
-            global _screenshot_method, _screenshot_wid
             with live_screenshot_lock:
                 live_screenshot_path = None
-            _screenshot_method = None  # re-detect next slideshow
-            _screenshot_wid = None
+            _screenshot_display = None  # re-detect next slideshow
             capture_count = 0
 
 
@@ -788,15 +739,14 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
             tmp_path = os.path.join(tempfile.gettempdir(), "teleprompter_live.jpg")
             with live_screenshot_lock:
                 current_path = live_screenshot_path
-            wid, winfo = _find_ppt_slideshow_window_id()
             info = {
                 "slideshow_active": slideshow_active,
                 "live_screenshot_path": current_path,
                 "tmp_path_exists": os.path.exists(tmp_path),
                 "tmp_path_size": os.path.getsize(tmp_path) if os.path.exists(tmp_path) else 0,
                 "platform": platform.system(),
-                "ppt_window_id": wid,
-                "ppt_window_info": winfo,
+                "capture_display": _screenshot_display,
+                "display_count": _detect_display_count(),
             }
             self._json_response(info)
 
@@ -840,7 +790,8 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
 
                 with settings_lock:
                     for key in ("fontSize", "textWidth", "wordSpacing",
-                                "autoScroll", "scrollSpeed", "mirror"):
+                                "autoScroll", "scrollSpeed", "mirror",
+                                "highlightLevel"):
                         if key in updates:
                             display_settings[key] = updates[key]
                     display_settings["settingsVersion"] += 1
@@ -850,6 +801,24 @@ class TeleprompterHandler(http.server.BaseHTTPRequestHandler):
             except Exception:
                 self.send_response(400)
                 self.end_headers()
+
+        elif self.path == "/api/screenshot-display":
+            try:
+                length = int(self.headers.get("Content-Length", 0))
+                body = self.rfile.read(length)
+                data = json.loads(body)
+                d = int(data.get("display", 0))
+                if d == 0:
+                    # Reset to auto-detect
+                    _set_screenshot_display(None)
+                else:
+                    _set_screenshot_display(d)
+                # Trigger an immediate capture with the new display
+                threading.Thread(target=_capture_slideshow_screenshot, daemon=True).start()
+                self._json_response({"ok": True, "display": d})
+            except Exception as e:
+                self._json_response({"ok": False, "error": str(e)}, 400)
+
         else:
             self.send_response(404)
             self.end_headers()
@@ -1893,6 +1862,16 @@ HTML_PAGE = r"""<!DOCTYPE html>
         </div>
       </div>
 
+      <!-- Capture display -->
+      <div class="cp-row">
+        <span class="cp-label">Capture</span>
+        <div class="cp-btn-group">
+          <button class="cp-btn" id="dispPrev" style="font-size:1.1rem;">&#x25C0;</button>
+          <span class="cp-value" id="dispValue">Auto</span>
+          <button class="cp-btn" id="dispNext" style="font-size:1.1rem;">&#x25B6;</button>
+        </div>
+      </div>
+
       <!-- Highlight bar -->
       <div class="cp-row" style="flex-wrap:wrap;">
         <span class="cp-label">Highlight</span>
@@ -2267,6 +2246,32 @@ function togglePortrait() {
   }
 }
 
+// ── Capture display picker ──
+var captureDisplay = 0;  // 0 = auto
+var maxDisplays = 3;     // updated from debug endpoint
+
+function setCaptureDisplay(d) {
+  captureDisplay = d;
+  document.getElementById('dispValue').textContent = d === 0 ? 'Auto' : 'Display ' + d;
+  fetch('/api/screenshot-display', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ display: d })
+  }).catch(function(){});
+}
+
+function changeDisplay(delta) {
+  var next = captureDisplay + delta;
+  if (next < 0) next = maxDisplays;
+  if (next > maxDisplays) next = 0;
+  setCaptureDisplay(next);
+}
+
+// Fetch display count once
+fetch('/api/slide-image-debug').then(function(r) { return r.json(); }).then(function(data) {
+  if (data.display_count) maxDisplays = data.display_count;
+}).catch(function(){});
+
 // ── Highlight bar ──
 var highlightOn = false;
 var highlightLevel = 0;  // 0-100
@@ -2379,6 +2384,8 @@ addTouchButton('wordSpUp', function() { changeWordSpacing(WORDSP_STEP); });
 addTouchButton('wordSpDown', function() { changeWordSpacing(-WORDSP_STEP); });
 addTouchButton('mirrorBtn', toggleMirror);
 addTouchButton('portraitBtn', togglePortrait);
+addTouchButton('dispPrev', function() { changeDisplay(-1); });
+addTouchButton('dispNext', function() { changeDisplay(1); });
 document.getElementById('highlightSlider').addEventListener('input', function() {
   setHighlightLevel(parseInt(this.value));
 });

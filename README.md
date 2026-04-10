@@ -30,7 +30,7 @@ This architecture avoids PowerPoint for Mac's sandbox restrictions -- no file I/
 - **Phone remote control** -- adjust display, scroll text, and advance slides from your phone
 - **Slide control buttons** -- Prev/Next Slide and Start Slideshow buttons on both the main page Controls panel and the phone remote, so you can advance slides without touching PowerPoint
 - **Portrait mode** -- optimized vertical layout with a live slide preview panel at the bottom, ideal for a portrait-oriented second monitor
-- **Live slide preview** (macOS) -- captures a screenshot of the PowerPoint slideshow window every 2 seconds (and immediately on slide change) for the portrait mode preview panel
+- **Live slide preview** (macOS) -- captures a screenshot of the display running PowerPoint every 2 seconds (and immediately on slide change) for the portrait mode preview panel; includes a display picker for multi-monitor setups
 - **Highlight bar** -- adjustable-opacity yellow highlight band at the top of the teleprompter to mark your reading position; controlled via slider on the Controls panel or phone remote
 - **Scroll past end** -- text can be scrolled completely off the top of the screen, so you're never stuck with text anchored at the bottom
 - **Demo Mode** (macOS) -- one-tap switch between your PowerPoint slideshow and a Terminal window for live coding demos, then back again on the same slide
@@ -145,7 +145,9 @@ The teleprompter browser window has a collapsible floating control panel (bottom
 
 Toggle Portrait mode from the Controls panel or press `P`. This switches the teleprompter to a vertical layout optimized for portrait-oriented monitors. A slide info panel appears at the bottom showing the current slide number/title, Prev/Next buttons, and a live screenshot preview of the PowerPoint slideshow (macOS only).
 
-The live preview captures the PowerPoint slideshow window every 2 seconds and immediately on every slide change. It requires macOS **Screen Recording** permission for Terminal or Python (System Settings > Privacy & Security > Screen Recording).
+The live preview captures the display running PowerPoint every 2 seconds and immediately on every slide change. It requires macOS **Screen Recording** permission for Terminal or Python (System Settings > Privacy & Security > Screen Recording).
+
+On multi-monitor setups, the **Capture** control in the Controls panel lets you select which display to capture. Use the left/right arrows to cycle through Auto (tries display 2 first), Display 1, Display 2, Display 3, etc. The display number is cached for the duration of the slideshow and resets when the slideshow ends.
 
 ### Highlight Bar
 
@@ -313,6 +315,7 @@ cd ~/talks/keynote
 | `/api/ppt/stop` | GET | Stop PowerPoint slideshow (macOS, via AppleScript) |
 | `/api/slide-image` | GET | Live screenshot of the PowerPoint slideshow (JPEG) |
 | `/api/slide-image-debug` | GET | Debug info for the screenshot pipeline |
+| `/api/screenshot-display` | POST | Set which display to capture (JSON: `{"display": 3}`, 0 = auto) |
 | `/api/demo/toggle` | GET | Toggle demo mode (switch between slideshow and Terminal) |
 | `/api/demo/state` | GET | Current demo mode state and available demo script |
 | `/api/remote-url` | GET | Get the phone remote URL with LAN IP |
@@ -360,8 +363,8 @@ macOS needs permission for Python to control Terminal under System Settings > Pr
 **Portrait mode: no slide preview image**
 The live screenshot feature requires macOS Screen Recording permission. Go to System Settings > Privacy & Security > Screen Recording and ensure Terminal (or Python) is listed and enabled. You may need to restart Terminal after granting the permission. Visit `http://localhost:8765/api/slide-image-debug` while the slideshow is running to see diagnostic info about the screenshot pipeline.
 
-**Portrait mode: screenshot shows wrong window**
-The teleprompter attempts to capture the PowerPoint slideshow window specifically using Quartz window detection. If it falls back to full-screen capture, it will capture whichever display the system considers "main." Check the terminal output for messages like "Using window capture" or "falling back to fullscreen" to see which method is in use.
+**Portrait mode: screenshot shows wrong display**
+By default, the teleprompter auto-detects and captures display 2 (assuming the teleprompter is on display 1). On setups with 3+ monitors, it may pick the wrong one. Use the **Capture** control in the Controls panel to cycle through displays until you see your PowerPoint slideshow. The selected display is cached for the rest of the slideshow session.
 
 **Start Slideshow button doesn't reappear when slideshow ends**
 A background thread checks PowerPoint's slideshow status every 3 seconds. If it detects the slideshow has ended, it resets the UI. Make sure PowerPoint is still running; the detection relies on AppleScript checking the slide show window count.
