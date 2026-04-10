@@ -186,13 +186,13 @@ Let's start at the foundation. But first, a few more visuals to anchor everythin
 
 *[GESTURE at side-by-side]*
 
-Here's the transformation at a glance. On the left — the typical unguarded AI stack. Shared credentials. Full data access. No registry. Raw PII in prompts. No scanning. No kill switch. Sound familiar?
+Before I show you the detailed flow, I want you to see the transformation at a glance. On the left — the typical unguarded AI stack. Shared credentials. Full data access. No registry. Raw PII in prompts. No scanning. No kill switch. Sound familiar?
 
 On the right — the same AI system after applying the blueprint. Scoped service accounts. Tenant isolation. Prompt defenses. Model governance. Full audit trail. Operational controls.
 
 *[PAUSE]*
 
-Same AI capabilities. Same outcomes for the business. But one of these is an incident waiting to happen and the other is an architecture you can defend. That's what we're building toward today. Now let's look at how a single request flows through all six layers.
+Same AI capabilities. Same outcomes for the business. But one of these is an incident waiting to happen and the other is an architecture you can defend. That's what we're building toward today. Now let me show you how a single request flows through all six layers.
 
 ---
 
@@ -200,7 +200,7 @@ Same AI capabilities. Same outcomes for the business. But one of these is an inc
 
 *[GESTURE at diagram]*
 
-This diagram shows what happens when a single AI request flows through all six layers of the blueprint.
+Before we dive into each layer, I want you to see the whole picture. This diagram shows what happens when a single AI request flows through all six layers of the blueprint.
 
 A user makes a request. It hits Layer 1 — identity and access — where the user and the AI agent are both authenticated and scoped. Then Layer 2 — context isolation — where PII is tokenized and tenant boundaries are enforced. Layer 3 — prompt defenses — where the input is scanned and the instruction hierarchy is applied. Layer 4 — model governance — where the registry confirms this is an approved model and version. Layer 5 — audit — where the entire interaction is logged. And Layer 6 — operational controls — where rate limits, cost caps, and kill switches are active.
 
@@ -349,7 +349,7 @@ Indirect prompt injection: someone plants malicious instructions in a shared kno
 
 The threat model is simple: attacker plants → retrieval happens → now the defenses catch it. The content filter detects injection patterns. The instruction hierarchy ensures system instructions always take precedence over retrieved content. The model processes only legitimate content.
 
-The key insight: no single layer stops this attack alone. Defense-in-depth means if one layer fails, the others still catch it.
+This is exactly what the live demo will show. For now, the key insight: no single layer stops this attack alone. Defense-in-depth means if one layer fails, the others still catch it.
 
 *[BRIEF RECAP — midpoint check-in]*
 
@@ -365,11 +365,11 @@ Layer four: model governance. And let me open this one with the failure, because
 
 The lifecycle has six stages: selection, evaluation, approval, deployment, monitoring, and retirement. At each stage, there should be a governance gate — a checkpoint where risk assessment, bias testing, and security review happen before the model moves forward. And these gates should plug into your CI/CD pipeline: model approval before merge, injection regression tests in the build, canary deployment with automatic rollback criteria, and audit event verification in post-deploy checks.
 
-Most organizations skip this entirely. A developer finds a model that works, deploys it to production, and nobody outside their team knows it's there until something goes wrong. Shadow IT is one of the biggest risks in enterprise AI today.
+Most organizations skip this entirely. A developer finds a model that works, deploys it to production, and nobody outside their team knows it's there until something goes wrong. That's shadow AI, and it's one of the biggest risks in enterprise AI today.
 
-Let's look at an example of how this goes wrong. Suppose a developer on your data team finds a new open-source model on Hugging Face that's great at summarization. They wrap it in an API, deploy it to a Kubernetes cluster, and start using it for an internal dashboard that summarizes customer feedback. No security review. No approval process. No evaluation of the model's training data, known biases, or failure modes. Three months later, the model starts producing summaries that systematically downplay negative feedback — a known bias in the training data. Nobody notices for weeks because nobody's monitoring it. By the time it's caught, product decisions have been made based on skewed summaries.
+Let me give you an example of how this goes wrong. A developer on your data team finds a new open-source model on Hugging Face that's great at summarization. They wrap it in an API, deploy it to a Kubernetes cluster, and start using it for an internal dashboard that summarizes customer feedback. No security review. No approval process. No evaluation of the model's training data, known biases, or failure modes. Three months later, the model starts producing summaries that systematically downplay negative feedback — a known bias in the training data. Nobody notices for weeks because nobody's monitoring it. By the time it's caught, product decisions have been made based on skewed summaries.
 
-This is the danger of shadow AI. We spent twenty years fighting shadow IT. Now we have shadow AI — same pattern, higher stakes, harder to detect because AI failures are subtle rather than binary.
+That's shadow AI. We spent twenty years fighting shadow IT. Now we have shadow AI — same pattern, higher stakes, harder to detect because AI failures are subtle rather than binary.
 
 And if you already have shadow AI — which statistically you do — here's the triage: inventory first, then wrap the highest-risk systems with audit logging and kill switches before you try to move them into a governed pipeline. Don't try to shut everything down on day one — you'll lose the teams that are getting real value. Meet them where they are and bring the controls to them.
 
@@ -616,107 +616,85 @@ Let's run it."
 
 ## SLIDE 45: Scenario 1: Customer-Facing AI Chatbot
 
-Scenario one: a customer-facing AI chatbot. This is probably the most common enterprise AI deployment, and it touches every single layer of the blueprint. So it's a great end-to-end test of the architecture.
+Scenario one: a customer-facing AI chatbot — probably the most common enterprise AI deployment, and it touches every layer. Imagine you're the platform lead at a financial services company. The product team wants an AI chatbot for customer support — live in six weeks. It needs customer data, every interaction is a compliance event, and if it goes wrong, the consequences are regulatory, legal, and reputational.
 
-Let me set the scene. Imagine you're the platform lead at a financial services company. The product team comes to you and says: "We want to deploy an AI chatbot for customer support. It'll reduce wait times by 40%, handle the top 20 most common questions automatically, and free up human agents for complex cases. We want it live in six weeks."
-
-Great — everyone's excited. But here's the challenge. The chatbot needs access to customer data — account balances, transaction history, support ticket history. It's customer-facing, so every single interaction is a potential compliance event under financial services regulations. And if it goes wrong — if it hallucinates financial advice, leaks one customer's data to another, or gets prompt-injected into saying something that creates legal liability — the consequences aren't just embarrassing. They're regulatory. They're legal. They're front-page-news damaging.
-
-This is exactly the scenario the blueprint was designed for. Let me walk through how each layer applies.
-
-Identity: the chatbot runs as a dedicated service account with customer-data-read scope. No write access. No access to internal systems, engineering resources, or financial trading platforms. The token is scoped to the customer support use case and nothing else.
-
-Context isolation: each conversation is scoped to the current customer only. A proxy layer tokenizes PII before it reaches the model. The model sees "CUST_TOKEN_7291" — not "Jane Smith, account ending in 4829." Tenant boundaries ensure that Customer A's conversation context never influences Customer B's response.
-
-Prompt injection defenses: input filtering catches manipulation attempts before they reach the model. The system prompt has immutable safety instructions with an instruction hierarchy that prevents any retrieved content — knowledge base articles, FAQ documents, customer records — from overriding behavioral constraints. Output scanning checks every response before it's sent to the customer.
-
-Model governance: the chatbot runs an approved model version from the registry, with documented behavioral constraints, an expiration date on its approval, and a defined set of topics it's allowed to discuss. If a customer asks for investment advice, the model is constrained to say "I'd recommend speaking with one of our financial advisors" — not hallucinate a stock pick.
-
-Audit: every conversation is logged with customer consent and a retention policy aligned to your financial services compliance requirements. Full structured logs including model version, confidence scores, and tool invocations.
-
-Operations: rate limits prevent abuse — both from malicious users testing the chatbot and from unexpected traffic spikes. A kill switch can redirect all traffic to human agents within seconds. And canary deployments validate any model updates against production quality metrics before full rollout.
+The slide shows how each layer applies. Identity: dedicated service account, customer-data-read scope, nothing else. Context isolation: each conversation scoped to one customer, PII tokenized. Prompt defenses: input filtering, immutable system instructions, output scanning. Model governance: approved version from the registry with behavioral constraints and an expiration date. Audit: every conversation logged with structured, searchable records. Operations: rate limits, kill switch to redirect to human agents, canary deployments.
 
 *[MICRO-INTERACTION — 30 seconds]*
 
-Quick scenario within the scenario. A customer asks the chatbot: "What's the average balance across all accounts in my zip code?" That request uses real customer data, aggregates across multiple accounts, and could reveal sensitive financial patterns. The policy engine intercepts it. What's your call — ALLOW, ESCALATE to a human agent, or DENY outright?
-
-*[PAUSE — let audience think]*
-
-Most of you probably said DENY or ESCALATE — and you're right. The chatbot's scope is individual account queries, not aggregate analytics. The policy engine denies it automatically and logs the attempt. That's the blueprint working.
-
----
-
-## SLIDE 46: Scenario 1: Chatbot — All Six Layers Applied
-
-Let me recap how all six layers work together for this chatbot deployment. Layer 1 Identity: customer authenticates, chatbot gets a session-scoped token with customer-data-read only. Layer 2 Context: sees only that customer's account data — tenant boundaries are absolute. Layer 3 Injection: input scanning on every query before it reaches the model. Layer 4 Governance: approved model with documented behavioral constraints and expiration. Layer 5 Audit: every interaction logged with full context for compliance. Layer 6 Ops: rate limits, kill switch to redirect to human agents, canary deployments.
-
-Without any single layer, the attack surface opens. That's the end-to-end test.
-
-[TIMING: maintained]
-
----
-
-## SLIDE 47: Scenario 1: Risk Mitigation Summary
-
-Risk mitigation summary — every risk maps to a specific blueprint control. Data leakage: context isolation and tokenization. Injection: layered defense stack. Hallucination: behavioral constraints and output validation. Privacy: audit trails and consent management. Service disruption: operational controls and kill switches.
-
-That's the power of a layered approach. It's an architecture, not a checklist.
-
----
-
-## SLIDE 48: Scenario 2: Internal AI Coding Assistant
-
-Scenario two: an internal AI coding assistant. And let me tell this one as an incident story — because that's how you'll remember it.
-
-*[INCIDENT NARRATIVE]*
-
-Tuesday morning. A senior engineer on your platform team is refactoring a payment processing module. They ask the coding assistant to help restructure the retry logic. The assistant starts generating — and here's the near-miss. It assembles 340 lines of context to send to the external model for completion. In that context: your custom tokenization logic, your rate-limiting strategy, vendor-specific API patterns, and — buried on line 287 — a hardcoded staging API key that someone forgot to rotate.
-
-If you have no controls, that code is now sitting on someone else's infrastructure. You have no record of it happening, no way to recall it, and you might not know for weeks — or ever.
-
-Now let's replay that with the blueprint in place.
-
-The request goes out. Identity layer: the engineer is authenticated via SSO, and the coding assistant's access is scoped to repos the engineer is authorized to see. Data boundary layer: a DLP filter scans the outgoing context. It detects proprietary patterns — the custom tokenization logic triggers a classification rule. The policy engine routes: for proprietary code, use the internal model, not the external provider.
+Quick scenario within the scenario. A customer asks: "What's the average balance across all accounts in my zip code?" That aggregates across accounts and could reveal sensitive patterns. What's your call — ALLOW, ESCALATE, or DENY?
 
 *[PAUSE]*
 
-The refactor completes using the internal model. No proprietary code leaves your perimeter. The audit trail records exactly what happened: what code was sent, which model processed it, and which policy rule triggered the internal routing. Tuesday morning continues without incident.
-
-That's the difference between "we have an AI coding assistant" and "we have a governed AI coding assistant." The developer's experience didn't change — but the organization's exposure did. This is context isolation and governance applied to code, not just chat.
-
-Remember the principle: *prompts guide behavior; platforms enforce behavior.* The developer didn't need to think about which model to use. The platform made the right choice automatically. That's the key developer experience insight — secure routing should be invisible. If developers have to manually choose the safe model, they won't. The platform makes the secure path the default path.
+Most of you probably said DENY or ESCALATE — and you're right. The chatbot's scope is individual queries, not aggregate analytics. The policy engine denies it and logs the attempt. That's the blueprint working — it's an architecture, not a checklist. Every risk maps to a specific control.
 
 ---
 
-## SLIDE 49: Scenario 2: The Near-Miss That Changed Policy
+## SLIDE 46: Scenario 2: Internal AI Coding Assistant
 
-Here's the critical moment distilled. The assistant assembled 340 lines of context to send to the external model: the custom tokenization logic, rate-limiting strategy, vendor-specific API patterns, and on line 287 — an internal pricing algorithm.
+Scenario two: an internal coding assistant. Let me tell this one as an incident story.
 
-Without Layer 2 context isolation and Layer 6 operational controls, that's IP exfiltration in production. With the blueprint, the egress filter catches it, the policy engine routes proprietary code to the internal model, and the audit trail records exactly what happened.
+Tuesday morning. A senior engineer asks the coding assistant to refactor a payment processing module. The assistant assembles 340 lines of context for the external model — including your custom tokenization logic, rate-limiting strategy, and on line 287, a hardcoded staging API key someone forgot to rotate.
+
+Without controls, that code is now on someone else's infrastructure. You might not know for weeks.
+
+With the blueprint: identity scopes the assistant to authorized repos. The DLP filter catches the proprietary tokenization logic. The policy engine routes proprietary code to the internal model. The refactor completes. No proprietary code leaves your perimeter. The audit trail records exactly what happened.
 
 The developer's experience didn't change. The organization's exposure did.
 
-[TIMING: maintained]
+*prompts guide behavior; platforms enforce behavior.* The developer didn't choose the safe model — the platform chose automatically. That's the key insight: secure routing should be invisible.
 
 ---
 
-## SLIDE 50: Scenario 2: Critical Safeguards
+## SLIDE 47: Scenario 2: The Near-Miss That Changed Policy
 
-Here's the policy architecture that made that incident a non-event. The policy target is simple: proprietary code stays internal by default.
+Here's the critical moment distilled. Three independent layers caught it: content classification tagged the code as proprietary before the developer touched it. Model selection routed trade-secret code to the internal model. DLP scanning checked outbound requests as a final checkpoint.
 
-Content classification marks code as proprietary before it enters any AI context window. Model selection routes proprietary code to internal or approved enterprise-hosted models — external providers only see non-proprietary logic. DLP scanning checks all completions before delivery and blocks if proprietary patterns are detected. An important caveat: whether proprietary code may be sent to an external provider depends on your policy, contractual safeguards, and the sensitivity of the code involved. The architecture supports the policy; the policy is a business decision.
+Any single layer would have caught this. Together, they're nearly airtight. Defense-in-depth applied to code, not just chat.
 
-And tool isolation ensures the coding assistant's execution environment is sandboxed — no code exfiltration through side channels like unauthorized network requests or file system access outside the approved workspace.
+The effort varies by maturity — start with the highest-risk repositories and expand.
 
-The effort varies by maturity. Start with the highest-risk repositories and expand.
+So those are the scenarios — the blueprint applied to real deployments. Now let's talk about what happens when organizations try this without the blueprint.
 
 ---
 
-## SLIDE 51: Implementation Roadmap
+## SLIDE 48: What Most Teams Get Wrong
+
+*[PAUSE — let the slide land]*
+
+Six anti-patterns — each maps to a missing layer. Shared credentials, no tenant filter, no input validation, no model registry, no audit trail, no kill switch. The right side shows the fix for each.
+
+Quick self-assessment — count how many of these exist in your organization. If it's three or higher, you're in the majority. The blueprint is the path from the left column to the right.
+
+And here's a quick way to test where you stand.
+
+---
+
+## SLIDE 49: 5 Questions Every AI Team Should Answer
+
+*[SLOW DOWN — let the audience reflect]*
+
+Five questions. If your AI team can answer yes to all five, you're in good shape.
+
+One: Do you know every AI system running in your organization — including the ones someone deployed on a Friday afternoon?
+
+Two: Can you kill a rogue AI agent within 60 seconds?
+
+Three: Is every AI interaction logged in structured, searchable audit trails?
+
+Four: Do your AI systems have their own scoped identities — or do they share human credentials?
+
+Five: Have you red-teamed your AI systems in the last 90 days?
+
+If you can't answer yes to all five, you know where to start. And here's the roadmap to get there.
+
+---
+
+## SLIDE 50: Implementation Roadmap
 
 *[GESTURE at diagram]*
 
-How do you actually implement this? You can't do all six layers overnight. Here's the phased approach.
+Let's make this concrete. You can't do all six layers overnight. Here's the phased approach.
 
 Phase 0, Week 1: AI asset inventory. Find every AI system in your organization — you can't secure what you can't see.
 
@@ -732,7 +710,7 @@ Each phase builds on the previous one. Ship Phase 0 this week.
 
 ---
 
-## SLIDE 52: Your Monday Morning Checklist (1 of 2)
+## SLIDE 51: Your Monday Morning Checklist (1 of 2)
 
 *[GESTURE at the checklist]*
 
@@ -744,7 +722,7 @@ These four are the foundation. Now let's look at the operational layer.
 
 ---
 
-## SLIDE 53: Your Monday Morning Checklist (2 of 2)
+## SLIDE 52: Your Monday Morning Checklist (2 of 2)
 
 *[GESTURE at items 5-8]*
 
@@ -756,7 +734,7 @@ Start this week. Iterate this quarter. Mature this year.
 
 ---
 
-## SLIDE 54: The Road Ahead
+## SLIDE 53: The Road Ahead
 
 The regulatory and technical landscape is moving fast.
 
@@ -768,68 +746,22 @@ Agentic AI security is the next frontier. Agents that act autonomously — calli
 
 ---
 
-## SLIDE 55: 5 Questions Every AI Team Should Answer
-
-*[SLOW DOWN — closing framework]*
-
-Five questions. If your AI team can answer yes to all five, you're in good shape.
-
-One: Do you know every AI system running in your organization — including the ones someone deployed on a Friday afternoon?
-
-Two: Can you kill a rogue AI agent within 60 seconds?
-
-Three: Is every AI interaction logged in structured, searchable audit trails?
-
-Four: Do your AI systems have their own scoped identities — or do they share human credentials?
-
-Five: Have you red-teamed your AI systems in the last 90 days?
-
-If you can't answer yes to all five, you know where to start.
-
----
-
-## SLIDE 56: What Most Teams Get Wrong
-
-*[PAUSE — let the slide land]*
-
-Six anti-patterns — each maps to a missing layer. Shared credentials, no tenant filter, no input validation, no model registry, no audit trail, no kill switch. The right side shows the fix for each.
-
-Quick self-assessment — count how many of these exist in your organization. If it's three or higher, you're in the majority. The blueprint is the path from the left column to the right.
-
----
-
-## SLIDE 57: Opening Incidents → Missing Blueprint Layers
-
-*[GESTURE across the four mapping rows]*
-
-Before I close, let me bring this full circle. Remember our opening incidents? Every single one maps to specific missing layers in the blueprint.
-
-The Chevy chatbot — sold a car for a dollar — that's Layer 3 and Layer 6. No behavioral boundaries, no output validation, no kill switch. DPD's chatbot swearing at customers — Layer 3 and cross-cutting human oversight. No input filtering, no escalation path.
-
-Now look at the enterprise-scale incidents. Microsoft's EchoLeak — Layer 2. No content filtering on retrieved data in the context window. GitHub Copilot leaking API keys — also Layer 2. No data boundary between training data and generated output.
-
-Notice something: Layer 2 — context isolation — shows up in both enterprise incidents. That's not a coincidence. It's the layer that controls what data the AI can see, and it's the one most organizations skip because it's hard to implement retroactively.
-
-These are not technology problems. They're architecture problems. And they're all addressable with the controls we walked through today.
-
-## SLIDE 58: Closing: Security Enables Innovation
+## SLIDE 54: Closing: Security Enables Innovation
 *[SLOW DOWN — closing moment]*
 
-97% of organizations that experienced an AI breach had no proper access controls. Remember the opening? The Chevy chatbot — no behavioral boundaries, no output validation, no kill switch. That's Layers 3 and 6 missing. DPD's swearing chatbot — no input filtering, no escalation path. Layers 3 and cross-cutting human oversight. Microsoft's EchoLeak — no content filtering on retrieved data. Layer 2. GitHub Copilot leaking API keys — no data boundary between training data and output. Layer 2 again. Each of these incidents maps to one or more missing layers in the blueprint. These aren't technology problems. They're architecture problems — and they're addressable with the controls we walked through today.
+97% of organizations that experienced an AI breach had no proper access controls. Remember the opening incidents — the Chevy chatbot, DPD, EchoLeak, Copilot secrets. Every one maps to missing layers in this blueprint. Not technology problems — architecture problems.
 
-The blueprint isn't about adding friction — it's about building the foundation that lets you deploy AI systems your organization actually trusts. When teams trust the safety net, they ship faster and take on harder problems. When they don't, AI projects stall in committee or get killed after the first incident.
+The blueprint isn't about adding friction. It's about building the foundation that lets teams move faster with confidence. When teams trust the safety net, they ship more often. When they don't, AI projects stall in committee or die after the first incident.
 
-Picture this: next Monday morning, you walk into your standup and say "I want every AI system in our org inventoried by Friday, and I want audit logging on the top three by end of month." That's it. That's the first move. Not a six-month initiative — a week of focused work that puts you ahead of 97% of the organizations in that opening stat.
+Picture this: next Monday morning, you walk into your standup and say "I want every AI system inventoried by Friday, and audit logging on the top three by end of month." That's it — a week of focused work that puts you ahead of 97% of the organizations in that opening stat.
 
 One last question to take with you: which single control from this blueprint would have stopped your most likely AI incident next quarter? That's the one to fund first.
-
-The organizations that build this infrastructure now aren't just more secure — they're the ones that will still be deploying AI a year from now, while others are cleaning up avoidable incidents.
 
 Thank you.
 
 ---
 
-## SLIDE 59: Questions
+## SLIDE 55: Questions
 *[PAUSE]*
 
 I'd love to take questions. We've got some time — who wants to go first?
