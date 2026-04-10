@@ -186,13 +186,13 @@ Let's start at the foundation. But first, a few more visuals to anchor everythin
 
 *[GESTURE at side-by-side]*
 
-Before I show you the detailed flow, I want you to see the transformation at a glance. On the left — the typical unguarded AI stack. Shared credentials. Full data access. No registry. Raw PII in prompts. No scanning. No kill switch. Sound familiar?
+Here's the transformation at a glance. On the left — the typical unguarded AI stack. Shared credentials. Full data access. No registry. Raw PII in prompts. No scanning. No kill switch. Sound familiar?
 
 On the right — the same AI system after applying the blueprint. Scoped service accounts. Tenant isolation. Prompt defenses. Model governance. Full audit trail. Operational controls.
 
 *[PAUSE]*
 
-Same AI capabilities. Same outcomes for the business. But one of these is an incident waiting to happen and the other is an architecture you can defend. That's what we're building toward today. Now let me show you how a single request flows through all six layers.
+Same AI capabilities. Same outcomes for the business. But one of these is an incident waiting to happen and the other is an architecture you can defend. That's what we're building toward today. Now let's look at how a single request flows through all six layers.
 
 ---
 
@@ -200,7 +200,7 @@ Same AI capabilities. Same outcomes for the business. But one of these is an inc
 
 *[GESTURE at diagram]*
 
-Before we dive into each layer, I want you to see the whole picture. This diagram shows what happens when a single AI request flows through all six layers of the blueprint.
+This diagram shows what happens when a single AI request flows through all six layers of the blueprint.
 
 A user makes a request. It hits Layer 1 — identity and access — where the user and the AI agent are both authenticated and scoped. Then Layer 2 — context isolation — where PII is tokenized and tenant boundaries are enforced. Layer 3 — prompt defenses — where the input is scanned and the instruction hierarchy is applied. Layer 4 — model governance — where the registry confirms this is an approved model and version. Layer 5 — audit — where the entire interaction is logged. And Layer 6 — operational controls — where rate limits, cost caps, and kill switches are active.
 
@@ -349,7 +349,7 @@ Indirect prompt injection: someone plants malicious instructions in a shared kno
 
 The threat model is simple: attacker plants → retrieval happens → now the defenses catch it. The content filter detects injection patterns. The instruction hierarchy ensures system instructions always take precedence over retrieved content. The model processes only legitimate content.
 
-This is exactly what the live demo will show. For now, the key insight: no single layer stops this attack alone. Defense-in-depth means if one layer fails, the others still catch it.
+The key insight: no single layer stops this attack alone. Defense-in-depth means if one layer fails, the others still catch it.
 
 *[BRIEF RECAP — midpoint check-in]*
 
@@ -365,11 +365,11 @@ Layer four: model governance. And let me open this one with the failure, because
 
 The lifecycle has six stages: selection, evaluation, approval, deployment, monitoring, and retirement. At each stage, there should be a governance gate — a checkpoint where risk assessment, bias testing, and security review happen before the model moves forward. And these gates should plug into your CI/CD pipeline: model approval before merge, injection regression tests in the build, canary deployment with automatic rollback criteria, and audit event verification in post-deploy checks.
 
-Most organizations skip this entirely. A developer finds a model that works, deploys it to production, and nobody outside their team knows it's there until something goes wrong. That's shadow AI, and it's one of the biggest risks in enterprise AI today.
+Most organizations skip this entirely. A developer finds a model that works, deploys it to production, and nobody outside their team knows it's there until something goes wrong. Shadow IT is one of the biggest risks in enterprise AI today.
 
-Let me give you an example of how this goes wrong. A developer on your data team finds a new open-source model on Hugging Face that's great at summarization. They wrap it in an API, deploy it to a Kubernetes cluster, and start using it for an internal dashboard that summarizes customer feedback. No security review. No approval process. No evaluation of the model's training data, known biases, or failure modes. Three months later, the model starts producing summaries that systematically downplay negative feedback — a known bias in the training data. Nobody notices for weeks because nobody's monitoring it. By the time it's caught, product decisions have been made based on skewed summaries.
+Let's look at an example of how this goes wrong. Suppose a developer on your data team finds a new open-source model on Hugging Face that's great at summarization. They wrap it in an API, deploy it to a Kubernetes cluster, and start using it for an internal dashboard that summarizes customer feedback. No security review. No approval process. No evaluation of the model's training data, known biases, or failure modes. Three months later, the model starts producing summaries that systematically downplay negative feedback — a known bias in the training data. Nobody notices for weeks because nobody's monitoring it. By the time it's caught, product decisions have been made based on skewed summaries.
 
-That's shadow AI. We spent twenty years fighting shadow IT. Now we have shadow AI — same pattern, higher stakes, harder to detect because AI failures are subtle rather than binary.
+This is the danger of shadow AI. We spent twenty years fighting shadow IT. Now we have shadow AI — same pattern, higher stakes, harder to detect because AI failures are subtle rather than binary.
 
 And if you already have shadow AI — which statistically you do — here's the triage: inventory first, then wrap the highest-risk systems with audit logging and kill switches before you try to move them into a governed pipeline. Don't try to shut everything down on day one — you'll lose the teams that are getting real value. Meet them where they are and bring the controls to them.
 
