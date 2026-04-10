@@ -1,8 +1,8 @@
-# CI/CD in the Age of CAI — Speaker Script (v10)
+# CI/CD in the Age of CAI — Speaker Script (v11)
 
-**Duration:** 75 minutes | **Target pace:** ~140 wpm | **Slides:** 50
+**Duration:** 75 minutes | **Target pace:** ~140 wpm | **Slides:** 52
 
-**Changes from v9:** Final polish pass — release gate config YAML updated from percentage thresholds to confidence band language for consistency; tools slide reframed with build-vs-buy guidance; "Where CAI Can Go Wrong" anti-pattern now explicitly connects to confidence band rationale; metrics section adds concrete before/after example; minor script tightening throughout
+**Changes from v10:** Added real citations (Priceline/Mabl 80k test executions, LogSage/ByteDance 1.07M CI runs, JetBrains 2025 adoption stats, GitLab Duo GA). Tempered aspirational claims — patterns 4-6 and policy-refined mechanism honestly framed as emerging/architectural vs. proven. Trimmed repetitive sections (slides 36, 41) to offset additions. New slides 8 (Three CAI Learning Mechanisms) and 12 (A Running Scenario) from v10.
 
 ---
 
@@ -51,7 +51,7 @@ On the left: CI/CD today. Build, test, deploy. Automated but unintelligent. Same
 
 On the right: CI/CD plus CAI. The same pipeline stages, but now each stage has an AI reasoning layer. Build with AI dependency analysis. Test with AI test synthesis and intelligent failure classification. Deploy with AI-powered release gates and risk-based decisions.
 
-Not replacing CI/CD — evolving it. Adding the intelligence layer that's been missing. And while this talk is pipeline commit to release — the same AI signals start earlier in the SDLC at PR review and continue later into production learning and incident response. The pipeline is the natural center of gravity, but CAI thinking extends both upstream and downstream. The data shows why this matters: the DORA 2025 State of AI-Assisted Software Development report found that AI coding assistants boost individual output — developers completed 21% more tasks — but organizational delivery metrics stayed essentially flat. One takeaway: if AI speeds up code creation but delivery systems remain unchanged, the bottleneck shifts downstream. That's the gap CAI addresses.
+Not replacing CI/CD — evolving it. Adding the intelligence layer that's been missing. And while this talk is about the entire pipeline - from commit to release — the same AI signals start earlier in the SDLC at PR review and continue later into production learning and incident response. The pipeline is the natural center of gravity, but CAI thinking extends both upstream and downstream. The data shows why this matters: the DORA 2025 State of AI-Assisted Software Development report found that AI coding assistants boost individual output — developers completed 21% more tasks — but organizational delivery metrics stayed essentially flat. One takeaway: if AI speeds up code creation but delivery systems remain unchanged, the bottleneck shifts downstream. That's the gap CAI addresses.
 
 ---
 
@@ -63,7 +63,9 @@ Reported test-cycle reductions up to 80% in specific contexts — from the MDPI 
 
 21% more tasks completed with AI coding assistants — DORA 2025. But 98% more PRs were merged, yet organizational throughput didn't spike proportionally. More code is flowing in, but the pipeline isn't keeping up — which is why the delivery layer needs its own intelligence.
 
-25 to 40% faster mean time to recovery — case study range from enterprise AIOps deployments. Even the low end translates to significant savings.
+25 to 40% faster mean time to recovery — in a case study from enterprise AIOps deployments. Even the low end translates to significant savings.
+
+And here's a reality check: the JetBrains 2025 Developer Survey found that while 75% of teams plan to use AI in their CI/CD pipelines, only 16% are actually doing it today. There's a big gap between aspiration and adoption. That gap is what this talk is about — practical patterns to close it.
 
 Treat these as directional examples, not promises. Your results will depend on codebase quality, pipeline maturity, team discipline, and how carefully you integrate. They show what's possible, not what's guaranteed. Let's talk about what makes this work.
 
@@ -101,7 +103,9 @@ On the left: inference-only. The AI analyzes fresh each time with no memory of p
 
 In the middle: retrieval-updated. This is where the RAG knowledge base comes in. Every resolved failure enriches the knowledge base. Every successful triage adds to the context the AI can draw on next time. Better context over time means better answers — the AI starts recognizing patterns it's seen before.
 
-On the right: policy-refined. Your thresholds and gate parameters adjust based on actual deployment outcomes. If the risk scorer is flagging too many false positives, the thresholds recalibrate. If the release gate is too conservative, the deployment data adjusts it. The system tunes itself.
+On the right: policy-refined. Your thresholds and gate parameters adjust based on actual deployment outcomes. If the risk scorer is flagging too many false positives, the thresholds recalibrate. If the release gate is too conservative, the deployment data adjusts it.
+
+Now, I want to be transparent about where these stand today. Inference-only is what most teams are doing — you add an AI step, it runs, it's useful. Retrieval-updated is achievable right now with existing RAG tools and vector databases. Policy-refined — where thresholds auto-adjust based on deployment outcomes — is the most aspirational of the three. I'm not aware of published production implementations of fully automated policy refinement in CI/CD. It's where the pattern is heading, not where most teams are today. The human version of this — manually tuning thresholds based on outcome data — is absolutely something teams do. The automation of that tuning is the frontier.
 
 Most teams start inference-only and add the other two as they mature. You don't need all three on day one.
 
@@ -179,6 +183,8 @@ Back to our scenario: Sarah's database connection pooling PR comes in. The AI ge
 
 Test intelligence goes further: the AI identifies which existing tests are impacted and runs only those. Changed three files? Run the 200 relevant tests, not all 10,000. Reported results include up to 80% cycle time reduction in specific contexts — from the MDPI study. Your results will depend on codebase structure and test architecture.
 
+This pattern has real traction. Priceline partnered with Mabl and scaled to 80,000 monthly automated test executions with AI-powered test generation, reporting an 85% reduction in test maintenance effort. That's not a lab experiment — that's production scale.
+
 Caveat: AI-generated tests are accelerators, not unquestioned truth. The AI might generate tests with shallow assertions. Use AI test synthesis to expand coverage, but treat the output as a starting point your team reviews.
 
 ---
@@ -207,7 +213,7 @@ Build fails. What do you do? You open the logs. You scroll through ten thousand 
 
 AI failure classification automates that entire process. The AI reads the full log, classifies the failure by type, severity, and root cause, and presents a structured summary. Look at the taxonomy on this slide — in many CI environments, environment and flaky-test issues account for a large share of failures, often more than genuine code bugs.
 
-The LogSage framework, published in 2025, demonstrated an LLM-based approach to CI/CD failure detection and remediation that handles this classification automatically. And the impact is measurable — enterprises deploying AIOps are reporting 25 to 40% faster MTTR, based on published case studies from companies like HCL and CMC Networks.
+The LogSage framework, published in 2025, demonstrated this at real scale — tested on ByteDance's CI infrastructure across 1.07 million CI executions, achieving over 80% precision in failure classification. That's not a toy demo — that's one of the largest software organizations on Earth using LLM-based classification on their actual build failures. And the broader impact is measurable — enterprises deploying AIOps are reporting 25 to 40% faster MTTR, based on published case studies from companies like HCL and CMC Networks.
 
 In our running scenario: Sarah's config change fails. Traditional pipeline: she opens a 10,000-line log, spends 20 minutes scrolling, eventually finds the error buried on line 7,842 — pool size exceeds the driver's maximum. CAI pipeline: the AI classifies it in seconds as "configuration validation error — pool size exceeds driver maximum," confidence 94%, links to the specific log line. Thirty seconds versus twenty minutes.
 
@@ -291,7 +297,9 @@ Don't go to your VP and say "I need six months and a team of five to implement a
 
 "Have we seen this before?" That's the first question every developer asks when a build fails. And the answer is almost always yes. Pattern four — RAG-driven debugging — is about making sure your pipeline can actually answer that question. Usually, the answer is yes — someone fixed this exact error six months ago, in PR #4521, and the fix is in the commit message. But nobody remembers that. The knowledge walked out the door when that developer updated their LinkedIn and is now "open to opportunities."
 
-RAG debugging solves this. You build a vector database of your past CI failures, resolved PRs, incident reports, and runbooks. One important note on source trust: your internal resolved PRs and runbooks belong in the highest trust tier. Public sources like Stack Overflow can be useful for context, but they should be clearly tagged and weighted lower — they weren't written for your codebase. When a new failure occurs, the AI extracts the error, embeds it as a query, searches your history for similar past failures, and synthesizes a fix — linking to the actual PRs and resolutions that solved the same problem before.
+RAG debugging addresses this. I should be transparent: this is more of an architectural pattern than a proven production practice with published case studies. The individual building blocks are mature — vector databases, embedding APIs, CI log collection — but I haven't found published examples of teams running this end-to-end in production CI pipelines specifically. The pattern is sound and buildable today, so let me show you the architecture.
+
+You build a vector database of your past CI failures, resolved PRs, incident reports, and runbooks. One important note on source trust: your internal resolved PRs and runbooks belong in the highest trust tier. Public sources like Stack Overflow can be useful for context, but they should be clearly tagged and weighted lower — they weren't written for your codebase. When a new failure occurs, the AI extracts the error, embeds it as a query, searches your history for similar past failures, and synthesizes a fix — linking to the actual PRs and resolutions that solved the same problem before.
 
 The AI doesn't guess. It searches your actual history and gives you grounded answers. And there's a feedback loop: every resolution gets added back to the knowledge base, making the system smarter over time.
 
@@ -345,6 +353,8 @@ AI risk scoring analyzes each change and assigns a risk level based on multiple 
 
 High-risk changes get the full treatment: complete test suite, extra security scans, manual approval gate. Low-risk changes get fast-tracked with smoke tests only. Medium-risk changes get targeted testing.
 
+Now, most risk scoring in practice today is heuristic-based — weighted point systems, not AI-driven. Meta built an internal Diff Risk Score system for their pipelines, but hasn't published detailed metrics on it. The concept is implementable today with a simple Python script. The AI-powered version — where learned weights replace hand-tuned ones — is still emerging. Start with the heuristic; it gets you 80% of the value.
+
 The result: teams report significant build time savings by focusing CI resources on high-risk changes instead of running the full battery on every single commit. The exact savings depend on your test suite size and change distribution, but the principle is universal — spend your CI budget where it matters.
 
 In our running scenario: Sarah's database config change? The risk scorer flags it immediately. Core infrastructure file, high blast radius, touches connection handling that affects every service, and modifies parameters that have caused production incidents before — the risk scorer knows this from historical deployment data. Risk score: 8 out of 10. Full test suite, security scan, and manual approval required. The pipeline is going to scrutinize this change because the signals say it deserves scrutiny.
@@ -388,6 +398,8 @@ AI release gates do a multi-signal assessment. They look at test results AND err
 "Ship or hold?" stops being a gut feeling and starts being a data-driven recommendation.
 
 Let me make this concrete. Without a CAI gate: tests green, Friday 4:30, team ships. At 5:12 PM, rising error rates — the canary caught a connection pool regression that unit tests didn't cover. Incident, rollback, two-hour cleanup. With a CAI gate: same Friday 4:30, but the gate sees canary error rates ticking up on a similar change pattern from last quarter. Recommendation: hold. Senior engineer reviews, catches the gap, ships Monday after a targeted fix. Same PR, different outcome — because the gate had memory the team didn't.
+
+I want to be upfront: AI-powered release gates are the most aspirational pattern in this talk. Harness and other vendors have announced AI-assisted deployment capabilities, but I don't have published adoption metrics or case studies showing this working end-to-end in production. The multi-signal synthesis concept is real — teams already evaluate these signals manually. The AI automation of that synthesis is where the industry is heading, but it's early days. That said, the building blocks are all available, and the architecture is sound.
 
 Important framing here: I said *recommendation*, not *decision*. Release gates should start as advisory. The AI gives you a confidence score and its reasoning. A human reviews and approves. Over time, as trust builds, you can move to approval assist — where the AI auto-approves low-risk changes but escalates high-risk ones. Eventually, enforced gates where the AI has authority over routine releases. But that's a maturity journey, not a day-one deployment.
 
@@ -481,7 +493,7 @@ Step five, risk scoring: this PR touches core infrastructure, affects connection
 
 Step six, release gate: Sarah applies the fix, build passes, but the risk score is still 8 out of 10. Confidence: 87%. Recommendation: escalate to senior engineer. A senior reviews, approves, and the change ships.
 
-Notice what happened: every pattern added a layer. Test synthesis caught the edge case. Classification diagnosed it. Summarization communicated it. RAG found the precedent. Risk scoring flagged the severity. And the release gate ensured the fix shipped safely. That's not six tools bolted on. That's one intelligent system.
+Notice what happened: every pattern added a layer. Test synthesis caught the edge case. Classification diagnosed it. Summarization communicated it. RAG found the precedent. Risk scoring flagged the severity. And the release gate ensured the fix shipped safely. Now — I've walked through this as if it's one seamless system, and that's the vision. In practice today, the first three patterns have mature tooling and real case studies. The last three are buildable but earlier in adoption. The point is the architecture — each pattern is independently valuable and they compound when connected.
 
 ---
 
@@ -489,13 +501,9 @@ Notice what happened: every pattern added a layer. Test synthesis caught the edg
 
 *[GESTURE across the six numbered cards]*
 
-One intelligent system — here it is laid out visually. Sarah's database connection pooling change, touched by all six patterns.
+Here it is laid out visually — one intelligent system. I'll let the cards speak for themselves since we just walked through each step.
 
-Step one: test synthesis caught the edge case — the config validation test that a human developer wouldn't have written. Step two: classification diagnosed the failure in seconds — "pool size exceeds driver maximum." Step three: summarization communicated it to the whole team in ten seconds via Slack.
-
-Step four: RAG lookup found the exact same fix from three months ago — PR #3847, same driver limit issue. Step five: risk scoring flagged the severity — core infrastructure, high blast radius, risk score 9 out of 10. Step six: the release gate shipped it safely with human sign-off after a senior engineer reviewed.
-
-Each component made the others more effective. That's not six tools bolted on — that's Continuous AI working as a system.
+The key takeaway: each component made the others more effective. And I want to be honest about the maturity curve here — patterns one through three, the ones on the left, have real production implementations and published case studies today. Patterns four through six, on the right, are architecturally sound and buildable, but they're earlier in adoption. The vision is the full pipeline. The practical starting point is the left side of this slide.
 
 ---
 
@@ -514,7 +522,7 @@ Here's the full picture. From commit to production, every stage has an AI enhanc
 
 Commit: AI code review and vulnerability detection. Build: AI dependency analysis and risk scoring. Test: AI test synthesis and failure classification. Validate: log summarization and RAG debugging. Release: AI release gate with confidence score. Deploy: canary analysis and auto-rollback.
 
-And at the bottom — the feedback loop. Every failure, every fix, every deployment outcome feeds back. The whole system calibrates over time. But this full architecture is the destination, not the starting point. You build it incrementally, pattern by pattern, proving value at each step.
+And at the bottom — the feedback loop. Every failure, every fix, every deployment outcome feeds back. I want to be clear: this full architecture is the destination, not today's reality for anyone I'm aware of. No team I've found has published a case study of all six layers running together in production. But the individual patterns are real and proven — especially the left side of the pipeline. You build this incrementally, pattern by pattern, proving value at each step.
 
 ---
 
@@ -524,7 +532,7 @@ Let me emphasize this because it's the key differentiator between "AI in CI" and
 
 Failed tests train the failure classifier — it learns what different failure types look like. Resolved PRs enrich the RAG debugging knowledge base — next time a similar failure occurs, the system already knows the fix. Deployment outcomes refine the risk scoring model — it learns which types of changes actually cause production issues. Rollbacks update release gate thresholds — if the gate let something through that shouldn't have shipped, it adjusts.
 
-This is what separates CAI from "we added a ChatGPT call to our pipeline and called it innovation." And remember — when I say "learning," I mean the three specific mechanisms we discussed: inference gets better through retrieval updates, retrieval gets better through resolution capture, and policy gets better through outcome calibration. Not model retraining. Not magic. Structured feedback loops.
+This is what separates CAI from "we added a ChatGPT call to our pipeline and called it innovation." And remember — when I say "learning," I mean the mechanisms we discussed earlier: inference gets better through retrieval updates, and retrieval gets better through resolution capture. Those two are achievable today with existing tools. The third — policy refinement through outcome calibration — is the most aspirational piece. Teams do this manually today, tuning thresholds based on what they observe. Automating that tuning is the frontier. Not model retraining. Not magic. Structured feedback loops, with varying levels of maturity.
 
 But the learning only works if you capture outcomes. If you're not feeding deployment results back in, the feedback loop is broken. Six months of the same prompts and thresholds isn't Continuous AI — it's a static API call. And the loop doesn't have to stop at code — imagine the feedback loop auto-drafting a postmortem after a rollback, or enriching a runbook with the resolution from this week's recurring failure. Incident summaries, release notes, and runbook updates are all outputs the feedback loop can generate or enrich over time. We'll talk about how to measure whether the loop is working in a few slides.
 
@@ -554,13 +562,7 @@ This stack isn't a six-month project. Teams can stand up a basic internal pilot 
 
 *[GESTURE across the six component cards]*
 
-Here's the minimum viable stack, laid out visually. Six components — two to three weeks for a basic pilot.
-
-CI runner — no changes, use what you already have. Redaction layer — build this first, before anything touches a model. This is your security foundation. Model gateway — rate limiting, retry logic, fallback rules. This is what separates a demo from a production system.
-
-Vector store — the memory layer for your RAG knowledge base. Policy engine — your guardrails defined in code, version-controlled and auditable. And audit log — every AI decision recorded so you can answer "why did the AI recommend that?"
-
-The advice at the bottom: start with redaction plus model gateway. Those two give you secure, reliable AI calls. Layer in the vector store, policy engine, and audit log as you mature. Don't let infrastructure decisions block you from getting started.
+Here's that stack laid out visually. I won't repeat the details — they're on the slide and we just covered them. The key advice: start with redaction plus model gateway. Those two give you secure, reliable AI calls from day one. Layer in the vector store, policy engine, and audit log as you mature. Don't let infrastructure decisions block you from getting started.
 
 ---
 
@@ -604,7 +606,7 @@ Here's the practical principle: start with the tasks where a small, cheap model 
 
 The ecosystem exists. You don't need to build all of this from scratch. The slide shows tools organized by pipeline stage — code review, testing, security, feature flags, custom AI steps, monitoring. I won't read the list; you can take a photo.
 
-The key takeaway is a build-versus-buy decision. Buy mature tooling for standard pipeline stages — test generation, UI testing, observability. These are solved problems with commercial products. Build custom AI for your specific patterns — your risk scorer, your failure classifier, your RAG knowledge base over your codebase. Those are specific to you, and a 50-line Python script often outperforms a generic product. And the integration layer — MCP, the Model Context Protocol — is becoming a leading standard for connecting AI to your tools and data.
+The key takeaway is a build-versus-buy decision. Buy mature tooling for standard pipeline stages — test generation with tools like Qodo or Mabl, UI testing, observability with platforms like GitLab Duo which went GA with CI/CD failure analysis. These are solved problems with commercial products. Build custom AI for your specific patterns — your risk scorer, your failure classifier, your RAG knowledge base over your codebase. Those are specific to you, and a 50-line Python script often outperforms a generic product. And the integration layer — MCP, the Model Context Protocol — is becoming a leading standard for connecting AI to your tools and data.
 
 ---
 
@@ -682,7 +684,7 @@ Day 1: log summaries and PR comments. Human-in-the-loop. You're adding visibilit
 
 Day 30: failure classification and dashboarding. Human-on-the-loop. You're adding intelligence — the pipeline categorizes failures, tracks patterns, and starts auto-remediating known issues like stale caches. Measure triage time reduction — if it's dropping, you're on track.
 
-Day 90: RAG memory and policy-bounded release gates. Human-over-the-loop. You're adding judgment — the pipeline remembers past fixes, scores risk, and advises on release decisions. Graduate to this only after earning trust with data from the first two stages.
+Day 90: RAG memory and advisory release gates. Human-over-the-loop. You're adding judgment — the pipeline remembers past fixes, scores risk, and advises on release decisions. These are the more aspirational patterns — the tooling is available but the production playbook is still being written by early adopters. Graduate to this only after earning trust with data from the first two stages.
 
 The key word is *earn*. Each stage proves the reliability that justifies the next. Don't skip ahead — the team that tries to deploy release gates on day one without the classification and memory infrastructure underneath will fail. Build the foundation first.
 
@@ -701,7 +703,7 @@ And the beautiful part: you can start today. Not with a massive transformation. 
 
 This isn't about replacing developers. It's about removing the tedious work — log-diving, failure triage, "have we seen this before?" investigations — so developers focus on creative, high-value work. AI handles pattern matching. Humans handle decision-making.
 
-The six patterns, the feedback loop, the guardrails, the adoption path — they're not theoretical. They use tools and APIs that exist today. Start with log summarization tomorrow morning. The feedback loop that connects the patterns is what turns a collection of AI tools into a genuinely intelligent delivery system.
+The six patterns, the feedback loop, the guardrails, the adoption path — they use tools and APIs that exist today. The first three patterns — test synthesis, failure classification, log summarization — have real production case studies and mature tooling. The last three — RAG debugging, risk scoring, release gates — are architecturally sound and buildable, but earlier in adoption. Start with the proven patterns. Let the data make the case for the ambitious ones. The feedback loop that connects them is what turns a collection of AI tools into a genuinely intelligent delivery system.
 
 Your developers are already using AI to write code faster. The question is whether your pipeline is learning anything from it. If AI speeds up coding but the pipeline stays dumb, you've moved the bottleneck, not solved it.
 
