@@ -329,23 +329,7 @@ What vector database should you use? Start simple — ChromaDB runs locally with
 
 ---
 
-## [SLIDE 25 — LIVE DEMO: CAI Pipeline in Action]
-
-**[SECTION DIVIDER — LIVE DEMO]**
-
-[DEMO: Run demo-cai-pipeline.py]
-
-"Let me show you what this looks like in practice. We're going to take a real PR — Sarah Chen's PR #5032, a Python authentication module change — and run it through our CAI pipeline live.
-
-The demo walks through all four patterns we just discussed: AI-assisted test synthesis, predictive risk scoring, intelligent change analysis, and automated documentation. You'll see the actual prompts being sent to the model and the real responses coming back.
-
-Watch for how each pattern builds on the previous one — the test results feed into risk scoring, the change analysis references both, and the documentation synthesizes everything.
-
-Let's run it."
-
----
-
-## [SLIDE 26 — Pattern 5: Risk Scoring]
+## [SLIDE 25 — Pattern 5: Risk Scoring]
 
 Here's a quick contrast. PR A: one-line typo fix in a README. PR B: database connection pooling change that touches every microservice. Your current pipeline: identical 45-minute test suites for both. PR A's developer is annoyed. PR B probably deserves even *more* scrutiny than it's getting. Pattern five — risk scoring — fixes this mismatch.
 
@@ -363,7 +347,7 @@ Meanwhile, the README fix that another developer pushed at the same time? Risk s
 
 ---
 
-## [SLIDE 27 — Five Risk Scoring Factors]
+## [SLIDE 26 — Five Risk Scoring Factors]
 
 *[GESTURE across the five factor cards]*
 
@@ -375,7 +359,7 @@ The bottom line is the routing rule: high risk gets the full suite plus security
 
 ---
 
-## [SLIDE 28 — Risk-Based Pipeline Routing]
+## [SLIDE 27 — Risk-Based Pipeline Routing]
 
 Here's the code — focus on the branching logic, not the syntax. A Python script calculates a risk score from 0 to 10 based on the PR factors. The workflow then branches: high risk gets the full test suite, medium risk gets targeted tests, low risk gets smoke tests only.
 
@@ -387,7 +371,7 @@ And think about explainability. When a PR gets flagged high-risk, developers wil
 
 ---
 
-## [SLIDE 29 — Pattern 6: AI-Powered Release Gates]
+## [SLIDE 28 — Pattern 6: AI-Powered Release Gates]
 
 *[GESTURE at diagram]*
 
@@ -405,7 +389,7 @@ Important framing here: I said *recommendation*, not *decision*. Release gates s
 
 ---
 
-## [SLIDE 30 — Multi-Signal Release Assessment]
+## [SLIDE 29 — Multi-Signal Release Assessment]
 
 Here are the signals an AI release gate evaluates, with the specific thresholds. Test pass rate above 99.5%. Error trend over the last 24 hours is decreasing. Risk score below 7 out of 10. Change scope under 500 lines. Zero critical security vulnerabilities. Canary health above 95%.
 
@@ -419,7 +403,7 @@ And calibrate it: after every release, compare the gate's recommendation against
 
 ---
 
-## [SLIDE 31 — Release Gate Configuration]
+## [SLIDE 30 — Release Gate Configuration]
 
 And here's what the configuration looks like. A YAML-based declarative config that defines your signals, their sources, thresholds, and the decision logic.
 
@@ -428,6 +412,22 @@ Ship if all signals pass and the confidence band is HIGH. Hold if any critical s
 Declarative config means you can version-control your release gate. Put it in your repo. Review changes to it. Audit who changed the thresholds and when. That's important for governance — you need a clear audit trail of how release decisions are being made and how the criteria evolve over time.
 
 So — step back for a moment. At this point your pipeline is no longer just enforcing rules. It's classifying failures, explaining them in plain English, remembering past fixes, quantifying risk, and advising on release decisions. That's six layers of intelligence that didn't exist before. But intelligence without guardrails is a liability. Let's talk about what can go wrong.
+
+---
+
+## [SLIDE 31 — LIVE DEMO: CAI Pipeline in Action]
+
+**[SECTION DIVIDER — LIVE DEMO]**
+
+[DEMO: Run demo-cai-pipeline.py]
+
+"Let me show you what this looks like in practice. We're going to take a real PR — Sarah Chen's PR #5032, a Python authentication module change — and run it through our CAI pipeline live.
+
+The demo walks through the six patterns we just discussed: AI-assisted test synthesis, failure classification, log summarization, RAG-driven debugging, risk scoring, and release gates. You'll see the actual prompts being sent to the model and the real responses coming back.
+
+Watch for how each pattern builds on the previous one — the test results feed into risk scoring, the change analysis references both, and the documentation synthesizes everything.
+
+Let's run it."
 
 ---
 

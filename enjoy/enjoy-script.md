@@ -10,7 +10,7 @@
 ---
 
 
-Good morning, everyone. Before we dig in, let's take a quick trip down memory lane. Remember when AI's biggest problems were actually... entertaining?
+Good morning, everyone. Before we dig in to our topic in depth, let's take a quick trip down memory lane. Remember when AI's biggest problems were actually... entertaining?
 
 [ADVANCE to bloopers]
 
@@ -37,7 +37,7 @@ Quick show of hands. How many of you saved 15 minutes this week using AI? [PAUSE
 
 [PAUSE] Yeah. That's the talk.
 
-I'm Brent Laster. I've been working in engineering and technical training for over two decades now. I've seen a lot of technology shifts. But I've never seen one that created this much frustration alongside this much promise. We're all using AI. Every single one of us. And yet when engineers, team leads, and architects are surveyed about how it's going, the honest answer is usually some version of: "It's fine, I guess. I'm not sure it's actually helping." That sentiment shows up consistently in research from Stack Overflow, BCG, and Pew.
+I'm Brent Laster. I've been working in technology for decades. I've seen a lot of technology shifts. But I've never seen one that created this much frustration alongside this much promise. I'd venture to say we're all using AI. Every single one of us. And yet when engineers, team leads, and architects are surveyed about how it's going in production, the honest answer is usually some version of: "It's helpful for some use cases, but we're not actually sure we're doing it right or that it's actually helping overall." That sentiment shows up consistently in research from Stack Overflow, BCG, and Pew.
 
 That's what we're going to dig into today. We'll look at five specific barriers that are making AI feel harder than it should. Then we'll walk through five achievable shifts — things you can implement this week — that change the experience. And we'll close with a playbook you can take back to your team on Monday.
 
@@ -55,7 +55,7 @@ That's what we're going to dig into today. We'll look at five specific barriers 
 
 ## SLIDE 6: A SHOW OF HANDS
 
-Let's start with the numbers. Across recent workforce studies, a clear pattern is emerging. About 52% of workers are actively using AI tools — that's from Qualtrics. But here's the catch — a separate study from ManpowerGroup found that worker confidence in using technology at work fell sharply by 18 percentage points over roughly the same period, even as AI use rose. Two different studies, same story: adoption going up, confidence going down.
+Let's start with the numbers. Across recent workforce studies, a clear pattern is emerging. About 52% of workers are actively using AI tools — that's from Qualtrics. But here's the catch — a separate study from ManpowerGroup found that worker confidence in using technology at work fell sharply — by 18% — over roughly the same period, even as AI use rose. Two different studies, same story: adoption going up, confidence going down.
 
 Now, these are broad workforce numbers — not engineering-specific. But the same pattern shows up very clearly in developer workflows, and I'll show you the engineering data in a moment. The point is: this isn't one team's problem. It's structural.
 
@@ -65,11 +65,11 @@ Now, these are broad workforce numbers — not engineering-specific. But the sam
 
 ## SLIDE 7: AI PRODUCTIVITY PARADOX
 
-Now let me hit you with the uncomfortable numbers. Only about one in four organizations have achieved repeatable ROI from AI across multiple use cases — that's from research by MIT and Wharton. The rest are still trying to figure out how to make this work beyond pilots and proofs of concept.
+Now let's talk about some uncomfortable business numbers. MIT's 2025 "State of AI in Business" report found that 95% of generative AI pilots failed to deliver measurable business impact. Let that land. Ninety-five percent. The vast majority of organizations are still trying to figure out how to make this work beyond pilots and proofs of concept.
 
 And among developers specifically, Stack Overflow's 2025 survey tells a stark story: only about one in three developers say they trust AI output accuracy. And 46% actively distrust it. More developers distrust AI-generated code than trust it. That's not a rounding error — that's a fundamental confidence problem.
 
-Meanwhile, Pew Research found that 52% of workers are more worried than hopeful about AI in their workplace. And ActivTrak's analysis of over 443 million hours of work activity found that focus sessions dropped 9% while collaboration time surged after AI adoption. The tools multiply, but the deep-focus time shrinks.
+Meanwhile, Pew Research found that 52% of workers are more worried than hopeful about AI in their workplace. And ActivTrak's analysis of over 443 million hours of work activity found that average focus session length dropped 9% — down to just 13 minutes — while collaboration time surged 34% after AI adoption. The tools multiply, but the deep-focus time shrinks.
 
 We're using it more. We're enjoying it less. Let's figure out why.
 
@@ -129,6 +129,8 @@ Each one feeds the others. Tool sprawl creates confusion about where AI fits, wh
 ## SLIDE 12: BARRIER 1 — TOO MANY TOOLS, NOT ENOUGH GLUE
 
 First barrier. Survey data tells us developers are juggling more AI tools than ever — ActivTrak's 2026 report found the average organization now uses seven AI tools, up from two just two years ago, with 83% of organizations using six or more. IDE copilot, chat interfaces, code search, review assistants, doc generators. Each one is independently useful. But none of them share context with each other.
+
+Now — there ARE efforts to fix this. Anthropic's Model Context Protocol — MCP — has gained real traction, with 97 million monthly SDK downloads and adoption by OpenAI, Google, Microsoft, and AWS. Teams are writing structured context files like CLAUDE.md and .cursorrules. But here's the honest status: MCP connects tools to data sources, not tools to each other. Your Cursor session still can't hand context to your Claude Code session. Context engineering is becoming a discipline, but the integration gap is still very real.
 
 So YOU become the integration layer. You re-explain the same problem four times to four different systems. AI didn't remove work. It just promoted all of us to unpaid reviewers. That human middleware cost is eating the productivity gains the tools are supposed to provide. The result? Widespread "shadow AI" use when the official tools are weak or slow.
 
@@ -192,7 +194,7 @@ The middle column is the frustration zone. The right column is what we're aiming
 
 Third barrier. AI is almost right a lot of the time. And "almost right" is the most dangerous kind of wrong. If it were obviously broken, you'd catch it. If it were always correct, you could trust it. But "almost right" means you have to verify everything, and the review feels pointless because the output usually looks fine.
 
-Here's how Stack Overflow's 2025 survey put it: 45% of developers said their number one frustration is "AI solutions that are almost right but not quite." That was the top response. And it tracks with the broader research — MIT's 2025 study found that 95% of AI pilots failed to deliver measurable business impact, largely because organizations couldn't get past the verification and scaling challenges.
+Here's how Stack Overflow's 2025 survey put it: 66% of developers said their biggest frustration is "AI solutions that are almost right but not quite." Two-thirds. That was the top response — and 45% said debugging AI-generated code is more time-consuming than writing it themselves. It tracks with the broader research — MIT's 2025 study found that 95% of AI pilots failed to deliver measurable business impact, largely because organizations couldn't get past the verification and scaling challenges.
 
 Many organizations still struggle to demonstrate repeatable, measurable ROI from AI beyond pilots — and a big part of that is the hidden verification cost. The teams that push through it and build good review discipline recover. The ones that don't either give up or ship bugs.
 
@@ -229,7 +231,7 @@ That's not a code bug. That's a process failure created by incomplete AI output 
 
 Fourth barrier, and this is the one that hits hardest. AI brain fry. For engineers, it's the constant loop of prompting, validating output line by line, re-prompting when it's wrong, and context-switching between tools — all while keeping your own mental model intact. A March 2026 study by BCG and Harvard Business Review surveyed nearly 1,500 workers and coined the term "AI brain fry" — mental fatigue from excessive AI oversight. They found meaningful increases among heavy AI users: 14% more mental effort, 12% more mental fatigue, 19% more information overload, and 33% more decision fatigue. Fourteen percent of knowledge workers reported significant cognitive strain, with software development flagged as one of the highest-prevalence roles. For engineering, that pattern is likely intensified by the verification load we've been talking about.
 
-And here's the irony: AI was supposed to lighten workloads. But ActivTrak's analysis of 443 million hours of work data found that focus sessions dropped 9% while collaboration time surged after AI adoption. The workload didn't shift — it stacked. For engineers, that means more diff review fatigue, more re-prompt cycles, more context reconstruction between tools, and less uninterrupted time for the deep thinking that produces good architecture. You're debugging AI's understanding of your codebase instead of debugging the codebase itself.
+And here's the irony: AI was supposed to lighten workloads. But ActivTrak's analysis of 443 million hours of work data found that average focus session length dropped 9% — down to just 13 minutes — while collaboration time surged 34% after AI adoption. The workload didn't shift — it stacked. For engineers, that means more diff review fatigue, more re-prompt cycles, more context reconstruction between tools, and less uninterrupted time for the deep thinking that produces good architecture. You're debugging AI's understanding of your codebase instead of debugging the codebase itself.
 
 [TIMING: 21:15]
 
@@ -246,9 +248,9 @@ And this isn't once a day. This cycle happens ten, fifteen, twenty times a day. 
 ---
 ## SLIDE 22: WHERE THE TIME ACTUALLY GOES
 
-Here's the data behind brain fry. BCG's research found directional evidence — not universal benchmarks — that for organizations using AI heavily, collaboration overhead increased meaningfully while focused work time dropped. ActivTrak's large-scale tracking confirmed the pattern: focus sessions down 9%, now averaging just 13 minutes each.
+Here's the data behind brain fry. ActivTrak's large-scale tracking tells the story: collaboration time surged 34%, while average focus session length dropped 9% — down to just 13 minutes each.
 
-That sounds like small numbers. But for an engineer, even a few percentage points of focused time is 3-4 hours per week. That's your deep-thinking time. Your architecture time. Your 'understand the system better' time.
+That sounds like small numbers. But for an engineer, even 9% of focused time is 3-4 hours per week. That's your deep-thinking time. Your architecture time. Your 'understand the system better' time.
 
 And the added collaboration time? That's context-rebuilding. Re-explaining problems across tools. Validating outputs. Re-prompting when AI gets it wrong. It's not necessarily bad work — but it's not the high-value work engineers signed up for.
 
@@ -588,7 +590,7 @@ I'd love to hear what's on your mind. What resonated? What didn't? What's the bi
 
 <details>
 <summary>You say adoption is up but confidence is down. What's the actual data behind that?</summary>
-<div class="qa-answer">Two separate studies tell the same story. Qualtrics found 52% of workers are actively using AI tools. ManpowerGroup found that worker confidence in using technology at work fell 18 percentage points over roughly the same period. Stack Overflow's 2025 developer survey: only about one in three developers trust AI output accuracy, while 46% actively distrust it. More developers distrust AI-generated code than trust it. And Pew found 52% of workers are more worried than hopeful about AI at work. Different studies, different methodologies, same directional finding.</div>
+<div class="qa-answer">Two separate studies tell the same story. Qualtrics found 52% of workers are actively using AI tools. ManpowerGroup found that worker confidence in using technology at work fell 18% over roughly the same period. Stack Overflow's 2025 developer survey: only about one in three developers trust AI output accuracy, while 46% actively distrust it. More developers distrust AI-generated code than trust it. And Pew found 52% of workers are more worried than hopeful about AI at work. Different studies, different methodologies, same directional finding.</div>
 </details>
 
 <details>
@@ -607,7 +609,7 @@ I'd love to hear what's on your mind. What resonated? What didn't? What's the bi
 
 <details>
 <summary>Tool sprawl — how many AI tools should a developer actually use?</summary>
-<div class="qa-answer">BCG's 2026 research found productivity gains rose from 1 to 2 tools, peaked at 3, and dropped past 4, while cognitive strain kept climbing. The recommendation: pick your best 2-3 tools, go deep, learn their strengths, build muscle memory, let the rest go. The problem isn't having options — it's that none of the tools share context with each other, so YOU become the integration layer, re-explaining the same problem to 4 different systems.</div>
+<div class="qa-answer">BCG's 2026 research found productivity gains rose from 1 to 2 tools, peaked at 3, and dropped past 4, while cognitive strain kept climbing. The recommendation: pick your best 2-3 tools, go deep, learn their strengths, build muscle memory, let the rest go. The problem isn't having options — it's that the tools still don't share context with each other in practice. Protocols like MCP are making progress connecting tools to data sources, but tool-to-tool context transfer remains unsolved. So YOU become the integration layer, re-explaining the same problem to 4 different systems.</div>
 </details>
 
 <details>
@@ -684,7 +686,7 @@ I'd love to hear what's on your mind. What resonated? What didn't? What's the bi
 
 <details>
 <summary>How do I convince my team lead or manager to invest in these changes?</summary>
-<div class="qa-answer">Use the data: only 1 in 4 organizations have achieved repeatable AI ROI (MIT/Wharton). Focus sessions dropped 9% after AI adoption (ActivTrak). 46% of developers distrust AI accuracy (Stack Overflow). Then show the fix: 30 seconds of context saves 20 minutes of re-prompting. Organizations that communicated where AI fits saw better adoption. 5 hours of training drops anxiety and improves adoption. Frame it as: "We're already spending time on AI. Let's spend it effectively instead of wastefully."</div>
+<div class="qa-answer">Use the data: 95% of AI pilots failed to deliver measurable ROI (MIT, 2025). Focus session length dropped 9% after AI adoption (ActivTrak). 46% of developers distrust AI accuracy (Stack Overflow). Then show the fix: 30 seconds of context saves 20 minutes of re-prompting. Organizations that communicated where AI fits saw better adoption. 5 hours of training drops anxiety and improves adoption. Frame it as: "We're already spending time on AI. Let's spend it effectively instead of wastefully."</div>
 </details>
 
 <hr>
