@@ -1,11 +1,8 @@
-# Context Engineering: Because the Model Isn't the Problem — v11 Improved Speaker Script
+# Context Engineering: Because the Model Isn't the Problem — v13 Speaker Script
 
 **Duration:** ~65 minutes (raw spoken ~50 min + ~10 min pauses, polls, transitions + ~5 min buffer)
 **Target pace:** ~140 words/min | **Spoken word count:** ~7,000 words
-**v12 Changes:** Removed Slide 24 (Context Rot) entirely. Condensed Slides 35-36, 43-45, and 46. Applied light trims to Slides 17, 20, 28, 31, 37. Renumbered slides 25+ to fill gap. Cut ~1,000 words total to meet 50-minute spoken content target.
-
----
-
+**v13 Changes:** Moved "Inside a Context Engine" slide from position 19 to position 31 (after all six pillars have been covered). Renumbered slides 20-31 to 19-30. Updated transitions at both move points. Rewrote context engine script section to reference pillars as already-covered material.
 ## SLIDE 1: VERSION
 [Skip]
 
@@ -225,27 +222,7 @@ Put simply: a context engine is not just retrieval — it's the system that sele
 
 ---
 
-## SLIDE 19: Inside a Context Engine (NEW)
-
-*[GESTURE at the 5-stage pipeline diagram]*
-
-So what does a context engine actually look like under the hood? Let me walk you through it — five stages, left to right.
-
-Stage one: **Query Analysis**. Before you retrieve anything, you analyze and expand the query. "Fix the login bug" becomes a classified intent — authentication issue, production severity — with expanded search terms. This is Pillar 6, Decomposition, in action.
-
-Stage two: **Multi-Source Retrieval**. Now you're pulling from multiple sources in parallel — embedding similarity against your knowledge base, but also knowledge graphs, live APIs, memory stores. Not just "find similar documents." This is Pillar 2.
-
-Stage three: **Rerank and Verify**. This is where most naive RAG falls down. You score the retrieved results for actual relevance to the expanded query, check whether they're current, and filter out noise. A document about connection pooling might be semantically similar to an auth token error, but it's irrelevant. This stage catches that. Pillar 5 — Constraints.
-
-Stage four: **Compress**. You've got verified, relevant context now, but maybe too much of it. Summarize, deduplicate, trim to your token budget. Pillar 3 — Memory management.
-
-And stage five: it all flows into **Structured Context** that gets sent to the LLM — your system prompt, XML-tagged context, constraints, formatted output spec. Pillars 1 and 4.
-
-Look at that bottom bar — every stage maps back to one or more of the six pillars we just introduced. The context engine is what happens when you orchestrate all six pillars into a single automated pipeline. That's the key insight: it's not one clever trick. It's systematic engineering.
-
----
-
-## SLIDE 20: The Retrieval Evolution (Practitioner Mental Model)
+## SLIDE 19: The Retrieval Evolution (Practitioner Mental Model)
 
 *[GESTURE at the timeline]*
 
@@ -259,7 +236,7 @@ If your retrieval system is still doing basic similarity search while the state 
 
 ---
 
-## SLIDE 21: Pillar 3: Memory
+## SLIDE 20: Pillar 3: Memory
 
 Pillar three — memory. And here's a fundamental problem with how language models handle long contexts.
 
@@ -273,7 +250,7 @@ Why does this happen? It's an architectural consequence. Transformer models have
 
 ---
 
-## SLIDE 22: Position Your Context Wisely
+## SLIDE 21: Position Your Context Wisely
 *[GESTURE at the position diagram]*
 
 So what do you do with the lost-in-the-middle finding? Three practical actions.
@@ -286,7 +263,7 @@ Some teams report meaningful token savings while preserving the information that
 
 ---
 
-## SLIDE 23: Context Layers Architecture
+## SLIDE 22: Context Layers Architecture
 
 Here's how to think about memory architecturally. I find this four-layer model really useful.
 
@@ -302,7 +279,7 @@ Let me make this concrete with our support bot. Working context: the current cus
 
 ---
 
-## SLIDE 24: Pillar 4: Formatting & Structure
+## SLIDE 23: Pillar 4: Formatting & Structure
 
 Pillar four — and this one genuinely surprises people when I show them the data.
 
@@ -316,7 +293,7 @@ And positioning matters too. Remember the lost-in-the-middle problem? That's not
 
 ---
 
-## SLIDE 25: Structure Changes Everything
+## SLIDE 24: Structure Changes Everything
 
 Here's a concrete example that makes the point viscerally.
 
@@ -334,7 +311,7 @@ This takes maybe 30 seconds longer to format. The difference in output quality i
 
 ---
 
-## SLIDE 26: Pillar 5: Constraints & Guardrails
+## SLIDE 25: Pillar 5: Constraints & Guardrails
 
 Pillar five — constraints. And I want to be really direct about this: telling the model what *not* to do is every bit as important as telling it what to do.
 
@@ -346,7 +323,7 @@ Most teams spend 90% of their prompt engineering energy on instructions — what
 
 ---
 
-## SLIDE 27: Context Smells: Red Flags to Watch For
+## SLIDE 26: Context Smells: Red Flags to Watch For
 
 Before the last pillar, here are six bad patterns — "context smells" that signal your context engineering needs fixing.
 
@@ -372,7 +349,7 @@ How many of you recognized at least three of these? Yeah, I see some uncomfortab
 
 ---
 
-## SLIDE 28: Diagnose Your System
+## SLIDE 27: Diagnose Your System
 *[GESTURE at the five-step ladder]*
 
 Here's the diagnostic ladder I promised. Think about a system you work with right now. Run it through these five steps.
@@ -387,7 +364,7 @@ Most teams jump straight to "we need a better model" without checking any of the
 
 ---
 
-## SLIDE 29: Pillar 6: Workflow Decomposition
+## SLIDE 28: Pillar 6: Workflow Decomposition
 
 And finally, pillar six — decomposition. This is the architectural pillar, and for complex tasks, it's often the most impactful.
 
@@ -397,7 +374,7 @@ The key idea here is on this slide: instead of cramming everything into one mass
 
 ---
 
-## SLIDE 30: Four Context Strategies
+## SLIDE 29: Four Context Strategies
 
 Four strategies for managing context: Write — persist data outside the context window. Select — retrieve only what's relevant. Compress — summarize and prune (but measure quality loss). Isolate — use multi-agent systems to separate concerns. The best systems combine all four. Ask: which strategy addresses your biggest bottleneck?
 
@@ -407,7 +384,7 @@ Decomposed approach: Step one — the agent reads the ticket to understand the i
 
 ---
 
-## SLIDE 31: Multi-Agent Context Architecture
+## SLIDE 30: Multi-Agent Context Architecture
 
 And this is where the industry is heading — multi-agent architectures. Gartner predicts that by 2027, one-third of agentic AI implementations will combine agents with different skills to manage complex tasks.
 
@@ -419,11 +396,31 @@ Same principle, applied to AI agents. One caveat: this is useful when specializa
 
 ---
 
+## SLIDE 31: Inside a Context Engine
+
+*[GESTURE at the 5-stage pipeline diagram]*
+
+Now that you've seen all six pillars, let me show you how they work together inside a context engine. Five stages, left to right.
+
+Stage one: **Query Analysis**. Before you retrieve anything, you analyze and expand the query. "Fix the login bug" becomes a classified intent — authentication issue, production severity — with expanded search terms. That's Pillar 6, Decomposition, which we just covered.
+
+Stage two: **Multi-Source Retrieval**. Now you're pulling from multiple sources in parallel — embedding similarity against your knowledge base, but also knowledge graphs, live APIs, memory stores. Not just "find similar documents." That's Pillar 2 — Retrieval.
+
+Stage three: **Rerank and Verify**. This is where most naive RAG falls down. You score the retrieved results for actual relevance to the expanded query, check whether they're current, and filter out noise. A document about connection pooling might be semantically similar to an auth token error, but it's irrelevant. This stage catches that. Pillar 5 — Constraints.
+
+Stage four: **Compress**. You've got verified, relevant context now, but maybe too much of it. Summarize, deduplicate, trim to your token budget. Pillar 3 — Memory management.
+
+And stage five: it all flows into **Structured Context** that gets sent to the LLM — your system prompt, XML-tagged context, constraints, formatted output spec. Pillars 1 and 4 — Instructions and Formatting.
+
+Look at that bottom bar — every stage maps back to one or more of the six pillars you've now seen in detail. The context engine is what happens when you orchestrate all six pillars into a single automated pipeline. That's the key insight: it's not one clever trick. It's systematic engineering. And now that you understand each pillar, you can see exactly how they fit together.
+
+---
+
 ## SLIDE 32: [LIVE DEMO] Context Engine in Action (NEW)
 
 *[SWITCH to terminal — run demo-context-engine.py]*
 
-Alright — I've shown you six pillars, retrieval principles, the context engine architecture. Now let's see it work. Live, with a real model running locally.
+Alright — you've seen the theory behind each pillar and how they combine in a context engine. Now let's see it work. Live, with a real model running locally.
 
 I have a script that asks the exact same question three times — "Fix the login bug" — but with three different levels of context. Same model each time. Let's watch what happens.
 
@@ -437,7 +434,7 @@ Round 2: same question, but now we send a system prompt, error logs, the actual 
 
 *[Hit Enter for Round 3 — Full context engine]*
 
-Round 3: full context engine. Embeddings, semantic retrieval, ranking, all six pillars assembled. Look at that pillar summary table — every one of the six pillars we just discussed is active. And look at the response quality.
+Round 3: full context engine. Embeddings, semantic retrieval, ranking, all six pillars assembled. Look at that pillar summary table — every one of the six pillars we discussed is active. And look at the response quality.
 
 *[Hit Enter for comparison table]*
 
@@ -857,6 +854,29 @@ Remember: better context often beats bigger models. Audit, prune, structure, mea
 
 | 26-28 | ~5 min | Pillar 5: Constraints, context smells, diagnosis |
 | 29-31 | ~5 min | Pillar 6: Decomposition, strategies, multi-agent |
+| 32-33 | ~5 min | Does it work? Support bot case study |
+| 34 | ~2 min | Evidence: ACE framework |
+| 35-39 | ~4.5 min | Context beats model upgrades, boundary conditions, decision framework, collaboration |
+| 40-43 | ~5 min | Monday morning playbook (7 items) |
+| 44-45 | ~4 min | Metrics, measurement, eval recipe |
+| 46 | ~3 min | Road ahead |
+| 47-48 | ~2 min | Reveal Part 1 & 2 — viral post callback |
+| 49-51 | ~3 min | Closing, questions, thank you |
+| **Total** | **~65 min** | **Core spoken ~50 min + ~10 min pauses, polls, transitions; ~5 min buffer** |
+
+---
+
+# Key Changes Made in v11
+
+
+
+---
+---
+
+# Timing & Pacing Guide
+
+| 25-27 | ~5 min | Pillar 5: Constraints, context smells, diagnosis |
+| 28-31 | ~5 min | Pillar 6: Decomposition, strategies, multi-agent, context engine |
 | 32-33 | ~5 min | Does it work? Support bot case study |
 | 34 | ~2 min | Evidence: ACE framework |
 | 35-39 | ~4.5 min | Context beats model upgrades, boundary conditions, decision framework, collaboration |
