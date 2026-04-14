@@ -15,7 +15,7 @@
 
 *[Wait for audience to settle]*
 
-Good morning, everyone. Thanks for being here at Arc of AI. I'm Brent Laster, and today we're going to talk about something that I think is one of the most underappreciated skills in AI right now.
+Hi, everyone. Thanks for being here at Arc of AI. I'm Brent Laster, and today we're going to talk about something that I think is one of the most underappreciated skills in AI right now.
 
 Here's the premise of this talk in one sentence: **Most of the time, the model isn't the problem. The context is.** And for the next hour, I'm going to show you exactly what that means, why it matters, and — most importantly — how to fix it.
 
@@ -148,7 +148,7 @@ And as the Anthropic blog puts it: be thoughtful and keep your context informati
 
 *[GESTURE at the two-column comparison]*
 
-Here's the difference in practice. On the left: "You are a helpful assistant. Please help the user with their questions." Three tokens of useful instruction. Zero constraints, no format, no role. The model has no idea what that means in your domain.
+Here's the difference in practice. On the left: "You are a helpful assistant. Please help the user with their questions." A few tokens of useful instruction. Zero constraints, no format, no role. The model has no idea what that means in your domain.
 
 On the right: specific role — senior code reviewer. Specific focus — Python, Django, PostgreSQL. Explicit constraints — no framework migrations, follow PEP-8. Clear format — return diff blocks with severity ratings. And examples.
 
@@ -246,7 +246,7 @@ Pillar three — memory. And here's a fundamental problem with how language mode
 
 This is the "lost in the middle" problem, discovered by researchers at Stanford, UC Berkeley, and Samaya AI. They ran a series of careful experiments asking: if you place critical information at different positions in a long context window, how does model performance change?
 
-The answer is dramatic. Information at the beginning of the context — models use it well. High performance. Information at the end — also good. But put critical information in the *middle* of a long context, and performance drops significantly.
+The answer is significantly. Information at the beginning of the context — models use it well. High performance. Information at the end — also good. But put critical information in the *middle* of a long context, and performance drops significantly.
 
 Why does this happen? It's an architectural consequence. Transformer models have certain structural properties in their attention mechanism. Tokens at the beginning of the context get attended to by every subsequent token — they accumulate enormous attention weight. Tokens at the end benefit from recency. But information in the middle? In practice, it's often used less effectively. The exact mechanism varies by architecture, but the operational takeaway is consistent across models.
 
@@ -307,7 +307,7 @@ On the left: unstructured. A wall of text describing a bug report — the user, 
 
 On the right: the exact same information, but structured with clear XML tags. Symptom. Timeline. Hypothesis. Each piece of information clearly delineated and labeled. The model knows instantly what each piece is and how to use it.
 
-And here's where the login bug comes back into the picture. Back to our login bug scenario — same information about authentication failures, user state, and code context, but now structured with clear sections. The model can instantly navigate the critical details: where the error occurred, when, what the user state was, and what the code shows. No parsing needed. No confusion.
+Back to our login bug scenario — same information about authentication failures, user state, and code context, but now structured with clear sections. The model can instantly navigate the critical details: where the error occurred, when, what the user state was, and what the code shows. No parsing needed. No confusion.
 
 This takes maybe 30 seconds longer to format. The difference in output quality is dramatic. According to a 2025 FlowHunt analysis of prompt engineering techniques, structured inputs with clear semantic boundaries consistently outperform unstructured equivalents — with teams reporting error rate reductions on the order of 30-40% just by structuring the input context. Not changing the model. Not adding data. Just organizing what was already there. Your mileage will vary, but the direction is consistent.
 
@@ -354,7 +354,7 @@ How many of you recognized at least three of these? Yeah, I see some uncomfortab
 ## SLIDE 27: Diagnose Your System
 *[GESTURE at the five-step ladder]*
 
-Here's the diagnostic ladder I promised. Think about a system you work with right now. Run it through these five steps.
+Here's a diagnostic ladder. Think about a system you work with right now. Run it through these five steps.
 
 Step one — is the instruction specific enough? Step two — is retrieval pulling relevant information? Step three — is the context structured? Step four — are constraints explicit? Step five — should this task be decomposed?
 
