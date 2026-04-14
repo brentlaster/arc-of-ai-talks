@@ -307,9 +307,9 @@ On the left: unstructured. A wall of text describing a bug report — the user, 
 
 On the right: the exact same information, but structured with clear XML tags. Symptom. Timeline. Hypothesis. Each piece of information clearly delineated and labeled. The model knows instantly what each piece is and how to use it.
 
-Back to our login bug scenario — same information about authentication failures, user state, and code context, but now structured with clear sections. The model can instantly navigate the critical details: where the error occurred, when, what the user state was, and what the code shows. No parsing needed. No confusion.
+This could represent our original login bug scenario — same information about authentication failures, user state, and code context, but now structured with clear sections. The model can instantly navigate the critical details: where the error occurred, when, what the user state was, and what the code shows. No parsing needed. No confusion.
 
-This takes maybe 30 seconds longer to format. The difference in output quality is dramatic. According to a 2025 FlowHunt analysis of prompt engineering techniques, structured inputs with clear semantic boundaries consistently outperform unstructured equivalents — with teams reporting error rate reductions on the order of 30-40% just by structuring the input context. Not changing the model. Not adding data. Just organizing what was already there. Your mileage will vary, but the direction is consistent.
+This takes maybe a few minutes longer to format. The difference in output quality is dramatic. According to a 2025 FlowHunt analysis of prompt engineering techniques, structured inputs with clear semantic boundaries consistently outperform unstructured equivalents — with teams reporting error rate reductions on the order of 30-40% just by structuring the input context. Not changing the model. Not adding data. Just organizing what was already there. Your mileage will vary, but the direction is consistent.
 
 ---
 
@@ -319,7 +319,13 @@ Pillar five — constraints. And I want to be really direct about this: telling 
 
 *[GESTURE across the four cards]*
 
-There are four types of constraints you should be thinking about. Output format constraints — JSON schemas, response length limits, required fields, structural requirements. Behavioral constraints — no speculation without evidence, cite your sources, escalate when uncertain rather than guessing. Domain constraints — stay within approved topics, reject out-of-scope requests gracefully. And safety constraints — PII handling rules, content policies, compliance requirements.
+There are four types of constraints you should be thinking about. Output format constraints — JSON schemas, response length limits, required fields, structural requirements. 
+
+Behavioral constraints — no speculation without evidence, cite your sources, escalate when uncertain rather than guessing. 
+
+Domain constraints — stay within approved topics, reject out-of-scope requests gracefully. 
+
+And safety constraints — PII handling rules, content policies, compliance requirements.
 
 Most teams spend 90% of their prompt engineering energy on instructions — what the model *should* do — and about 10% on constraints. I'd argue it should be closer to 60/40. Constraints are what separate a demo from a production system. Consider this scenario: a support chatbot confidently recommends a medication dosage change — something that should always be escalated to a physician. One behavioral constraint — "never provide specific medical dosing; always escalate to a healthcare professional" — prevents it entirely. That's the difference constraints make.
 
@@ -390,7 +396,17 @@ Decomposed approach: Step one — the agent reads the ticket to understand the i
 
 And this is where the industry is heading — multi-agent architectures. Gartner predicts that by 2027, one-third of agentic AI implementations will combine agents with different skills to manage complex tasks.
 
-The pattern is elegant and intuitive: an orchestrator agent receives the task and routes it to specialist agents. A data agent for data retrieval and analysis. A code agent for code generation and review. A research agent for web search and synthesis. A QA agent for validation.
+The pattern is elegant and intuitive: 
+
+an orchestrator agent receives the task and routes it to specialist agents. 
+
+A data agent for data retrieval and analysis. 
+
+A code agent for code generation and review. 
+
+A research agent for web search and synthesis. 
+
+A QA agent for validation.
 
 Each specialist gets only the context it needs — no overload, no confusion, no wasted tokens. The orchestrator handles coordination and context routing.
 
