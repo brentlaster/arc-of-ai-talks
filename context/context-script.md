@@ -206,7 +206,7 @@ Three principles that fix most retrieval problems.
 
 First — quality in equals quality out. If you're retrieving irrelevant documents, the model wastes tokens parsing noise.
 
-Second — recency matters. Remember the deprecated docs example from a moment ago? That pattern is everywhere. Stale documents in the index are one of the most common retrieval failures. A recency filter and "last-verified" metadata tag are straightforward fixes that can eliminate an entire class of errors.
+Second — recency matters. The deprecated docs pattern is everywhere. Stale documents in the index are one of the most common retrieval failures. A recency filter and "last-verified" metadata tag are straightforward fixes that can eliminate an entire class of errors.
 
 And third — measure impact. Every time you change your retrieval, track retrieval precision alongside output accuracy. If you're not measuring context quality, you're guessing.
 
@@ -289,7 +289,7 @@ Pillar four — and this one genuinely surprises people when I show them the dat
 
 Here's a design principle that holds across production systems generally: relevant, focused tokens often outperform much larger unfocused ones. When you structure information well — using XML tags, JSON structure, or markdown headers — versus dumping raw text, the difference in model performance can be dramatic.
 
-Why? Because formatting isn't cosmetic — it's *functional*. XML tags and JSON structure aren't decoration; they're the Protobuf of prompts. The model parses structure exactly like a typed service parses a payload. Without them, the model has to infer what each piece of information is and how it relates to everything else. With them, the structure is explicit.
+Why? Because formatting isn't cosmetic — it's *functional*. XML tags and JSON structure aren't decoration; they're the data serialization format of prompts. The model parses structure exactly like a typed service parses a payload. Without them, the model has to infer what each piece of information is and how it relates to everything else. With them, the structure is explicit.
 
 And positioning matters too. Remember the lost-in-the-middle problem? That's not just a memory issue — it applies to everything in your context. Front-load your most important information. Back-load your constraints and output format. Don't bury the critical stuff in the middle of a wall of text.
 
