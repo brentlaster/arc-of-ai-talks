@@ -1,8 +1,10 @@
-# Context Engineering: Because the Model Isn't the Problem — v13 Speaker Script
+# Context Engineering: Because the Model Isn't the Problem — v14 Speaker Script
 
 **Duration:** ~65 minutes (raw spoken ~50 min + ~10 min pauses, polls, transitions + ~5 min buffer)
 **Target pace:** ~140 words/min | **Spoken word count:** ~7,000 words
 **v13 Changes:** Moved "Inside a Context Engine" slide from position 19 to position 31 (after all six pillars have been covered). Renumbered slides 20-31 to 19-30. Updated transitions at both move points. Rewrote context engine script section to reference pillars as already-covered material.
+**v14 Changes:** Wove programmer/microservices analogies into existing slides (no new slides, no net length increase). Added framings: "prompting is a function, context engineering is a distributed system" (Slide 7), "system prompt is your API contract" (Slide 12), "RAG is a data pipeline; naive RAG is SELECT * with no WHERE" (Slide 16), "XML tags are the Protobuf of prompts" (Slide 23), "multi-agent is literally microservices" (Slide 30), "model is the database, context is the query" (Slide 38), "evals are SLOs for your context" (Slide 47). Swapped text in-place to preserve word count.
+**v15 Changes:** Pushed engineer analogies into the deck itself (visible to post-talk readers): subtitle/tagline swaps on Slides 7, 12, 16, 23, 30. Repurposed Slide 41 ("It Takes a Village") into "Why This Feels Familiar: The Engineer's Translation" — a two-column table mapping familiar software concepts (function, distributed system, API contract, ETL pipeline, Protobuf, microservices, SLOs) to context engineering equivalents. Slide count unchanged at 53. Script for Slide 41 rewritten to match the new translation table.
 ## SLIDE 1: VERSION
 [Skip]
 
@@ -77,7 +79,7 @@ When you write a prompt, you're crafting one input. When you do context engineer
 
 And that's the key mindset shift. We're moving from "how do I phrase this question?" to "how do I build the information environment that makes the right answer inevitable?"
 
-Think about it this way. When a new engineer joins your team, you don't just give them a task and hope for the best. You give them context — documentation, codebase access, team norms, escalation paths, examples of good work. The better the onboarding context, the faster they produce good work. AI systems work exactly the same way. The quality of the output is bounded by the quality of the context you provide.
+Here's the analogy that lands with engineers: writing a prompt is like writing a function. Context engineering is designing a distributed system. LLMs are stateless services — every call is a fresh request with no memory of the last one. Whatever state the model needs, you pass in explicitly. That's the discipline microservices taught us: no implicit shared state, everything in the request payload. The quality of output is bounded by the quality of the context you provide.
 
 ---
 
@@ -134,7 +136,7 @@ Pillar one: instructions and system prompts. This is the most foundational thing
 
 *[GESTURE at the slide content]*
 
-The recipe is straightforward: Role plus Constraints plus Output Format plus Examples. That's what a good system prompt looks like. "Be helpful" is not a system prompt — it's a guess. You need to tell the model who it is, what domain it operates in, what it's allowed to do, what it's *not* allowed to do, and what a correct answer looks like.
+Think of the system prompt as your API contract with the model. "Be helpful" is a REST endpoint with no schema — it accepts anything and returns anything. A real contract specifies Role plus Constraints plus Output Format plus Examples: who the model is, what domain it operates in, what it's allowed to do, what it's *not* allowed to do, and what a correct answer looks like.
 
 Teams routinely spend weeks evaluating models when their system prompt is three lines of generic text. Swap in a specific, well-constrained prompt and suddenly the "worse" model outperforms the "better" one. It's the single highest-leverage change most teams can make.
 
@@ -189,7 +191,7 @@ Pillar two: retrieval and data selection. This is where a lot of systems start t
 
 *[GESTURE at the slide]*
 
-RAG is one of the most powerful tools for context engineering — but most implementations are naive. The chunking problem alone trips up the majority of teams. Too small, and you lose the surrounding context needed for meaningful answers. Too large, and you get noisy embeddings that are hard to pinpoint.
+RAG is your data pipeline for the model — and most implementations are naive. Think of naive RAG as a SELECT * with no WHERE clause. A context engine is a proper ETL with filters, joins, and freshness checks. The chunking problem alone trips up most teams. Too small, you lose surrounding context. Too large, you get noisy embeddings that are hard to pinpoint.
 
 A good litmus test: if a chunk makes sense to a human on its own, it will make sense to the model.
 
@@ -287,7 +289,7 @@ Pillar four — and this one genuinely surprises people when I show them the dat
 
 Here's a design principle that holds across production systems generally: relevant, focused tokens often outperform much larger unfocused ones. When you structure information well — using XML tags, JSON structure, or markdown headers — versus dumping raw text, the difference in model performance can be dramatic.
 
-Why? Because formatting isn't cosmetic — it's *functional*. When you use semantic boundaries like tags and headers, the model actually uses them to parse and prioritize information. Think of them like section headers in a textbook. Without them, the model has to infer what each piece of information is and how it relates to everything else. With them, the structure is explicit.
+Why? Because formatting isn't cosmetic — it's *functional*. XML tags and JSON structure aren't decoration; they're the Protobuf of prompts. The model parses structure exactly like a typed service parses a payload. Without them, the model has to infer what each piece of information is and how it relates to everything else. With them, the structure is explicit.
 
 And positioning matters too. Remember the lost-in-the-middle problem? That's not just a memory issue — it applies to everything in your context. Front-load your most important information. Back-load your constraints and output format. Don't bury the critical stuff in the middle of a wall of text.
 
@@ -392,7 +394,7 @@ The pattern is elegant and intuitive: an orchestrator agent receives the task an
 
 Each specialist gets only the context it needs — no overload, no confusion, no wasted tokens. The orchestrator handles coordination and context routing.
 
-Same principle, applied to AI agents. One caveat: this is useful when specialization is real. Multi-agent is not a reason to create agents for everything — only when the context separation genuinely helps.
+This is literally microservices architecture applied to AI — orchestrator plus specialists, bounded context, clear interfaces. Same lessons apply: only decompose when specialization is real. Multi-agent isn't a reason to create agents for everything — only when the context separation genuinely helps.
 
 ---
 
@@ -507,7 +509,7 @@ On the left: when context is the bottleneck. You're asking the model to do somet
 
 On the right: when the model capability matters. You're asking the model to do something that's genuinely beyond its reasoning capacity — deep math, novel algorithm design, real-time constraint satisfaction without scaffolding. No amount of context engineering will fix that. You need a more capable model.
 
-Here's the rule of thumb: fix context first, measure what changes, then decide. In many production cases documented in the literature, context fixes deliver the majority of the improvement before model upgrades become necessary. If you're in the remaining situations where the model is the real bottleneck, then you upgrade. But start with context. It's cheaper, faster, and more often correct.
+Here's the rule of thumb: the model is the database; context is the query. When a query is slow, you don't ask for a faster database — you fix the query first. Same discipline here. Context fixes deliver most of the improvement before model upgrades become necessary. If the model is genuinely the bottleneck, you upgrade. But start with context. It's cheaper, faster, and more often correct.
 
 ---
 
@@ -541,11 +543,15 @@ One thing to note: hybrid strategies are common in practice. Many production sys
 
 ---
 
-## SLIDE 41: It Takes a Village
+## SLIDE 41: Why This Feels Familiar — The Engineer's Translation
 
-One more thing before we move to the playbook. Context engineering isn't a solo sport. It's cross-disciplinary by nature.
+*[GESTURE at the two-column mapping]*
 
-You need data engineers for retrieval pipelines and chunking. You need domain experts to curate knowledge and define constraints — they know what information actually matters. And you need AI engineers to architect the context flows and agent systems. The key question is: who owns each pillar? Instructions might be the AI engineer. Retrieval quality might be the data engineer. Constraints might be the domain expert. Make ownership explicit or it falls through the cracks.
+Before we jump to the Monday morning playbook, I want to give you a mental Rosetta Stone. Everything you've just seen maps to patterns you already know from building software systems.
+
+Writing a prompt is like writing a function. Context engineering is designing a distributed system. The system prompt is your API contract with the model. Retrieval is your data pipeline — naive RAG is a SELECT star with no WHERE clause. Structured formatting is the Protobuf of prompts. Multi-agent is microservices architecture applied to AI. And the five-step eval recipe? That's SLOs and unit tests for your context.
+
+The discipline isn't new. The system under management is. If you've built reliable distributed systems, you already know how to do this — you just need to apply the same rigor to the AI layer. *[PAUSE]* And a side note on ownership: context engineering is cross-disciplinary — data engineers own retrieval quality, domain experts own constraints, AI engineers own the flow. Make ownership explicit, just like you would for any service.
 
 ---
 
@@ -618,7 +624,7 @@ Here's a practical evaluation recipe you can start tomorrow.
 
 Step one: choose 20 representative tasks from your real production workload. Step two: freeze the model — don't change it. Step three: change exactly one context lever — maybe you restructure the system prompt, improve retrieval, or add constraints. Step four: score accuracy, relevance, and latency on those same 20 tasks. Step five: repeat with the next lever.
 
-One lever at a time, measured against the same baseline. That's how you build confidence that your changes are actually driving improvement.
+One lever at a time, measured against the same baseline. These are SLOs and unit tests for your context — the same discipline you already apply to services, now applied to your AI layer.
 
 This gives you a clear, attributable picture of what's working and what's not. No guessing.
 

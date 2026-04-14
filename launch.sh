@@ -39,4 +39,4 @@ PORT=$(python3 -c "import json; print(json.load(open('$CONFIG')).get('port', 876
   done
 ) &
 
-python3 "$SCRIPT_DIR/teleprompter.py" --config "$CONFIG" --no-browser
+python3 "$SCRIPT_DIR/teleprompter.py" --config "$CONFIG" --no-browser --keyboard
