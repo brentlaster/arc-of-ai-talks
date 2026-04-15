@@ -128,9 +128,9 @@ Each one feeds the others. Tool sprawl creates confusion about where AI fits, wh
 
 ## SLIDE 12: BARRIER 1 -- TOO MANY TOOLS, NOT ENOUGH GLUE
 
-First barrier. Survey data tells us developers are juggling more AI tools than ever -- ActivTrak's 2026 report found the average organization now uses seven AI tools, up from two just two years ago, with 83% of organizations using six or more. IDE copilot, chat interfaces, code search, review assistants, doc generators. Each one is independently useful. But none of them share context with each other.
+First barrier. Survey data tells us developers are juggling more AI tools than ever -- ActivTrak's 2026 report found the average organization now uses seven AI tools, up from two just two years ago, with 83% of organizations using six or more. IDE copilot, chat interfaces, code search, review assistants, doc generators. Each one is independently useful. But none of them share all context with each other.
 
-Now -- there ARE efforts to fix this. Anthropic's Model Context Protocol -- MCP -- has gained real traction, with 97 million monthly SDK downloads and adoption by OpenAI, Google, Microsoft, and AWS. Teams are writing structured context files like CLAUDE.md and .cursorrules. But here's the honest status: MCP connects tools to data sources, not tools to each other. Your Cursor session still can't hand context to your Claude Code session. Context engineering is becoming a discipline, but the integration gap is still very real.
+Now -- there ARE efforts to fix this. Anthropic's Model Context Protocol -- MCP -- has gained real traction, with 97 million monthly SDK downloads and adoption by OpenAI, Google, Microsoft, and AWS. Memory frameworks like Zep, Letta, and Mem0 are building persistent agent-memory layers. Teams are writing structured context files like CLAUDE.md and .cursorrules. But here's the honest status: MCP connects tools to data sources. The memory frameworks are mostly for developers building agent systems, not for the average engineer juggling Copilot, ChatGPT, and Cursor. Your Cursor session still can't hand context to your Claude Code session in any seamless way. The integration gap is being chipped at -- but for everyday users, it's still very real.
 
 So YOU become the integration layer. You re-explain the same problem four times to four different systems. AI didn't remove work. It just promoted all of us to unpaid reviewers. That human middleware cost is eating the productivity gains the tools are supposed to provide. The result? Widespread "shadow AI" use when the official tools are weak or slow.
 
@@ -724,6 +724,11 @@ I'd love to hear what's on your mind. What resonated? What didn't? What's the bi
 <details>
 <summary>Tool sprawl -- how many AI tools should a developer actually use?</summary>
 <div class="qa-answer">BCG's 2026 research found productivity gains rose from 1 to 2 tools, peaked at 3, and dropped past 4, while cognitive strain kept climbing. The recommendation: pick your best 2-3 tools, go deep, learn their strengths, build muscle memory, let the rest go. The problem isn't having options -- it's that the tools still don't share context with each other in practice. Protocols like MCP are making progress connecting tools to data sources, but tool-to-tool context transfer remains unsolved. So YOU become the integration layer, re-explaining the same problem to 4 different systems.</div>
+</details>
+
+<details>
+<summary>What about MCP, Zep, Letta, or Mem0 -- don't those solve the tool-to-tool context problem?</summary>
+<div class="qa-answer">They're real and they're making real progress -- but they solve adjacent problems, not the one I'm describing. MCP (Anthropic's Model Context Protocol) has 97M+ monthly SDK downloads and near-universal adoption across OpenAI, Google, Microsoft, and AWS -- but it standardizes how AI tools connect to *data sources* (your filesystem, databases, APIs), not how tools share context with *each other*. Memory frameworks like Zep (with Graphiti), Letta (formerly MemGPT), and Mem0 persist agent state across sessions -- but they're developer infrastructure for people building agent systems, not consumer-level solutions. The average engineer bouncing between Copilot, ChatGPT, Cursor, and Claude still has to re-explain their problem four times. The gap is being chipped at, but for most users in most workflows, it's still very real.</div>
 </details>
 
 <details>
