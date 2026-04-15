@@ -1,8 +1,8 @@
-# CI/CD in the Age of CAI — Speaker Script (v11)
+# CI/CD in the Age of CAI — Speaker Script (v12)
 
-**Duration:** 75 minutes | **Target pace:** ~140 wpm | **Slides:** 52
+**Duration:** 75 minutes | **Target pace:** ~140 wpm | **Slides:** 54
 
-**Changes from v10:** Added real citations (Priceline/Mabl 80k test executions, LogSage/ByteDance 1.07M CI runs, JetBrains 2025 adoption stats, GitLab Duo GA). Tempered aspirational claims — patterns 4-6 and policy-refined mechanism honestly framed as emerging/architectural vs. proven. Trimmed repetitive sections (slides 36, 41) to offset additions. New slides 8 (Three CAI Learning Mechanisms) and 12 (A Running Scenario) from v10.
+**Changes from v11:** Renamed "AI Monitor" to "AI Release Gates" on Slide 5. Split out JetBrains 75%/16% reality check to its own slide (new Slide 6). Removed duplicated three-levels content from Slide 7 — now a clean lead-in to the levels visual on Slide 9, which absorbed the material. Added paragraph breaks to Slide 11 script. Added new Slide 16 covering Sarah's AI-generated test-synthesis outcome. Moved the "Sarah's config fails" Pattern 2 paragraph from Slide 16 script to Slide 17. Moved the "Back to Sarah" Slack message from Slide 19 to Slide 20. Added Slide 23 as a placeholder for a colleague testimonial on log summarization. Made the "Have we seen this before?" question visually larger on Slide 22 (now Slide 24). Removed the LIVE DEMO slide entirely. Expanded Slide 32 (now Slide 33) to discuss all six failure modes. Expanded Slide 34 (now Slide 35) to discuss all five anti-patterns. Swapped the deck positions of Slides 35/36 (now 36/37) to better match script narrative.
 
 ---
 
@@ -55,7 +55,21 @@ Not replacing CI/CD — evolving it. Adding the intelligence layer that's been m
 
 ---
 
-## [SLIDE 6 — What Early Adopters Are Reporting]
+## [SLIDE 6 — The CAI Adoption Gap: Plan vs. Do]
+
+*[GESTURE at the two numbers]*
+
+Before we go further, a reality check on where the industry actually is.
+
+The JetBrains 2025 Developer Survey asked teams two questions. First: do you plan to use AI in your CI/CD pipelines? Seventy-five percent said yes. Then: are you actually doing it today? Only sixteen percent.
+
+Seventy-five percent plan. Sixteen percent do. That's a five-to-one gap between intention and execution.
+
+That gap is what this talk is about. The patterns we'll walk through aren't theoretical — they're what the sixteen percent are already doing. And they're how you get from planning to doing.
+
+---
+
+## [SLIDE 7 — What Early Adopters Are Reporting]
 
 Let me share what teams on the leading edge are seeing. And I want to be upfront: these are early results, and they vary widely depending on codebase maturity, pipeline complexity, and how thoughtfully the AI was integrated.
 
@@ -65,13 +79,11 @@ Reported test-cycle reductions up to 80% in specific contexts — from the MDPI 
 
 25 to 40% faster mean time to recovery — in a case study from enterprise AIOps deployments. Even the low end translates to significant savings.
 
-And here's a reality check: the JetBrains 2025 Developer Survey found that while 75% of teams plan to use AI in their CI/CD pipelines, only 16% are actually doing it today. There's a big gap between aspiration and adoption. That gap is what this talk is about — practical patterns to close it.
-
 Treat these as directional examples, not promises. Your results will depend on codebase quality, pipeline maturity, team discipline, and how carefully you integrate. They show what's possible, not what's guaranteed. Let's talk about what makes this work.
 
 ---
 
-## [SLIDE 7 — What Is Continuous AI?]
+## [SLIDE 8 — What Is Continuous AI?]
 
 Before we go further, let me define what I actually mean by Continuous AI — and I should note this is my practical framing for a pattern that's emerging, not an established industry standard like CI/CD or MLOps. Think of it as a working pattern name for CI/CD systems that embed AI reasoning, retrieval, and policy feedback into repeated delivery workflows.
 
@@ -81,19 +93,15 @@ How is this different from AIOps? AIOps focuses on production monitoring and inc
 
 Continuous AI is the practice of embedding AI reasoning into software delivery workflows so the pipeline continuously analyzes changes, adapts validation, improves triage, and learns from outcomes across repeated runs.
 
-There are three levels to think about here. Level one: AI *in* a pipeline. You add an AI step — maybe a code review bot or a test generator. It runs, it produces output, it's useful. But it's a one-shot addition. It doesn't get smarter.
+To be clear: CAI is not just putting a chatbot in one CI step. It requires repeated workflow integration plus outcome feedback. If the pipeline doesn't learn from what happens, it's not CAI — it's a one-shot API call.
 
-Level two: AI-assisted CI/CD. Multiple AI steps working together, sharing context. Your test generator knows about your failure classifier. Your risk scorer informs your release gate. The steps are connected.
-
-Level three — and this is what I'm calling CAI: a closed-loop learning system. Every failure trains the classifier. Every resolved PR enriches the knowledge base. Every deployment outcome refines the risk model. The pipeline can improve with every run — not just every code change — when outcomes are captured and fed back.
-
-That feedback loop is the difference. It's what makes it "continuous" in the truest sense — not just continuous integration, but continuous intelligence. To be clear: CAI is not just putting a chatbot in one CI step. It requires repeated workflow integration plus outcome feedback. If the pipeline doesn't learn from what happens, it's not CAI — it's a one-shot API call.
+But "integration" isn't one thing — it happens at different levels of sophistication. Let me show you.
 
 
 
 ---
 
-## [SLIDE 8 — Three CAI Learning Mechanisms]
+## [SLIDE 9 — Three CAI Learning Mechanisms]
 
 *[GESTURE across the three cards]*
 
@@ -113,21 +121,23 @@ Quick question for the room — how many of you currently have at least one AI-p
 
 ---
 
-## [SLIDE 9 — Three Levels of AI Integration]
+## [SLIDE 10 — Three Levels of AI Integration]
 
 *[GESTURE across the three level cards]*
 
-Let me make these three levels visual for you. On the left: level one — AI in a pipeline. A single AI step. It's useful, but it doesn't get smarter over time. A code review bot that runs the same prompt on every PR. Helpful, but static.
+Let me make these three levels visual for you.
 
-In the middle: level two — AI-assisted CI/CD. Multiple AI steps sharing context across stages. Your test generator knows about your failure classifier. Your risk scorer informs your release gate. The steps are connected and aware of each other.
+Level one — AI *in* a pipeline: a single AI step. You add an AI step — maybe a code review bot or a test generator. It runs, it produces output, it's useful. But it's a one-shot addition. It doesn't get smarter over time. A code review bot that runs the same prompt on every PR. Helpful, but static.
 
-On the right: level three — CAI, the closed-loop system. Every outcome trains the system. Failed tests improve the classifier. Resolved PRs enrich the knowledge base. Deployment outcomes refine the risk model. That's continuous intelligence.
+Level two — AI-assisted CI/CD: multiple AI steps working together, sharing context across stages. Your test generator knows about your failure classifier. Your risk scorer informs your release gate. The steps are connected and aware of each other.
 
-Look at the bottom — the feedback loop arrow. That's what makes it "continuous." Without that loop, you're at level one or two. With it, you're doing CAI.
+Level three — CAI, the closed-loop system. Every outcome trains the system. Every failure trains the classifier. Every resolved PR enriches the knowledge base. Every deployment outcome refines the risk model. The pipeline can improve with every run — not just every code change — when outcomes are captured and fed back.
+
+Look at the bottom — the feedback loop arrow. That's what makes it "continuous" in the truest sense — not just continuous integration, but continuous intelligence. Without that loop, you're at level one or two. With it, you're doing CAI.
 
 ---
 
-## [SLIDE 10 — Where AI Fits in the Pipeline]
+## [SLIDE 11 — Where AI Fits in the Pipeline]
 
 Here's the map. And this is the slide I want you to take a photo of if you take a photo of anything today.
 
@@ -140,17 +150,21 @@ Seven integration points. You don't have to do them all at once — start where 
 
 ---
 
-## [SLIDE 11 — Seven AI Integration Points]
+## [SLIDE 12 — Seven AI Integration Points]
 
 Here's the detail view. Each pipeline stage with the specific AI capability it enables.
 
 *[Walk through the list briefly — don't read every one, highlight 2-3]*
 
-I want to call out a few key ones. Test is where the richest opportunities are right now — AI test synthesis and intelligent failure classification can transform your testing workflow. These are the patterns that have the most mature tooling and the clearest ROI. Release gates are where the highest business impact is — AI-powered ship-or-hold decisions that synthesize multiple signals into one recommendation. And monitoring with auto-remediation is where the future is heading — pipelines that don't just detect problems but fix them automatically.
+I want to call out a few key ones. Test is where the richest opportunities are right now — AI test synthesis and intelligent failure classification can transform your testing workflow. These are the patterns that have the most mature tooling and the clearest ROI.
+
+Release gates are where the highest business impact is — AI-powered ship-or-hold decisions that synthesize multiple signals into one recommendation.
+
+And monitoring with auto-remediation is where the future is heading — pipelines that don't just detect problems but fix them automatically.
 
 ---
 
-## [SLIDE 12 — A Running Scenario]
+## [SLIDE 13 — A Running Scenario]
 
 Before we dive into the patterns, I want to set up something we'll carry through the rest of the talk. One PR, one developer, one pipeline — and we'll follow it through all six patterns to see how each one adds a layer of intelligence.
 
@@ -166,14 +180,14 @@ Let's dive in.
 
 ---
 
-## [SLIDE 13 — Section Divider: Six Patterns]
+## [SLIDE 14 — Section Divider: Six Patterns]
 *[PAUSE]*
 
 I've organized this into six practical patterns for Continuous AI. These are patterns you can implement today, with tools and APIs that exist right now. For each one, I'll show you what the pattern does, why it matters, and actual code or configuration you could use.
 
 ---
 
-## [SLIDE 14 — Pattern 1: AI-Assisted Test Synthesis]
+## [SLIDE 15 — Pattern 1: AI-Assisted Test Synthesis]
 
 How many of you have a codebase where test coverage is described as "aspirational"? *[Pause for laughs.]* Yeah. We write tests for the happy path, maybe throw in a null check, and call it "comprehensive." Pattern one is for you.
 
@@ -189,7 +203,25 @@ Caveat: AI-generated tests are accelerators, not unquestioned truth. The AI migh
 
 ---
 
-## [SLIDE 15 — AI Test Synthesis in GitHub Actions]
+## [SLIDE 16 — Sarah's Test Case Outcome]
+
+*[GESTURE at the generated tests list]*
+
+Let me make pattern one concrete with Sarah's PR. Sarah's change bumps the connection pool size from 50 to 200 and timeout from 30 to 60 seconds. What does AI-assisted test synthesis actually generate for that diff?
+
+Three tests the AI writes that Sarah probably wasn't going to:
+
+First: a connection-timeout edge-case test. What happens when a connection sits idle for 59 seconds versus 61 seconds? The AI probes both sides of the new timeout boundary.
+
+Second: a pool-exhaustion test under concurrent load. With pool size 200, what happens when 250 requests hit simultaneously? The AI simulates the saturation case.
+
+Third: a configuration validation test. Does the new pool size exceed the driver's maximum? This is the test that's about to catch the exact failure we'll see in a few slides — a config-level check a human developer wouldn't have thought to write for a "simple" config change.
+
+That third test is the whole value proposition in one line. The AI thinks of the edge cases you don't. And it does it consistently, on every PR, without anyone remembering to add it.
+
+---
+
+## [SLIDE 17 — AI Test Synthesis in GitHub Actions]
 
 Here's what this actually looks like in a GitHub Actions workflow. Remember, this pattern translates to any CI platform — the YAML syntax changes, the architecture doesn't.
 
@@ -205,7 +237,7 @@ One thing to think about: where do the generated tests run? My recommendation: r
 
 ---
 
-## [SLIDE 16 — Pattern 2: Intelligent Failure Classification]
+## [SLIDE 18 — Pattern 2: Intelligent Failure Classification]
 
 Pattern two: intelligent failure classification. And this one addresses one of the most tedious, time-consuming parts of any developer's day.
 
@@ -215,14 +247,13 @@ AI failure classification automates that entire process. The AI reads the full l
 
 The LogSage framework, published in 2025, demonstrated this at real scale — tested on ByteDance's CI infrastructure across 1.07 million CI executions, achieving over 80% precision in failure classification. That's not a toy demo — that's one of the largest software organizations on Earth using LLM-based classification on their actual build failures. And the broader impact is measurable — enterprises deploying AIOps are reporting 25 to 40% faster MTTR, based on published case studies from companies like HCL and CMC Networks.
 
-In our running scenario: Sarah's config change fails. Traditional pipeline: she opens a 10,000-line log, spends 20 minutes scrolling, eventually finds the error buried on line 7,842 — pool size exceeds the driver's maximum. CAI pipeline: the AI classifies it in seconds as "configuration validation error — pool size exceeds driver maximum," confidence 94%, links to the specific log line. Thirty seconds versus twenty minutes.
-
 Quick show: how many of you spent more than 20 minutes today — today! — manually triaging a build failure? *[Pause.]* That's the time this pattern gives back.
 
 ---
 
-## [SLIDE 17 — Failure Triage: Before & After]
+## [SLIDE 19 — Failure Triage: Before & After]
 
+Starting with Sarah: her config change fails. Traditional pipeline: she opens a 10,000-line log, spends 20 minutes scrolling, eventually finds the error buried on line 7,842 — pool size exceeds the driver's maximum. CAI pipeline: the AI classifies it in seconds as "configuration validation error — pool size exceeds driver maximum," confidence 94%, links to the specific log line. Thirty seconds versus twenty minutes.
 Let me make this concrete. Before: build fails, developer reads a 10,000-line log, Googles the error message, eventually figures out it's an environment issue, manually restarts the pipeline. Time: 30 to 60 minutes.
 
 After: build fails, AI reads the full log in seconds, classifies it as "environment issue — Docker image cache is stale," auto-restarts the pipeline with a cache clear, and comments on the PR with a summary. Time: 2 to 3 minutes.
@@ -233,7 +264,7 @@ One important caveat here: the AI classifier can hallucinate. It might confident
 
 ---
 
-## [SLIDE 18 — Failure Classification: Code]
+## [SLIDE 20 — Failure Classification: Code]
 
 Here's the implementation. This is a GitHub Actions step that runs only on failure. It extracts the last 500 lines of the build log, sends them to the Claude API with a classification prompt, and posts the structured JSON result as a PR comment.
 
@@ -245,7 +276,7 @@ A basic prototype takes about 30 minutes — production hardening takes longer, 
 
 ---
 
-## [SLIDE 19 — Pattern 3: Automated Log Summarization]
+## [SLIDE 21 — Pattern 3: Automated Log Summarization]
 
 Pattern three, and this is the one I recommend starting with because it has the lowest implementation effort and the highest visibility. Automated log summarization.
 
@@ -259,6 +290,18 @@ This is the "gateway drug" of CAI. Twenty minutes of setup, and your Slack chann
 
 Important operational note: the AI summary should always link back to the full raw log. Never replace raw logs — only augment them. There will be cases where the summary misses a critical detail — maybe a secondary warning that turns out to be important, or a timeout that the AI interpreted differently than a human would. Your team needs to be able to drill into the complete output.
 
+---
+
+## [SLIDE 22 — Log Summarization: Before → After]
+
+*[GESTURE at the before/after comparison]*
+
+This is the slide to show your manager if they ask "why should we bother?" On the left: what everyone has today. "Build #4521 failed." That's it. A useless notification. You open a 10,000-line log. You search manually. You lose twenty minutes of your life.
+
+On the right: what twenty minutes of setup gives you. "TypeScript compilation ran out of memory on 847 files. Fix: increase runner to 8GB or split compilation. Confidence: 94%." Actionable intelligence. Root cause, suggested fix, and a confidence score — all delivered before you've finished reading the Slack notification.
+
+One important note at the bottom of this slide: always link back to the full raw log. Summaries can miss secondary warnings. The summary augments the log — it never replaces it.
+
 Back to Sarah — remember her database config change? When her build fails because the pool size exceeded the driver maximum, the log summary goes to Slack. And it looks like this — imagine reading it on your phone:
 
 *[READ as if quoting a Slack message]*
@@ -269,19 +312,17 @@ That's it. Everyone on the team — Sarah, her tech lead, the platform engineer 
 
 ---
 
-## [SLIDE 20 — Log Summarization: Before → After]
+## [SLIDE 23 — Testimonial: Log Summarization in Practice]
 
-*[GESTURE at the before/after comparison]*
+**[PLACEHOLDER — add testimonial from colleague about log summarization impact]**
 
-This is the slide to show your manager if they ask "why should we bother?" On the left: what everyone has today. "Build #4521 failed." That's it. A useless notification. You open a 10,000-line log. You search manually. You lose twenty minutes of your life.
+*[Deliver the testimonial here — a specific story of the before/after experience from someone who actually implemented this pattern. Keep it concrete: what they had before, what twenty minutes of setup changed, and what it feels like now.]*
 
-On the right: what twenty minutes of setup gives you. "TypeScript compilation ran out of memory on 847 files. Fix: increase runner to 8GB or split compilation. Confidence: 94%." Actionable intelligence. Root cause, suggested fix, and a confidence score — all delivered before you've finished reading the Slack notification.
-
-One important note at the bottom of this slide: always link back to the full raw log. Summaries can miss secondary warnings. The summary augments the log — it never replaces it.
+*[Aim for under one minute. Personal stories land harder than statistics at this point in the talk.]*
 
 ---
 
-## [SLIDE 21 — Log Summarization + Slack Notification]
+## [SLIDE 24 — Log Summarization + Slack Notification]
 
 Here's the code — and like all the code slides in this talk, this is an illustrative scaffold showing the architecture, not a copy-paste production snippet. It tails the last 200 lines of the build log, pipes them through Claude with a summarization prompt, posts the result to Slack via webhook, and comments on the PR.
 
@@ -291,7 +332,7 @@ Don't go to your VP and say "I need six months and a team of five to implement a
 
 ---
 
-## [SLIDE 22 — Pattern 4: RAG-Driven Debugging]
+## [SLIDE 25 — Pattern 4: RAG-Driven Debugging]
 
 *[GESTURE at diagram]*
 
@@ -309,7 +350,7 @@ This is the institutional memory that most teams lose when people leave. RAG deb
 
 ---
 
-## [SLIDE 23 — Give Your Pipeline Memory]
+## [SLIDE 26 — Give Your Pipeline Memory]
 
 The implementation has four steps. Index: build your vector database from past CI logs, resolved PRs, runbooks, and incidents. This is the upfront investment — you're building the knowledge base that everything else draws from. Embed: when a failure occurs, extract the error signature and create a query vector that captures the semantic meaning of the failure. Search: find the three most similar past failures in your history. Not keyword matching — semantic similarity. The AI understands that "connection refused on port 5432" and "PostgreSQL server not accepting connections" are the same class of problem. Synthesize: the LLM reads the matched failures, their resolutions, and the current context, then proposes a fix and links to the past resolutions so the developer can verify.
 
@@ -319,7 +360,7 @@ A practical tip: start indexing today, even before you build the query interface
 
 ---
 
-## [SLIDE 24 — RAG Debug Pipeline Step]
+## [SLIDE 27 — RAG Debug Pipeline Step]
 
 Here's the implementation — same illustrative pattern as before. On failure, it extracts the error signature, runs a Python script that embeds the error and searches the Pinecone vector database for similar past failures, then pipes the matches to Claude to synthesize a fix recommendation, and posts it as a PR comment.
 
@@ -329,7 +370,7 @@ What vector database should you use? Start simple — ChromaDB runs locally with
 
 ---
 
-## [SLIDE 25 — Pattern 5: Risk Scoring]
+## [SLIDE 28 — Pattern 5: Risk Scoring]
 
 Here's a quick contrast. PR A: one-line typo fix in a README. PR B: database connection pooling change that touches every microservice. Your current pipeline: identical 45-minute test suites for both. PR A's developer is annoyed. PR B probably deserves even *more* scrutiny than it's getting. Pattern five — risk scoring — fixes this mismatch.
 
@@ -347,7 +388,7 @@ Meanwhile, the README fix that another developer pushed at the same time? Risk s
 
 ---
 
-## [SLIDE 26 — Five Risk Scoring Factors]
+## [SLIDE 29 — Five Risk Scoring Factors]
 
 *[GESTURE across the five factor cards]*
 
@@ -359,7 +400,7 @@ The bottom line is the routing rule: high risk gets the full suite plus security
 
 ---
 
-## [SLIDE 27 — Risk-Based Pipeline Routing]
+## [SLIDE 30 — Risk-Based Pipeline Routing]
 
 Here's the code — focus on the branching logic, not the syntax. A Python script calculates a risk score from 0 to 10 based on the PR factors. The workflow then branches: high risk gets the full test suite, medium risk gets targeted tests, low risk gets smoke tests only.
 
@@ -371,7 +412,7 @@ And think about explainability. When a PR gets flagged high-risk, developers wil
 
 ---
 
-## [SLIDE 28 — Pattern 6: AI-Powered Release Gates]
+## [SLIDE 31 — Pattern 6: AI-Powered Release Gates]
 
 *[GESTURE at diagram]*
 
@@ -389,7 +430,7 @@ Important framing here: I said *recommendation*, not *decision*. Release gates s
 
 ---
 
-## [SLIDE 29 — Multi-Signal Release Assessment]
+## [SLIDE 32 — Multi-Signal Release Assessment]
 
 Here are the signals an AI release gate evaluates, with the specific thresholds. Test pass rate above 99.5%. Error trend over the last 24 hours is decreasing. Risk score below 7 out of 10. Change scope under 500 lines. Zero critical security vulnerabilities. Canary health above 95%.
 
@@ -403,7 +444,7 @@ And calibrate it: after every release, compare the gate's recommendation against
 
 ---
 
-## [SLIDE 30 — Release Gate Configuration]
+## [SLIDE 33 — Release Gate Configuration]
 
 And here's what the configuration looks like. A YAML-based declarative config that defines your signals, their sources, thresholds, and the decision logic.
 
@@ -415,37 +456,27 @@ So — step back for a moment. At this point your pipeline is no longer just enf
 
 ---
 
-## [SLIDE 31 — LIVE DEMO: CAI Pipeline in Action]
+## [SLIDE 34 — Where CAI Can Go Wrong]
 
-**[SECTION DIVIDER — LIVE DEMO]**
-
-[DEMO: Run demo-cai-pipeline.py]
-
-"Let me show you what this looks like in practice. We're going to take a real PR — Sarah Chen's PR #5032, a Python authentication module change — and run it through our CAI pipeline live.
-
-The demo walks through the six patterns we just discussed: AI-assisted test synthesis, failure classification, log summarization, RAG-driven debugging, risk scoring, and release gates. You'll see the actual prompts being sent to the model and the real responses coming back.
-
-Watch for how each pattern builds on the previous one — the test results feed into risk scoring, the change analysis references both, and the documentation synthesizes everything.
-
-Let's run it."
-
----
-
-## [SLIDE 32 — Where CAI Can Go Wrong]
-
-Let me be real about the risks. Three critical failure modes to know about.
+Let me be real about the risks. Six failure modes every team should plan for.
 
 First: hallucinated triage. The AI confidently misclassifies a real bug as flaky. Your team skips it, and it ships to production. Always link back to raw logs and include confidence scores.
 
 Second: false gate confidence. That 94% confidence number feels precise but it's not omniscient. Use confidence bands (HIGH, MEDIUM, LOW) instead of percentages — same decision value, no false precision.
 
-Third: autonomy creep. You start advisory. Then auto-approve gets a lower threshold. Then auto-retry. Before you know it, the AI is making release decisions nobody reviews. Drift happens slowly but compounds.
+Third: secret leakage. Logs and diffs sent to external AI can contain tokens, API keys, and internal architecture details. Build the redaction layer before you ever call a model — don't retrofit it.
 
-The mitigation is the same for all: human oversight at appropriate levels, version-controlled boundaries, and regular accuracy evaluation. The organizational discipline to keep reviewing what the AI is actually doing — that's the hard part.
+Fourth: stale RAG data. Your knowledge base returns outdated fixes, and bad historical data gets amplified. Version-tag resolutions, apply recency weighting, and curate the store on a regular cadence.
+
+Fifth: cost and latency. Model calls in hot CI paths can add 30 to 60 seconds per step — multiplied across every PR and every branch. Use small models where you can, async where you can, and match model tier to task value.
+
+Sixth: autonomy creep. You start advisory. Then auto-approve gets a lower threshold. Then auto-retry. Before you know it, the AI is making release decisions nobody reviews. Drift happens slowly but compounds.
+
+The mitigation is the same thread for all six: human oversight at appropriate levels, version-controlled boundaries, and regular accuracy evaluation. The organizational discipline to keep reviewing what the AI is actually doing — that's the hard part.
 
 ---
 
-## [SLIDE 33 — Guardrails Every CAI Pipeline Needs]
+## [SLIDE 35 — Guardrails Every CAI Pipeline Needs]
 
 Protect against failure modes with guardrails. Start with the autonomy ladder.
 
@@ -461,19 +492,25 @@ Trust is earned through demonstrated reliability, not assumed based on technolog
 
 ---
 
-## [SLIDE 34 — Common CAI Anti-Patterns]
+## [SLIDE 36 — Common CAI Anti-Patterns]
 
-Three critical anti-patterns to avoid:
+Five critical anti-patterns to avoid:
 
 One: sending raw logs — with secrets — to a public LLM. Build logs contain environment variables, API keys. If you don't have a redaction step before your model call, you're one misconfiguration away from a security incident.
 
 Two: skipping advisory mode. Don't try to auto-fix failures immediately. Run in advisory mode first — the AI recommends, a human decides. Build trust through demonstrated accuracy before giving it autonomy.
 
-Three: treating confidence scores as truth. A 87% confidence is a heuristic, not a probability. Use it as one signal among many, not the deciding factor.
+Three: treating confidence scores as truth. An 87% confidence is a heuristic, not a probability. Use it as one signal among many, not the deciding factor.
+
+Four: five steps before one. Adding all six AI patterns to your pipeline at once instead of validating each one. It looks ambitious on a roadmap, but in practice nothing gets to production reliability because nothing gets focused attention. One pattern, proven, then the next.
+
+Five: uncurated RAG. Using RAG without version tags, recency weighting, or curation. Your knowledge base becomes a graveyard of outdated fixes, and the AI confidently recommends solutions from codebase versions that no longer exist. Tag, weight, and curate — or don't build it at all.
+
+If you recognize any of these in your current setup, fix them before adding more AI steps.
 
 ---
 
-## [SLIDE 35 — CAI in Action: One PR, Six Patterns]
+## [SLIDE 37 — Sarah's PR: Six Patterns Applied]
 
 Let's bring Sarah's journey full circle. One PR, six patterns, end to end.
 
@@ -497,7 +534,7 @@ Notice what happened: every pattern added a layer. Test synthesis caught the edg
 
 ---
 
-## [SLIDE 36 — Sarah's PR: Six Patterns Applied]
+## [SLIDE 38 — CAI in Action: One PR, Six Patterns]
 
 *[GESTURE across the six numbered cards]*
 
@@ -507,7 +544,7 @@ The key takeaway: each component made the others more effective. And I want to b
 
 ---
 
-## [SLIDE 37 — Section Divider: Putting It All Together]
+## [SLIDE 39 — Section Divider: Putting It All Together]
 *[PAUSE]*
 
 Six patterns. Each one valuable on its own. But you've probably noticed something as we went through them — they're not independent. The failure classifier feeds the RAG knowledge base. The risk scorer influences the release gate. The test synthesizer catches bugs before the failure classifier has to triage them. They're interconnected. And the real power comes when you connect them into a complete CAI pipeline.
@@ -516,7 +553,7 @@ Let's zoom out and look at the full architecture.
 
 ---
 
-## [SLIDE 38 — The Complete CAI Pipeline]
+## [SLIDE 40 — The Complete CAI Pipeline]
 
 Here's the full picture. From commit to production, every stage has an AI enhancement layer. Take a look at this architecture — this is the vision we've been building toward.
 
@@ -526,7 +563,7 @@ And at the bottom — the feedback loop. Every failure, every fix, every deploym
 
 ---
 
-## [SLIDE 39 — The Feedback Loop]
+## [SLIDE 41 — The Feedback Loop]
 
 Let me emphasize this because it's the key differentiator between "AI in CI" and "Continuous AI."
 
@@ -538,7 +575,7 @@ But the learning only works if you capture outcomes. If you're not feeding deplo
 
 ---
 
-## [SLIDE 40 — The Smallest Useful CAI Stack]
+## [SLIDE 42 — The Smallest Useful CAI Stack]
 
 So you're sold on the vision. But what does the infrastructure actually look like? How much do you need to build before you can ship something real?
 
@@ -558,7 +595,7 @@ This stack isn't a six-month project. Teams can stand up a basic internal pilot 
 
 ---
 
-## [SLIDE 41 — Six-Component CAI Stack]
+## [SLIDE 43 — Six-Component CAI Stack]
 
 *[GESTURE across the six component cards]*
 
@@ -566,7 +603,7 @@ Here's that stack laid out visually. I won't repeat the details — they're on t
 
 ---
 
-## [SLIDE 42 — A Minimal CAI Workflow in One Repo]
+## [SLIDE 44 — A Minimal CAI Workflow in One Repo]
 
 Now, for the intermediate engineers in the room who are thinking "this all sounds great, but what does it actually look like in my repo?" — this slide is for you.
 
@@ -580,7 +617,7 @@ The key insight: each script maps to one of the six patterns we discussed. Log s
 
 ---
 
-## [SLIDE 43 — Where CAI Pays for Itself]
+## [SLIDE 45 — Where CAI Pays for Itself]
 
 Now — and this is the natural next question — what does all this cost? Is it worth it?
 
@@ -600,7 +637,7 @@ Here's the practical principle: start with the tasks where a small, cheap model 
 
 ---
 
-## [SLIDE 44 — Real Tools for Real Pipelines]
+## [SLIDE 46 — Real Tools for Real Pipelines]
 
 *[MOVE QUICKLY through this slide — 30-45 seconds max]*
 
@@ -610,7 +647,7 @@ The key takeaway is a build-versus-buy decision. Buy mature tooling for standard
 
 ---
 
-## [SLIDE 45 — Getting Started: The Monday Morning Plan]
+## [SLIDE 47 — Getting Started: The Monday Morning Plan]
 
 Start here, ordered by effort and impact:
 
@@ -628,7 +665,7 @@ Six: release gates. The capstone — build once you trust the other signals. Sta
 
 ---
 
-## [SLIDE 46 — Don't Boil the Ocean]
+## [SLIDE 48 — Don't Boil the Ocean]
 
 Most important advice: don't try to implement all six patterns at once.
 
@@ -640,7 +677,7 @@ One undeniable win beats six half-finished experiments.
 
 ---
 
-## [SLIDE 47 — How You Know CAI Is Helping]
+## [SLIDE 49 — How You Know CAI Is Helping]
 
 Before expanding to more patterns, measure whether it's working. Track these from day one:
 
@@ -658,7 +695,7 @@ To make this concrete: Metaview published a case study on their engineering blog
 
 ---
 
-## [SLIDE 48 — Evaluation Methodology]
+## [SLIDE 50 — Evaluation Methodology]
 
 Five-step loop applies to every CAI pattern before promoting from advisory to assisted:
 
@@ -674,7 +711,7 @@ Five: promote. Move to assisted mode only after data shows measured reliability.
 
 ---
 
-## [SLIDE 49 — Your CAI Adoption Path]
+## [SLIDE 51 — Your CAI Adoption Path]
 
 Here's the practical roadmap — not in phases or years, but in concrete milestones.
 
@@ -690,7 +727,7 @@ The key word is *earn*. Each stage proves the reliability that justifies the nex
 
 ---
 
-## [SLIDE 50 — From CI/CD to CI/CD + CAI]
+## [SLIDE 52 — From CI/CD to CI/CD + CAI]
 *[SLOW DOWN — closing moment]*
 
 So let me bring it back to where we started.
@@ -711,7 +748,7 @@ Tomorrow morning, don't add six AI steps. Add one. Pick the most annoying, repet
 
 ---
 
-## [SLIDE 51 — Questions]
+## [SLIDE 53 — Questions]
 *[PAUSE]*
 
 I'd love to take questions. We've got some time — who wants to go first?
@@ -852,6 +889,6 @@ I'd love to take questions. We've got some time — who wants to go first?
 
 ---
 
-## [SLIDE 52 — Ending]
+## [SLIDE 54 — Ending]
 
 Thank you so much, everyone. My contact info is up here — training@getskillsnow.com, or find me online at techskillstransformations.com. I'd love to hear about your CAI implementations. Thanks for spending this time with me!
