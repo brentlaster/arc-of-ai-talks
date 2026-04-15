@@ -1,8 +1,8 @@
-# CI/CD in the Age of CAI — Speaker Script (v13)
+# CI/CD in the Age of CAI — Speaker Script (v14)
 
-**Duration:** 75 minutes | **Target pace:** ~140 wpm | **Slides:** 57
+**Duration:** 75 minutes | **Target pace:** ~140 wpm | **Slides:** 60
 
-**Changes from v12:** Split former Slide 4 into three slides — the dumb-pipeline statement stays at Slide 4; the 40-minute cache-hunt scenario moves to a new Slide 5; the thesis moves to a new Slide 6. Split the DORA metric out of former Slide 5 into a new standalone Slide 8. Moved the seven-integration-point detail paragraph out of former Slide 11 (now 14) and into former Slide 12 (now 15) so the detail sits with the detail slide. All subsequent slides renumbered +3.
+**Changes from v13:** Trimmed duplicate "link back to raw log" reference from Slide 25 (both XML and script). Moved Sarah's Slack phone-notification moment out of Slide 25 to a new Slide 26 with a phone mockup. Moved the "start here" framing and VP pitch out of Slide 27 (was Slack-notification code only) to a new Slide 29 — this is now a standalone "Your First Win" emphasis slide. Added a Source-Trust-Tier visual to the RAG-Driven Debugging slide (now Slide 30) showing internal history weighted above public sources. Moved the Sarah-vs-README risk-scoring comparison out of Slide 31 (Pattern 5) to a new Slide 34 with a side-by-side 8/10 vs 1/10 visual. All subsequent slides renumbered +3.
 
 ---
 
@@ -344,19 +344,27 @@ This is the slide to show your manager if they ask "why should we bother?" On th
 
 On the right: what twenty minutes of setup gives you. "TypeScript compilation ran out of memory on 847 files. Fix: increase runner to 8GB or split compilation. Confidence: 94%." Actionable intelligence. Root cause, suggested fix, and a confidence score — all delivered before you've finished reading the Slack notification.
 
-One important note at the bottom of this slide: always link back to the full raw log. Summaries can miss secondary warnings. The summary augments the log — it never replaces it.
+---
 
-Back to Sarah — remember her database config change? When her build fails because the pool size exceeded the driver maximum, the log summary goes to Slack. And it looks like this — imagine reading it on your phone:
+## [SLIDE 26 — Sarah's Phone: What the Team Sees]
+
+*[GESTURE at the phone mockup]*
+
+Back to Sarah — remember her database config change? When her build fails because the pool size exceeds the driver maximum, the log summary goes straight to Slack. Here's what it looks like on the team's phones — imagine reading this standing at the coffee machine.
 
 *[READ as if quoting a Slack message]*
 
-"Build failed — PR #5032 (Sarah Chen). Root cause: connection pool size 200 exceeds async driver max of 150. Suggested fix: reduce pool size to 150 or switch to async driver config. Confidence: 94%. Full log: link."
+"Build failed — PR #5032, Sarah Chen. Root cause: connection pool size 200 exceeds async driver max of 150. Suggested fix: reduce pool size to 150 or switch to async driver config. Confidence: 94%. Full log: link."
 
-That's it. Everyone on the team — Sarah, her tech lead, the platform engineer — knows exactly what happened, why, and what to do about it. No one had to open a log file. No one had to context-switch.
+That's it. That's the whole notification.
+
+Everyone on the team — Sarah, her tech lead, the platform engineer, the SRE on call — knows exactly what happened, why, and what to do about it. No one had to open a log file. No one had to context-switch from whatever they were doing. The first person to triage this has a twenty-second head start on the fix instead of a twenty-minute detour through stack traces.
+
+And when they do want to dig in, the link to the raw log is right there in the message. The summary is the fast path. The log is always one tap away.
 
 ---
 
-## [SLIDE 26 — Testimonial: Log Summarization in Practice]
+## [SLIDE 27 — Testimonial: Log Summarization in Practice]
 
 **[PLACEHOLDER — add testimonial from colleague about log summarization impact]**
 
@@ -366,17 +374,31 @@ That's it. Everyone on the team — Sarah, her tech lead, the platform engineer 
 
 ---
 
-## [SLIDE 27 — Log Summarization + Slack Notification]
+## [SLIDE 28 — Log Summarization + Slack Notification]
 
 Here's the code — and like all the code slides in this talk, this is an illustrative scaffold showing the architecture, not a copy-paste production snippet. It tails the last 200 lines of the build log, pipes them through Claude with a summarization prompt, posts the result to Slack via webhook, and comments on the PR.
 
-And I meant what I said — this is the number-one pattern I recommend starting with. A first proof-of-concept takes maybe 20 minutes. It's immediately visible to the entire team. It saves real time every single day. And most importantly, it builds trust in AI pipeline steps. When your team sees that the AI summaries are accurate and useful, they'll be much more open to the more advanced patterns.
+---
 
-Don't go to your VP and say "I need six months and a team of five to implement an AI-powered autonomous deployment system." Go to your VP and say "I added a thing to Slack that tells us why builds fail in plain English. It took me a day." Then watch them come back asking for more. That's how you fund a CAI program — one undeniable win at a time.
+## [SLIDE 29 — Your First Win: Start Here, Then Scale]
+
+*[GESTURE at the two cards]*
+
+I want to spend a minute on this because it matters more than any single code pattern in the talk: log summarization is the pattern to start with. Number one. Every single time.
+
+Why this one first? Four reasons, and they're all on the left card. A first proof-of-concept takes maybe twenty minutes. It's immediately visible to the entire team — the Slack channel they already live in. It saves real time every single day, not in some future state. And most importantly, it builds trust in AI pipeline steps. When your team sees that the AI summaries are accurate and useful, they stop resisting the more advanced patterns. They start asking for them.
+
+Which brings me to the VP pitch on the right card.
+
+Don't go to your VP and say "I need six months and a team of five to implement an AI-powered autonomous deployment system." That's a no. That's a committee. That's a procurement cycle.
+
+Go to your VP and say: "I added a thing to Slack that tells us why builds fail in plain English. It took me a day." Then watch them come back asking for more.
+
+That is how you fund a CAI program. One undeniable win at a time. Start here.
 
 ---
 
-## [SLIDE 28 — Pattern 4: RAG-Driven Debugging]
+## [SLIDE 30 — Pattern 4: RAG-Driven Debugging]
 
 *[GESTURE at diagram]*
 
@@ -394,9 +416,17 @@ This is the institutional memory that most teams lose when people leave. RAG deb
 
 ---
 
-## [SLIDE 29 — Give Your Pipeline Memory]
+## [SLIDE 31 — Give Your Pipeline Memory]
 
-The implementation has four steps. Index: build your vector database from past CI logs, resolved PRs, runbooks, and incidents. This is the upfront investment — you're building the knowledge base that everything else draws from. Embed: when a failure occurs, extract the error signature and create a query vector that captures the semantic meaning of the failure. Search: find the three most similar past failures in your history. Not keyword matching — semantic similarity. The AI understands that "connection refused on port 5432" and "PostgreSQL server not accepting connections" are the same class of problem. Synthesize: the LLM reads the matched failures, their resolutions, and the current context, then proposes a fix and links to the past resolutions so the developer can verify.
+The implementation has four steps. 
+
+Index: build your vector database from past CI logs, resolved PRs, runbooks, and incidents. This is the upfront investment — you're building the knowledge base that everything else draws from. 
+
+Embed: when a failure occurs, extract the error signature and create a query vector that captures the semantic meaning of the failure. 
+
+Search: find the three most similar past failures in your history. Not keyword matching — semantic similarity. The AI understands that "connection refused on port 5432" and "PostgreSQL server not accepting connections" are the same class of problem. 
+
+Synthesize: the LLM reads the matched failures, their resolutions, and the current context, then proposes a fix and links to the past resolutions so the developer can verify.
 
 After three months, your RAG debugging system has seen hundreds of failures. After six months, thousands. After a year, it's seen almost everything your pipeline can throw at it. The system gets more valuable with every failure — which is a nice inversion of the usual relationship with build failures.
 
@@ -404,7 +434,7 @@ A practical tip: start indexing today, even before you build the query interface
 
 ---
 
-## [SLIDE 30 — RAG Debug Pipeline Step]
+## [SLIDE 32 — RAG Debug Pipeline Step]
 
 Here's the implementation — same illustrative pattern as before. On failure, it extracts the error signature, runs a Python script that embeds the error and searches the Pinecone vector database for similar past failures, then pipes the matches to Claude to synthesize a fix recommendation, and posts it as a PR comment.
 
@@ -414,7 +444,7 @@ What vector database should you use? Start simple — ChromaDB runs locally with
 
 ---
 
-## [SLIDE 31 — Pattern 5: Risk Scoring]
+## [SLIDE 33 — Pattern 5: Risk Scoring]
 
 Here's a quick contrast. PR A: one-line typo fix in a README. PR B: database connection pooling change that touches every microservice. Your current pipeline: identical 45-minute test suites for both. PR A's developer is annoyed. PR B probably deserves even *more* scrutiny than it's getting. Pattern five — risk scoring — fixes this mismatch.
 
@@ -426,13 +456,25 @@ Now, most risk scoring in practice today is heuristic-based — weighted point s
 
 The result: teams report significant build time savings by focusing CI resources on high-risk changes instead of running the full battery on every single commit. The exact savings depend on your test suite size and change distribution, but the principle is universal — spend your CI budget where it matters.
 
-In our running scenario: Sarah's database config change? The risk scorer flags it immediately. Core infrastructure file, high blast radius, touches connection handling that affects every service, and modifies parameters that have caused production incidents before — the risk scorer knows this from historical deployment data. Risk score: 8 out of 10. Full test suite, security scan, and manual approval required. The pipeline is going to scrutinize this change because the signals say it deserves scrutiny.
+---
 
-Meanwhile, the README fix that another developer pushed at the same time? Risk score: 1. Smoke tests only, merged in 3 minutes. That developer isn't waiting 45 minutes for tests on a typo correction. They're already working on their next task. That's intelligent resource allocation — every change gets the level of scrutiny it deserves, no more, no less.
+## [SLIDE 34 — Two PRs, Two Treatments]
+
+*[GESTURE between the two cards]*
+
+Let me make this concrete with our running scenario — and a contrast.
+
+On the left: Sarah's database config change. The risk scorer flags it immediately. Core infrastructure file, touched by every microservice. High blast radius. And it modifies parameters that have caused production incidents before — the risk scorer knows this from historical deployment data. Risk score: eight out of ten. Treatment: full test suite, security scan, and manual approval gate required. The pipeline is going to scrutinize this change because every signal says it deserves scrutiny.
+
+On the right: another developer pushed a README typo fix at the same moment. Risk score: one. Docs-only path, no runtime blast radius, no prior failure signature. Treatment: smoke tests only, merged in three minutes. That developer isn't waiting forty-five minutes for a test suite on a typo correction. They're already working on their next task.
+
+That's intelligent resource allocation. Every change gets the level of scrutiny it deserves — no more, no less. Same pipeline, two completely different treatments, and both developers got exactly what their change needed.
+
+This is what risk scoring buys you: not a faster pipeline. A *right-sized* pipeline for each change.
 
 ---
 
-## [SLIDE 32 — Five Risk Scoring Factors]
+## [SLIDE 35 — Five Risk Scoring Factors]
 
 *[GESTURE across the five factor cards]*
 
@@ -444,7 +486,7 @@ The bottom line is the routing rule: high risk gets the full suite plus security
 
 ---
 
-## [SLIDE 33 — Risk-Based Pipeline Routing]
+## [SLIDE 36 — Risk-Based Pipeline Routing]
 
 Here's the code — focus on the branching logic, not the syntax. A Python script calculates a risk score from 0 to 10 based on the PR factors. The workflow then branches: high risk gets the full test suite, medium risk gets targeted tests, low risk gets smoke tests only.
 
@@ -456,7 +498,7 @@ And think about explainability. When a PR gets flagged high-risk, developers wil
 
 ---
 
-## [SLIDE 34 — Pattern 6: AI-Powered Release Gates]
+## [SLIDE 37 — Pattern 6: AI-Powered Release Gates]
 
 *[GESTURE at diagram]*
 
@@ -474,7 +516,7 @@ Important framing here: I said *recommendation*, not *decision*. Release gates s
 
 ---
 
-## [SLIDE 35 — Multi-Signal Release Assessment]
+## [SLIDE 38 — Multi-Signal Release Assessment]
 
 Here are the signals an AI release gate evaluates, with the specific thresholds. Test pass rate above 99.5%. Error trend over the last 24 hours is decreasing. Risk score below 7 out of 10. Change scope under 500 lines. Zero critical security vulnerabilities. Canary health above 95%.
 
@@ -488,7 +530,7 @@ And calibrate it: after every release, compare the gate's recommendation against
 
 ---
 
-## [SLIDE 36 — Release Gate Configuration]
+## [SLIDE 39 — Release Gate Configuration]
 
 And here's what the configuration looks like. A YAML-based declarative config that defines your signals, their sources, thresholds, and the decision logic.
 
@@ -500,7 +542,7 @@ So — step back for a moment. At this point your pipeline is no longer just enf
 
 ---
 
-## [SLIDE 37 — Where CAI Can Go Wrong]
+## [SLIDE 40 — Where CAI Can Go Wrong]
 
 Let me be real about the risks. Six failure modes every team should plan for.
 
@@ -520,7 +562,7 @@ The mitigation is the same thread for all six: human oversight at appropriate le
 
 ---
 
-## [SLIDE 38 — Guardrails Every CAI Pipeline Needs]
+## [SLIDE 41 — Guardrails Every CAI Pipeline Needs]
 
 Protect against failure modes with guardrails. Start with the autonomy ladder.
 
@@ -536,7 +578,7 @@ Trust is earned through demonstrated reliability, not assumed based on technolog
 
 ---
 
-## [SLIDE 39 — Common CAI Anti-Patterns]
+## [SLIDE 42 — Common CAI Anti-Patterns]
 
 Five critical anti-patterns to avoid:
 
@@ -554,7 +596,7 @@ If you recognize any of these in your current setup, fix them before adding more
 
 ---
 
-## [SLIDE 40 — Sarah's PR: Six Patterns Applied]
+## [SLIDE 43 — Sarah's PR: Six Patterns Applied]
 
 Let's bring Sarah's journey full circle. One PR, six patterns, end to end.
 
@@ -578,7 +620,7 @@ Notice what happened: every pattern added a layer. Test synthesis caught the edg
 
 ---
 
-## [SLIDE 41 — CAI in Action: One PR, Six Patterns]
+## [SLIDE 44 — CAI in Action: One PR, Six Patterns]
 
 *[GESTURE across the six numbered cards]*
 
@@ -588,7 +630,7 @@ The key takeaway: each component made the others more effective. And I want to b
 
 ---
 
-## [SLIDE 42 — Section Divider: Putting It All Together]
+## [SLIDE 45 — Section Divider: Putting It All Together]
 *[PAUSE]*
 
 Six patterns. Each one valuable on its own. But you've probably noticed something as we went through them — they're not independent. The failure classifier feeds the RAG knowledge base. The risk scorer influences the release gate. The test synthesizer catches bugs before the failure classifier has to triage them. They're interconnected. And the real power comes when you connect them into a complete CAI pipeline.
@@ -597,7 +639,7 @@ Let's zoom out and look at the full architecture.
 
 ---
 
-## [SLIDE 43 — The Complete CAI Pipeline]
+## [SLIDE 46 — The Complete CAI Pipeline]
 
 Here's the full picture. From commit to production, every stage has an AI enhancement layer. Take a look at this architecture — this is the vision we've been building toward.
 
@@ -607,7 +649,7 @@ And at the bottom — the feedback loop. Every failure, every fix, every deploym
 
 ---
 
-## [SLIDE 44 — The Feedback Loop]
+## [SLIDE 47 — The Feedback Loop]
 
 Let me emphasize this because it's the key differentiator between "AI in CI" and "Continuous AI."
 
@@ -619,7 +661,7 @@ But the learning only works if you capture outcomes. If you're not feeding deplo
 
 ---
 
-## [SLIDE 45 — The Smallest Useful CAI Stack]
+## [SLIDE 48 — The Smallest Useful CAI Stack]
 
 So you're sold on the vision. But what does the infrastructure actually look like? How much do you need to build before you can ship something real?
 
@@ -639,7 +681,7 @@ This stack isn't a six-month project. Teams can stand up a basic internal pilot 
 
 ---
 
-## [SLIDE 46 — Six-Component CAI Stack]
+## [SLIDE 49 — Six-Component CAI Stack]
 
 *[GESTURE across the six component cards]*
 
@@ -647,7 +689,7 @@ Here's that stack laid out visually. I won't repeat the details — they're on t
 
 ---
 
-## [SLIDE 47 — A Minimal CAI Workflow in One Repo]
+## [SLIDE 50 — A Minimal CAI Workflow in One Repo]
 
 Now, for the intermediate engineers in the room who are thinking "this all sounds great, but what does it actually look like in my repo?" — this slide is for you.
 
@@ -661,7 +703,7 @@ The key insight: each script maps to one of the six patterns we discussed. Log s
 
 ---
 
-## [SLIDE 48 — Where CAI Pays for Itself]
+## [SLIDE 51 — Where CAI Pays for Itself]
 
 Now — and this is the natural next question — what does all this cost? Is it worth it?
 
@@ -681,7 +723,7 @@ Here's the practical principle: start with the tasks where a small, cheap model 
 
 ---
 
-## [SLIDE 49 — Real Tools for Real Pipelines]
+## [SLIDE 52 — Real Tools for Real Pipelines]
 
 *[MOVE QUICKLY through this slide — 30-45 seconds max]*
 
@@ -691,7 +733,7 @@ The key takeaway is a build-versus-buy decision. Buy mature tooling for standard
 
 ---
 
-## [SLIDE 50 — Getting Started: The Monday Morning Plan]
+## [SLIDE 53 — Getting Started: The Monday Morning Plan]
 
 Start here, ordered by effort and impact:
 
@@ -709,7 +751,7 @@ Six: release gates. The capstone — build once you trust the other signals. Sta
 
 ---
 
-## [SLIDE 51 — Don't Boil the Ocean]
+## [SLIDE 54 — Don't Boil the Ocean]
 
 Most important advice: don't try to implement all six patterns at once.
 
@@ -721,7 +763,7 @@ One undeniable win beats six half-finished experiments.
 
 ---
 
-## [SLIDE 52 — How You Know CAI Is Helping]
+## [SLIDE 55 — How You Know CAI Is Helping]
 
 Before expanding to more patterns, measure whether it's working. Track these from day one:
 
@@ -739,7 +781,7 @@ To make this concrete: Metaview published a case study on their engineering blog
 
 ---
 
-## [SLIDE 53 — Evaluation Methodology]
+## [SLIDE 56 — Evaluation Methodology]
 
 Five-step loop applies to every CAI pattern before promoting from advisory to assisted:
 
@@ -755,7 +797,7 @@ Five: promote. Move to assisted mode only after data shows measured reliability.
 
 ---
 
-## [SLIDE 54 — Your CAI Adoption Path]
+## [SLIDE 57 — Your CAI Adoption Path]
 
 Here's the practical roadmap — not in phases or years, but in concrete milestones.
 
@@ -771,7 +813,7 @@ The key word is *earn*. Each stage proves the reliability that justifies the nex
 
 ---
 
-## [SLIDE 55 — From CI/CD to CI/CD + CAI]
+## [SLIDE 58 — From CI/CD to CI/CD + CAI]
 *[SLOW DOWN — closing moment]*
 
 So let me bring it back to where we started.
@@ -792,7 +834,7 @@ Tomorrow morning, don't add six AI steps. Add one. Pick the most annoying, repet
 
 ---
 
-## [SLIDE 56 — Questions]
+## [SLIDE 59 — Questions]
 *[PAUSE]*
 
 I'd love to take questions. We've got some time — who wants to go first?
@@ -933,6 +975,6 @@ I'd love to take questions. We've got some time — who wants to go first?
 
 ---
 
-## [SLIDE 57 — Ending]
+## [SLIDE 60 — Ending]
 
 Thank you so much, everyone. My contact info is up here — training@getskillsnow.com, or find me online at techskillstransformations.com. I'd love to hear about your CAI implementations. Thanks for spending this time with me!
