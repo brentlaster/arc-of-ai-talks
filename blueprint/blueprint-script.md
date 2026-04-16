@@ -23,14 +23,7 @@ But before we get into the data and the frameworks, I want to show you something
 
 ---
 
-## SLIDE 3: ABOUT ME
-
-[Brief personal introduction - use content on slide]
-
----
-
-
-## SLIDE 4: When AI Gets 'Creative'
+## SLIDE 3: When AI Gets 'Creative'
 
 *[Show the screenshot and let audience react]*
 
@@ -41,6 +34,12 @@ The chatbot completely ignored its core purpose and launched into a code explana
 *[TRANSITION]*
 
 And the stakes DO get higher. Let me show you what happens when the same class of failure hits enterprise systems.
+
+---
+
+## SLIDE 4: ABOUT ME
+
+[Brief personal introduction - use content on slide]
 
 ---
 
