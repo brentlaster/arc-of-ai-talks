@@ -385,15 +385,21 @@ Selection, evaluation, approval, deployment, monitoring, retirement. The most co
 
 ---
 
-## SLIDE 29: Governance Gates
+## SLIDE 29: Shadow AI: The Invisible Risk
 
-Every model in production should be in a model registry: approved models with version tracking, compliance status, and usage policies. When a new model or model version is proposed, it goes through evaluation — performance, safety, bias, security — before an approval committee signs off.
+*[PAUSE — let the slide land]*
 
-This isn't bureaucracy for bureaucracy's sake. And here's an important ownership question: *what do engineers own versus what does governance own?* Engineers own the registry integration, the deployment gates, and the monitoring hooks — the machinery. Governance owns the policies, the risk classifications, and the approval criteria — the rules. When those responsibilities are clear, both sides move faster.
+Before we go deeper into governance, I want to surface a problem most organizations have and don't know how to measure — shadow AI. This is what happens when AI adoption outpaces governance.
 
-Let me separate two things people often conflate. On the regulatory side, the EU AI Act requires documented risk assessments, audit trails, and governance processes for high-risk AI systems — with real enforcement teeth. The penalty structure is tiered: for the most serious violations — prohibited AI practices — fines can reach up to 35 million euros or 7% of global annual turnover. Other obligation categories carry lower maximums, but they're still significant enough to get executive attention.
+Three manifestations to watch for.
 
-Separately, ISO 42001 and NIST AI RMF are governance frameworks — they don't carry fines themselves, but they give you the implementation structure to demonstrate compliance with regulations like the AI Act. Think of the AI Act as the "what you must do" and ISO 42001 / NIST as the "how to do it." Your legal team should be involved in mapping your controls to specific compliance requirements.
+*Data leakage.* Teams experiment with AI tools using real customer data — because that's the data they have. Once that data flows into an unvetted model, you can't recall it. It's in training sets, vendor logs, cache layers you don't control.
+
+*Compliance gaps.* When AI is being used informally, there's no audit trail. No record of what data was sent, what the model said, who reviewed the output. When a regulator asks "how do you ensure human oversight of high-risk AI decisions?" — you don't have an answer because you don't even have a list.
+
+*Invisible identities.* Developers spin up their own API keys. Teams share credentials. AI agents run under someone's personal account. When something goes wrong, nobody knows who to call — and nobody can revoke access cleanly.
+
+And here's the number that should make every platform leader uncomfortable: *59% of enterprises confirm shadow AI in their environments.* That's not "might have" — that's "yes, it's here." The blueprint's job isn't to shut this down. It's to bring it into the light — inventory first, then govern.
 
 ---
 
@@ -485,11 +491,13 @@ On the right, rate limiting — per-tenant, per-model limits with burst handling
 
 ## SLIDE 36: Canary Deployments & Incident Response
 
-Canary deployments are especially important for generative AI because "quality" isn't binary. You need AI-specific metrics: escalation rate, unsafe output rate, and cost per resolved interaction. Start at 5% of traffic, then 10%, 25%, full rollout. Any anomaly triggers automatic rollback.
+Canary deployments are especially important for generative AI because "quality" isn't binary. You need AI-specific metrics. The rollout pattern on the left is concrete: 5% of traffic, then 10%, then 25%, then full rollout — with five minutes of monitoring at each phase. Error rate stays under 0.1%, latency p95 stays under two seconds, cost variance stays under 5% — or you roll back.
 
-Quick example — imagine updating your customer service model. Benchmarks look better on paper. But in production at 5%, escalation rate jumps 40%. Canary catches it, rolls back in two minutes. Without it? You find out from customer complaints three days later.
+Rollback triggers are automatic: latency spike, error rate, cost anomaly, security alert. Any one of those, and the canary gets pulled.
 
-You also need AI-specific incident response playbooks — detection, containment, investigation, remediation, post-mortem.
+On the right, an eight-step incident runbook — what you do when something goes wrong. *Detect, Alert, Isolate, Assess, Communicate, Remediate, Document, Monitor.* Isolate comes early — that's the kill switch moment. Assess and Communicate happen in parallel, not sequentially. Document and Monitor are what separates organizations that learn from incidents from organizations that repeat them.
+
+Quick example — imagine updating your customer service model. Benchmarks look better on paper. But in production at 5%, escalation rate jumps 40%. Canary catches it, automatic rollback in two minutes. Without it? You find out from customer complaints three days later. With the runbook? You also have the post-mortem and the trail for your next audit.
 
 ---
 
@@ -533,17 +541,23 @@ Automate what you can — injection tests and regression gates belong in CI/CD. 
 
 ---
 
-## SLIDE 40: Governance Operating Model (RACI)
+## SLIDE 40: Who Owns What?
 
-*[NEW SECTION]*
+*[GESTURE across the four columns]*
 
-Last cross-cutting concern: who owns what? A blueprint is useless if nobody knows who's responsible.
+Last cross-cutting concern: who owns what? A blueprint is useless if nobody knows who's responsible — so every AI security capability on the slide has a clear accountable owner.
 
-The pattern is simple: platform builds infrastructure — IAM, audit, sandboxing. App teams consume those controls and extend them with prompt defenses and human oversight for their specific use case. Security governs the framework — policies, risk thresholds, registry approval. Legal advises on compliance and vendor risk.
+Four teams, four different jobs.
 
-The key principle: app teams do not invent their own security model. They consume platformized controls. That shared ownership is what makes enterprise AI security scalable. Without it? Everyone assumes someone else is handling security, and nobody is.
+*Platform* owns the infrastructure everyone else builds on — IAM and identity, audit infrastructure, operational controls like canary deploys and kill switches. If the platform team isn't on board, none of this scales.
 
-If your organization has an internal developer platform or a platform engineering team, this blueprint maps directly to what they already do — golden paths, paved roads, shared infrastructure. The AI security controls become part of the platform, not a separate initiative. That's how you scale this across dozens of teams without each one reinventing the wheel.
+*Security* is accountable for the most capabilities — and that's deliberate. Data boundaries, prompt defenses, model registry, red teaming, incident response. Security sets the policies and risk thresholds; platform and app teams implement them.
+
+*App teams* are not off the hook. They own red teaming their own AI features, implementing the input guards in their applications, and being first responders when their app misbehaves. The key principle: app teams do not invent their own security model. They consume platformized controls.
+
+*Legal* owns vendor risk — contract reviews with AI providers — and regulatory guidance for data boundaries. That's not a side role; it's where compliance meets engineering.
+
+The callout at the bottom is the honest summary: Security is accountable for the most capabilities, but every team has skin in the game. That's what makes enterprise AI security scalable — not a single team heroically holding the line, but a distributed ownership model where each team owns what they're best positioned to own.
 
 ---
 
@@ -597,11 +611,29 @@ Now let me show you how the blueprint works when it's in place — by walking th
 
 ---
 
-## SLIDE 44: Scenario 1: Customer-Facing AI Chatbot
+## SLIDE 44: Scenario: Customer-Facing AI Chatbot
 
-Scenario one: a customer-facing AI chatbot — probably the most common enterprise AI deployment, and it touches every layer. Imagine you're the platform lead at a financial services company. The product team wants an AI chatbot for customer support — live in six weeks. It needs customer data, every interaction is a compliance event, and if it goes wrong, the consequences are regulatory, legal, and reputational.
+Scenario one: a customer-facing AI chatbot — probably the most common enterprise AI deployment, and it touches every layer. The slide traces a single customer message through the full security stack, step by step.
 
-The slide shows how each layer applies. Identity: dedicated service account, customer-data-read scope, nothing else. Context isolation: each conversation scoped to one customer, PII tokenized. Prompt defenses: input filtering, immutable system instructions, output scanning. Model governance: approved version from the registry with behavioral constraints and an expiration date. Audit: every conversation logged with structured, searchable records. Operations: rate limits, kill switch to redirect to human agents, canary deployments.
+*[WALK THROUGH THE 8 STEPS]*
+
+Step one: the customer message comes in — "Can I return my order?" A completely benign-looking request. But every message, benign or not, passes through the same pipeline.
+
+Step two: *identity.* Validate the session; the chatbot operates under scoped credentials — customer-data-read only, no write access, no access to internal systems.
+
+Step three: *prompt defense.* Scan the input for injection attempts before it reaches the model. This is where "ignore previous instructions" and more sophisticated encoding attacks get caught.
+
+Step four: *data boundary.* This customer's context only. Tokenized PII, tenant isolation at the infrastructure layer. The model never sees another customer's data.
+
+Step five: *model processing.* A pinned model version from the registry, with behavioral constraints — no financial advice, no aggregate analytics, no investment recommendations.
+
+Step six: *output scan.* Check the response for PII leaks, policy violations, or anything that shouldn't be in a customer-facing message.
+
+Step seven: *audit log.* The full conversation is recorded with structured metadata — who, what, when, which model, which policy rules fired.
+
+Step eight: a safe response goes back — "Your return has been initiated."
+
+The tagline at the bottom is the whole point: *every message passes through every security layer — the customer never sees the security, only the response.* That's the blueprint working. It's invisible to the user, and the organization's exposure is controlled at every step.
 
 *[MICRO-INTERACTION — 30 seconds]*
 
@@ -609,7 +641,7 @@ Quick scenario within the scenario. A customer asks: "What's the average balance
 
 *[PAUSE]*
 
-Most of you probably said DENY or ESCALATE — and you're right. The chatbot's scope is individual queries, not aggregate analytics. The policy engine denies it and logs the attempt. That's the blueprint working — it's an architecture, not a checklist. Every risk maps to a specific control.
+Most of you probably said DENY or ESCALATE — and you're right. The chatbot's scope is individual queries, not aggregate analytics. Step three catches the injection; step five's behavioral constraints would decline it; step six's output scan would catch it even if the earlier layers missed it. That's defense in depth — it's an architecture, not a checklist.
 
 ---
 
