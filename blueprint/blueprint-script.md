@@ -366,9 +366,17 @@ And the bottom path shows the indirect injection vector: retrieved content from 
 
 Four concrete defense techniques you can implement.
 
-Input sanitization: strip or encode special characters, detect injection patterns, reject inputs that match known attack signatures. Canary tokens: embed invisible markers in your system prompt — if they appear in the output, you know the system prompt was extracted. Output validation: scan responses for PII, policy violations, or content the model shouldn't produce. And behavioral boundaries: explicit rules about what the model can and cannot do, enforced at the application layer, not just in the prompt.
+Input sanitization: strip or encode special characters, detect injection patterns, reject inputs that match known attack signatures. 
 
-Defense in depth. No single technique is sufficient. All four together make injection attacks significantly harder. And the principle here is to reduce and mediate untrusted content before it reaches the model, and constrain how the model processes it. You can't always prevent untrusted content from entering the pipeline — especially in RAG and email workflows — but you can control how the model treats it.
+Canary tokens: embed invisible markers in your system prompt — if they appear in the output, you know the system prompt was extracted. 
+
+Output validation: scan responses for PII, policy violations, or content the model shouldn't produce. 
+
+And behavioral boundaries: explicit rules about what the model can and cannot do, enforced at the application layer, not just in the prompt.
+
+Defense in depth. No single technique is sufficient. 
+
+All four together make injection attacks significantly harder. And the principle here is to reduce and mediate untrusted content before it reaches the model, and constrain how the model processes it. You can't always prevent untrusted content from entering the pipeline — especially in RAG and email workflows — but you can control how the model treats it.
 
 ---
 
@@ -392,7 +400,7 @@ Quick checkpoint. We're halfway through the blueprint. If you remember only thre
 
 *[SHIFT TONE — common failure]*
 
-Layer four: model governance. And let me open this one with the failure, because it's the most relatable. Raise your hand if someone in your engineering org has deployed a model to production without a formal approval process. Yeah. That's shadow AI, and it's how most governance failures start.
+Layer four: model governance. And let me open this one with the failure, because it's the most relatable. Smile knowingly if someone in your engineering org has deployed a model to production without a formal approval process. That's shadow AI, and it's how most governance failures start.
 
 The lifecycle has six stages: selection, evaluation, approval, deployment, monitoring, and retirement. At each stage, there should be a governance gate — a checkpoint where risk assessment, bias testing, and security review happen before the model moves forward. And these gates should plug into your CI/CD pipeline: model approval before merge, injection regression tests in the build, canary deployment with automatic rollback criteria, and audit event verification in post-deploy checks.
 

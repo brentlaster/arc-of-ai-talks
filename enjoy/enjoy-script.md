@@ -119,7 +119,7 @@ Each one feeds the others. Tool sprawl creates confusion about where AI fits, wh
 
 ## SLIDE 11: BARRIER 1 — TOO MANY TOOLS, NOT ENOUGH GLUE
 
-First barrier. Survey data tells us developers are juggling more AI tools than ever — ActivTrak's 2026 report found the average organization now uses seven AI tools, up from two just two years ago, with 83% of organizations using six or more. IDE copilot, chat interfaces, code search, review assistants, doc generators. Each one is independently useful. But none of them share context with each other.
+First barrier. Survey data tells us developers are juggling more AI tools than ever — ActivTrak's 2026 report found the average organization now uses five AI tools, up from two just two years ago, with 83% of organizations using six or more. IDE copilot, chat interfaces, code search, review assistants, doc generators. Each one is independently useful. But none of them share context with each other.
 
 Now — there ARE efforts to fix this. Anthropic's Model Context Protocol — MCP — has gained real traction, with 97 million monthly SDK downloads and adoption by OpenAI, Google, Microsoft, and AWS. Teams are writing structured context files like CLAUDE.md and .cursorrules. But here's the honest status: MCP connects tools to data sources, not tools to each other. Your Cursor session still can't hand context to your Claude Code session. Context engineering is becoming a discipline, but the integration gap is still very real.
 
@@ -231,7 +231,21 @@ And here's the irony: AI was supposed to lighten workloads. But ActivTrak's anal
 
 ## SLIDE 20: THE DEVELOPER BRAIN FRY CYCLE -- WHERE THE TIME GOES
 
-For engineers specifically, the cycle looks like this. Step one: write a detailed prompt. Step two: inspect the output line by line. Step three: compare against your requirements. Step four: patch what AI got wrong. Step five: re-run and test. Step six: re-validate — did the patch break something else? Step seven: context-switch to the next task.
+For engineers specifically, the cycle looks like this. 
+
+Step one: write a detailed prompt. 
+
+Step two: inspect the output line by line. 
+
+Step three: compare against your requirements. 
+
+Step four: patch what AI got wrong. 
+
+Step five: re-run and test. 
+
+Step six: re-validate — did the patch break something else? 
+
+Step seven: context-switch to the next task.
 
 And this isn't once a day. This cycle happens ten, fifteen, twenty times a day. Every single AI interaction. The generation is fast, sure. But the validation tax — the cognitive cost of verifying every single output — that's where the time goes. And that's what's burning people out.
 
