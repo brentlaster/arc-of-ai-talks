@@ -11,22 +11,6 @@
 
 
 ## SLIDE 2: TITLE
-
-The Enterprise AI Security Blueprint
-
-[Advance to next slide]
-
----
-
-
-## SLIDE 3: ABOUT ME
-
-[Brief personal introduction - use content on slide]
-
----
-
-
-## SLIDE 4: Title
 *[Wait for audience to settle]*
 
 Good morning, everyone. I'm Brent Laster, and today we're going to talk about something that keeps CISOs up at night, makes platform teams nervous, and that most organizations are handling... poorly.
@@ -39,7 +23,14 @@ But before we get into the data and the frameworks, I want to show you something
 
 ---
 
-## SLIDE 5: When AI Gets 'Creative'
+## SLIDE 3: ABOUT ME
+
+[Brief personal introduction - use content on slide]
+
+---
+
+
+## SLIDE 4: When AI Gets 'Creative'
 
 *[Show the screenshot and let audience react]*
 
@@ -53,7 +44,7 @@ And the stakes DO get higher. Let me show you what happens when the same class o
 
 ---
 
-## SLIDE 6: When AI Goes Wrong: Real Incidents
+## SLIDE 5: When AI Goes Wrong: Real Incidents
 
 *[PAUSE — let audience read the cards]*
 
@@ -67,10 +58,17 @@ Now here's the thing — these are not one-off bugs. They are architecture failu
 
 That's what happens when you deploy AI without a security blueprint. And that's exactly what this talk is going to fix.
 
-Now, you might be thinking — those are consumer-facing chatbots with no budget. We're building serious enterprise systems. But here's the thing: the same architectural failures show up everywhere. Microsoft 365 Copilot had the EchoLeak vulnerability — a zero-click prompt injection that could exfiltrate data via a single crafted email, bypassing Microsoft's injection classifier entirely. In a published study, researchers demonstrated that coding assistants can emit valid secrets in generated suggestions — one analysis found thousands of valid API keys and credentials in GitHub Copilot output alone. These aren't small companies making mistakes. These are the biggest tech companies in the world.
+---
 
-The difference between a chatbot selling a car for a dollar and an enterprise AI leaking your customers' financial data is scale and consequence. The same classes of architectural failures recur at very different scales.
+## SLIDE 6: Enterprise-Scale AI Failures
 
+Now, you might be thinking — those are consumer-facing chatbots with no budget. We're building serious enterprise systems. But here's the thing: the same architectural failures show up everywhere.
+
+Microsoft 365 Copilot had the EchoLeak vulnerability — a zero-click prompt injection that could exfiltrate data via a single crafted email, bypassing Microsoft's injection classifier entirely.
+
+In a published study, researchers demonstrated that coding assistants can emit valid secrets in generated suggestions — one analysis found thousands of valid API keys and credentials in GitHub Copilot output alone.
+
+These aren't small companies making mistakes. These are the biggest tech companies in the world. The difference between a chatbot selling a car for a dollar and an enterprise AI leaking your customers' financial data is scale and consequence. The same classes of architectural failures recur at very different scales.
 
 *[AUDIENCE POLL]*
 
@@ -172,8 +170,6 @@ Layer 6: Operational Controls. How do we run AI systems safely in production?
 
 Think of the six layers in three arcs. The first arc — Layers 1 and 2 — is about *who and what*: who can act, what data they can reach. The second arc — Layers 3 and 4 — is about *what enters and leaves the model safely*: prompt defenses and model governance. The third arc — Layers 5 and 6 — is about *running it in production*: observability and operational controls.
 
-After the six layers, I'm going to show you some cross-cutting concerns — tool isolation, human oversight, security testing, and governance operating models. Then we'll walk through two real-world scenarios that tie everything together.
-
 *[EARLY AUDIENCE MOMENT]*
 
 Before we dive in — quick pulse check. Look at those six layers. Which one do you think is weakest in your organization right now? Identity? Audit? Prompt defenses? Don't shout it out — just hold it in your mind. We'll come back to it.
@@ -242,14 +238,27 @@ Quick exercise. Imagine this request comes in: a marketing intern asks the codin
 
 There's no single right answer — it depends on your policy. But the fact that you had to think about it is the point. The policy engine makes that decision automatically, on every request, at machine speed. That's the shift from "we hope people follow the rules" to "the platform enforces the rules."
 
-If you're trying to picture where this lives in your platform: think AI gateway, identity provider, policy engine, model registry, retrieval proxy, audit pipeline, and runtime control plane. Those are the infrastructure surfaces the blueprint maps to.
+---
 
-Now let's drill into each layer.
+## SLIDE 19: Blueprint Infrastructure Mapping
+
+*[GESTURE at the diagram]*
+
+If you're trying to picture where this lives in your platform, here's how the blueprint maps to real infrastructure. Seven surfaces.
+
+AI Gateway — the entry point where every request is authenticated and routed. Identity Provider — your IAM layer, issuing scoped tokens for agents and users. Policy Engine — the decision point we just saw, evaluating every request against your rules.
+
+Model Registry — the governed catalog of approved models with version pinning and expiration. Retrieval Proxy — the tenant-scoped gateway for RAG, enforcing data boundaries before any similarity search. Audit Pipeline — structured logging for every interaction, feeding your SIEM and compliance systems.
+
+And the Runtime Control Plane — rate limits, kill switches, canary deployments, cost caps. The operational layer that lets you stop things fast.
+
+These aren't new categories. They map directly to infrastructure you already have — or infrastructure your platform team can build on existing patterns. The blueprint gives you the security architecture; your platform gives you the implementation surface.
+
+Now let's drill into each layer, starting at the foundation.
 
 ---
 
-
-## SLIDE 19: Layer 1: Identity & Access Control
+## SLIDE 20: Layer 1: Identity & Access Control
 
 Layer one is the foundation, and it's the one most organizations skip entirely. AI-specific identity and access management.
 
@@ -269,7 +278,7 @@ And secrets management — AI agents should never hold long-lived credentials. U
 
 ---
 
-## SLIDE 20: IAM Configuration Example
+## SLIDE 21: IAM Configuration Example
 
 And here's what the infrastructure-as-code looks like. Terraform creating an AI service account with a custom role scoped to exactly what the marketing agent needs.
 
@@ -279,7 +288,7 @@ This is a deployable pattern — the structure works in any cloud IAM stack toda
 
 ---
 
-## SLIDE 21: Layer 2: Context Isolation & Data Boundaries
+## SLIDE 22: Layer 2: Context Isolation & Data Boundaries
 
 *[TRANSITION]*
 
@@ -297,7 +306,7 @@ Third, DLP for AI — filtering and redacting sensitive patterns before they rea
 
 ---
 
-## SLIDE 22: Data Redaction & Multi-Tenant Isolation
+## SLIDE 23: Data Redaction & Multi-Tenant Isolation
 
 Three redaction techniques: masking for display, tokenization for AI contexts, and one-way hashing for audit correlation. Use all three together.
 
@@ -305,11 +314,27 @@ For multi-tenant isolation: enforce tenant boundaries at the infrastructure leve
 
 ---
 
-## SLIDE 23: Layer 3: Prompt Injection Defenses
+## SLIDE 24: Implementation Checkpoint: Layers 1 & 2
+
+*[PAUSE]*
+
+Quick implementation checkpoint before we continue. If you're a platform team, what we've covered so far — identity and context isolation — means three concrete things on Monday morning.
+
+One: scoped service accounts for every AI system. No more shared developer credentials.
+
+Two: tenant-filtered retrieval in your RAG pipeline. Data boundaries enforced at the infrastructure layer, before any similarity search.
+
+Three: classification tags that follow data through every hop. If the tag doesn't travel with the data, the boundary is broken.
+
+Those two layers alone close most of the gaps in the opening incidents. The Chevy chatbot — no scoped identity, no behavioral constraints. DPD — no input filtering, no data boundaries. EchoLeak — no content filtering on retrieved data. All of those are Layer 1 and Layer 2 failures.
+
+If you do nothing else after this talk, do those three things. Now let's move on to the AI-specific vulnerability that keeps security professionals up at night.
+
+---
+
+## SLIDE 25: Layer 3: Prompt Injection Defenses
 
 *[TRANSITION]*
-
-Quick implementation checkpoint before we continue. If you're a platform team, what we've covered so far — identity and context isolation — means three things on Monday morning: scoped service accounts for every AI system, tenant-filtered retrieval in your RAG pipeline, and classification tags that follow data through every hop. Those two layers alone close most of the gaps in the opening incidents.
 
 Layer three: prompt injection defenses. And this is the AI-specific vulnerability that keeps security professionals up at night.
 
@@ -321,17 +346,23 @@ Indirect injection is especially dangerous because the attack surface is enormou
 
 ---
 
-## SLIDE 24: Injection Attack Flow
+## SLIDE 26: Injection Attack Flow
 
 *[GESTURE at diagram]*
 
-Here's the defense stack. User input comes in on the left. First defense: input validation — sanitize, detect known injection patterns, reject suspicious inputs. Second defense: instruction hierarchy — system instructions always override user content, which always overrides retrieved content. The model should never follow instructions from untrusted sources without verification. Third defense, on the output side: output scanning — check the AI's response for data leakage, policy violations, or signs that an injection succeeded.
+Here's the defense stack. User input comes in on the left. 
+
+First defense: input validation — sanitize, detect known injection patterns, reject suspicious inputs. 
+
+Second defense: instruction hierarchy — system instructions always override user content, which always overrides retrieved content. The model should never follow instructions from untrusted sources without verification. 
+
+Third defense, on the output side: output scanning — check the AI's response for data leakage, policy violations, or signs that an injection succeeded.
 
 And the bottom path shows the indirect injection vector: retrieved content from documents, emails, or web pages passes through content filtering before it can enter the model's context. This is critical — if you're doing RAG, every retrieved document is a potential attack surface.
 
 ---
 
-## SLIDE 25: Four Defense Techniques
+## SLIDE 27: Four Defense Techniques
 
 Four concrete defense techniques you can implement.
 
@@ -341,7 +372,7 @@ Defense in depth. No single technique is sufficient. All four together make inje
 
 ---
 
-## SLIDE 26: Live Walkthrough: Indirect Injection in RAG
+## SLIDE 28: Live Walkthrough: Indirect Injection in RAG
 
 *[SLOW DOWN — this is the most memorable segment]*
 
@@ -357,7 +388,7 @@ Quick checkpoint. We're halfway through the blueprint. If you remember only thre
 
 ---
 
-## SLIDE 27: Layer 4: Model Governance Pipeline
+## SLIDE 29: Layer 4: Model Governance Pipeline
 
 *[SHIFT TONE — common failure]*
 
@@ -375,7 +406,7 @@ And if you already have shadow AI — which statistically you do — here's the 
 
 ---
 
-## SLIDE 28: Layer 4: Governance Pipeline Stages
+## SLIDE 30: Layer 4: Governance Pipeline Stages
 
 The governance lifecycle has six stages, and at each one there should be a gate — a checkpoint where risk assessment, bias testing, and security review happen before the model advances.
 
@@ -385,7 +416,7 @@ Selection, evaluation, approval, deployment, monitoring, retirement. The most co
 
 ---
 
-## SLIDE 29: Shadow AI: The Invisible Risk
+## SLIDE 31: Shadow AI: The Invisible Risk
 
 *[PAUSE — let the slide land]*
 
@@ -403,7 +434,7 @@ And here's the number that should make every platform leader uncomfortable: *59%
 
 ---
 
-## SLIDE 30: Model Registry Configuration
+## SLIDE 32: Model Registry Configuration
 
 Here's what a model registry entry looks like in practice. JSON configuration specifying the model name, version, provider, risk classification, compliance status, approved use cases, and data access restrictions.
 
@@ -413,7 +444,7 @@ Every model has explicit boundaries: what data it can access, what use cases it'
 
 ---
 
-## SLIDE 31: Layer 5: Audit Trails & Observability
+## SLIDE 33: Layer 5: Audit Trails & Observability
 
 *[TRANSITION]*
 
@@ -423,17 +454,7 @@ Remember the IBM/Ponemon numbers: 33% have no trails at all. Only 6% have compre
 
 Key distinction: logging for debugging and logging for evidence are not the same thing. Debugging logs tell engineers what went wrong. Evidence-quality logs tell regulators and incident responders what happened, who was affected, and whether controls were in place. The blueprint requires both.
 
-Quick incident scenario. Suspicious prompt flagged, two anomalous tool calls correlated, cost spike detected — three times normal in 60 seconds. Kill switch trips, agent isolated. The incident responder traces the full chain in minutes using the immutable audit log. Without that trail? You're guessing, manually reviewing chat logs, calling customers to ask what the bot said.
-
 If you can't see what your AI systems are doing, you can't secure them. You can't comply with regulations. You can't investigate incidents. You can't improve. Period.
-
-*[MINI THREAT-MODEL EXERCISE — 30 seconds]*
-
-Quick thought experiment. Imagine a poisoned HR benefits PDF gets uploaded to your shared RAG knowledge base. An employee asks "what's our parental leave policy?" and the RAG system retrieves the poisoned document. Which layer fails first? Think about it — is it Layer 2 because the content wasn't classified? Layer 3 because the injection wasn't caught? Or Layer 5 because nobody's monitoring what documents enter the index?
-
-*[PAUSE]*
-
-In most organizations, the answer is Layer 5 — you wouldn't even know the poisoned document was there until something went wrong. That's why audit and observability come before incident response. You can't respond to what you can't see.
 
 ---
 
@@ -445,7 +466,23 @@ The EU AI Act requires audit trails for high-risk AI systems. ISO 42001 requires
 
 ---
 
-## SLIDE 32: Structured Audit Logging
+## SLIDE 34: Threat Model Exercise: Poisoned RAG
+
+*[MINI THREAT-MODEL EXERCISE — 30 seconds]*
+
+Quick incident scenario. Suspicious prompt flagged, two anomalous tool calls correlated, cost spike detected — three times normal in 60 seconds. Kill switch trips, agent isolated. The incident responder traces the full chain in minutes using the immutable audit log. Without that trail? You're guessing, manually reviewing chat logs, calling customers to ask what the bot said.
+
+Now let's make this personal.
+
+Imagine a poisoned HR benefits PDF gets uploaded to your shared RAG knowledge base. An employee asks "what's our parental leave policy?" and the RAG system retrieves the poisoned document. Which layer fails first? Think about it — is it Layer 2 because the content wasn't classified? Layer 3 because the injection wasn't caught? Or Layer 5 because nobody's monitoring what documents enter the index?
+
+*[PAUSE]*
+
+In most organizations, the answer is Layer 5 — you wouldn't even know the poisoned document was there until something went wrong. That's why audit and observability come before incident response. You can't respond to what you can't see.
+
+---
+
+## SLIDE 35: Structured Audit Logging
 
 Here's what a structured, privacy-safe audit log entry looks like — five essential fields.
 
@@ -455,7 +492,7 @@ Important nuance: log structured metadata, not raw prompts and responses. Store 
 
 ---
 
-## SLIDE 33: Audit Maturity Ladder
+## SLIDE 36: Audit Maturity Ladder
 
 *[GESTURE at diagram]*
 
@@ -465,7 +502,7 @@ Move up this ladder incrementally. Start with structured logging for your highes
 
 ---
 
-## SLIDE 34: Layer 6: Operational Controls
+## SLIDE 37: Layer 6: Operational Controls
 
 *[ARCHITECTURE PRINCIPLE]*
 
@@ -481,7 +518,7 @@ Canary deployments — don't roll out AI changes to everyone at once. Start with
 
 ---
 
-## SLIDE 35: Kill Switches & Rate Limiting
+## SLIDE 38: Kill Switches & Rate Limiting
 
 On the left, the kill switch — a simple API endpoint that stops requests, cancels in-flight calls, logs the event, and alerts the incident channel. Recovery requires manual review before restart.
 
@@ -489,7 +526,7 @@ On the right, rate limiting — per-tenant, per-model limits with burst handling
 
 ---
 
-## SLIDE 36: Canary Deployments & Incident Response
+## SLIDE 39: Canary Deployments & Incident Response
 
 Canary deployments are especially important for generative AI because "quality" isn't binary. You need AI-specific metrics. The rollout pattern on the left is concrete: 5% of traffic, then 10%, then 25%, then full rollout — with five minutes of monitoring at each phase. Error rate stays under 0.1%, latency p95 stays under two seconds, cost variance stays under 5% — or you roll back.
 
@@ -501,7 +538,7 @@ Quick example — imagine updating your customer service model. Benchmarks look 
 
 ---
 
-## SLIDE 37: Tool Isolation & Sandboxing
+## SLIDE 40: Tool Isolation & Sandboxing
 
 *[NEW SECTION]*
 
@@ -517,7 +554,7 @@ Without tool isolation, an agent tricked into misusing its tools bypasses everyt
 
 ---
 
-## SLIDE 38: Human Oversight Patterns
+## SLIDE 41: Human Oversight Patterns
 
 *[NEW SECTION]*
 
@@ -529,7 +566,7 @@ Example: your AI customer service agent drafts a pricing exception email. That's
 
 ---
 
-## SLIDE 39: Security Testing & Red Teaming
+## SLIDE 42: Security Testing & Red Teaming
 
 *[NEW SECTION]*
 
@@ -541,7 +578,7 @@ Automate what you can — injection tests and regression gates belong in CI/CD. 
 
 ---
 
-## SLIDE 40: Who Owns What?
+## SLIDE 43: Who Owns What?
 
 *[GESTURE across the four columns]*
 
@@ -561,7 +598,7 @@ The callout at the bottom is the honest summary: Security is accountable for the
 
 ---
 
-## SLIDE 41: What Breaks Without Each Control?
+## SLIDE 44: What Breaks Without Each Control?
 
 *[VISUAL RESET — let the audience scan the table]*
 
@@ -573,7 +610,7 @@ The key insight: the six layers protect the data and the interactions. The cross
 
 ---
 
-## SLIDE 42: When the Blueprint Is Missing: A Failure Chain
+## SLIDE 45: When the Blueprint Is Missing: A Failure Chain
 
 *[PAUSE — let audience read the cascade]*
 
@@ -594,7 +631,7 @@ Layer 1 — identity. If the chatbot had a scoped service account instead of a s
 Each missing layer compounds the next. A single missing control rarely causes the breach — the cascade does. That's why the blueprint is six layers, not one. And that's why we're about to walk through two real-world scenarios where all six layers work together.
 
 ---
-## SLIDE 43: Section Divider: Scenario Walkthroughs
+## SLIDE 46: Section Divider: Scenario Walkthroughs
 *[PAUSE]*
 
 Alright, that's the six layers, the cross-cutting concerns, and the failure chain.
@@ -611,7 +648,7 @@ Now let me show you how the blueprint works when it's in place — by walking th
 
 ---
 
-## SLIDE 44: Scenario: Customer-Facing AI Chatbot
+## SLIDE 47: Scenario: Customer-Facing AI Chatbot
 
 Scenario one: a customer-facing AI chatbot — probably the most common enterprise AI deployment, and it touches every layer. The slide traces a single customer message through the full security stack, step by step.
 
@@ -645,7 +682,7 @@ Most of you probably said DENY or ESCALATE — and you're right. The chatbot's s
 
 ---
 
-## SLIDE 45: Scenario 2: Internal AI Coding Assistant
+## SLIDE 48: Scenario 2: Internal AI Coding Assistant
 
 Scenario two: an internal coding assistant. Let me tell this one as an incident story.
 
@@ -661,7 +698,7 @@ The developer's experience didn't change. The organization's exposure did.
 
 ---
 
-## SLIDE 46: Scenario 2: The Near-Miss That Changed Policy
+## SLIDE 49: Scenario 2: The Near-Miss That Changed Policy
 
 Here's the critical moment distilled. Three independent layers caught it: content classification tagged the code as proprietary before the developer touched it. Model selection routed trade-secret code to the internal model. DLP scanning checked outbound requests as a final checkpoint.
 
@@ -675,7 +712,7 @@ So those are the scenarios — the blueprint applied to real deployments. Now le
 
 ---
 
-## SLIDE 47: What Most Teams Get Wrong
+## SLIDE 50: What Most Teams Get Wrong
 
 *[PAUSE — let the slide land]*
 
@@ -687,7 +724,7 @@ And here's a quick way to test where you stand.
 
 ---
 
-## SLIDE 48: 5 Questions Every AI Team Should Answer
+## SLIDE 51: 5 Questions Every AI Team Should Answer
 
 *[SLOW DOWN — let the audience reflect]*
 
@@ -707,7 +744,7 @@ If you can't answer yes to all five, you know where to start. And here's the roa
 
 ---
 
-## SLIDE 49: Implementation Roadmap
+## SLIDE 52: Implementation Roadmap
 
 *[GESTURE at diagram]*
 
@@ -727,7 +764,7 @@ Each phase builds on the previous one. Ship Phase 0 this week.
 
 ---
 
-## SLIDE 50: Your Monday Morning Checklist (1 of 2)
+## SLIDE 53: Your Monday Morning Checklist (1 of 2)
 
 *[GESTURE at the checklist]*
 
@@ -739,7 +776,7 @@ These four are the foundation. Now let's look at the operational layer.
 
 ---
 
-## SLIDE 51: Your Monday Morning Checklist (2 of 2)
+## SLIDE 54: Your Monday Morning Checklist (2 of 2)
 
 *[GESTURE at items 5-8]*
 
@@ -751,7 +788,7 @@ Start this week. Iterate this quarter. Mature this year.
 
 ---
 
-## SLIDE 52: The Road Ahead
+## SLIDE 55: The Road Ahead
 
 The regulatory and technical landscape is moving fast.
 
@@ -763,7 +800,7 @@ Agentic AI security is the next frontier. Agents that act autonomously — calli
 
 ---
 
-## SLIDE 53: Closing: Security Enables Innovation
+## SLIDE 56: Closing: Security Enables Innovation
 *[SLOW DOWN — closing moment]*
 
 97% of organizations that experienced an AI breach had no proper access controls. Remember the opening incidents — the Chevy chatbot, DPD, EchoLeak, Copilot secrets. Every one maps to missing layers in this blueprint. Not technology problems — architecture problems.
@@ -778,7 +815,7 @@ Thank you.
 
 ---
 
-## SLIDE 54: Questions
+## SLIDE 57: Questions
 *[PAUSE]*
 
 I'd love to take questions. We've got some time — who wants to go first?
